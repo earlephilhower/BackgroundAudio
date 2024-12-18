@@ -1,0 +1,6 @@
+This is a port of the ESP8266 port of LIBMAD with the ultra-low-memory
+optimizations removed.  This will generate all 1152 samples per pass,
+and has been modified from stock to interleave those synth()d samples
+so they're directly usable in I2S or PWM.
+-Earle F. Philhower, III
+ <earlephilhower@yahoo.com>

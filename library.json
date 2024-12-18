@@ -1,0 +1,26 @@
+{
+    "name": "BackgroundAudio",
+    "description": "Plays MP3, AAC, and WAV via an IRQ based mechanism to allow multitasking while playing",
+    "keywords": "Pico, RP2040, Pico 2, RP2350, MP3, AAC, WAV, I2S, PWM, Webradio",
+    "authors": [
+        {
+            "name": "Earle F. Philhower, III",
+            "email": "earlephilhower@yahoo.com",
+            "url": "https://github.com/earlephilhower/BackgroundAudio",
+            "maintainer": true
+        }
+    ],
+    "repository": {
+        "type": "git",
+         "url": "https://github.com/earlephilhower/BackgroundAudio"
+    },
+    "version": "1.0.0",
+    "homepage": "https://github.com/earlephilhower/BackgroundAudio",
+    "frameworks": "Arduino",
+    "examples": [
+        "examples/*/*.ino"
+    ],
+	"build": {
+		"libLDFMode": "deep"
+	}
+}

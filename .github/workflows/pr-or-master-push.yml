@@ -1,0 +1,35 @@
+# Run whenever a PR is generated or updated.
+name: BackgroundAudio
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/arduino-lint-action@v2
+        with:
+          library-manager: 'update'
+
+# Validate orthography
+  code-spell:
+    name: Check spelling
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Run codespell
+      uses: codespell-project/actions-codespell@master
+      with:
+        skip: ./src/libmad,./src/libhelix-aac
+        ignore_words_list: ESP8266,esp8266,esp,dout,DOUT,ser,ans,inout,numer,hist,aache
