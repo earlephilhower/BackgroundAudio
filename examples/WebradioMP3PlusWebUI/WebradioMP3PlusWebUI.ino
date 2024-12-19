@@ -153,6 +153,8 @@ void loop() {
     return;
   }
 
+  web.handleClient();
+
   // If the HTTP stream drops, reconnect
   if (!http.connected()) {
     Serial.printf("(Re)connecting to '%s'...\n", url.c_str());
@@ -260,6 +262,4 @@ void loop() {
       case 'n': url = Serial.readString(); url.trim(); http.end(); break; // Will reconnect next pass
     }
   }
-
-  web.handleClient();
 }
