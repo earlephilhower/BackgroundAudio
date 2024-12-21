@@ -22,7 +22,7 @@ rate.
 audio processing is happening in the same context as the web interface and net streaming code leading to
 dropouts and hangs in extended use.  The WebRadioMP3PlusWebUI sketch here is basically the same user application
 but because of the interrupt-driver, buffer-based architecture playback is very smooth even on an original
-Pico and even with HTTPS decryption in software.  The MP3 decoder and HTTPs engryption stack are the same
+Pico and even with HTTPS decryption in software.  The MP3 decoder and HTTPs encryption stack are the same
 in both libraries, they're just used more efficiently here.)
 
 ## Compatibility
