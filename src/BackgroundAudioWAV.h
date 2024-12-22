@@ -266,12 +266,15 @@ private:
             }
 underflow:
             _underflows++;
-            *out++ = 0;
-            *out++ = 0;
             if (_accumShift) {
                 _ib.shiftUp(_accumShift);
                 _accumShift = 0;
                 _shifts++;
+            }
+            // Because we're in IRQ and there's not enough data, we know no more can come it so just 0-fill remainder in tight loop
+            while (out < end) {
+                *out++ = 0;
+                *out++ = 0;
             }
             continue;
         } // while(out < end-of-outsamples)
