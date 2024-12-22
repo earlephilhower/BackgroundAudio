@@ -22,45 +22,49 @@
 # ifndef LIBMAD_HUFFMAN_H
 # define LIBMAD_HUFFMAN_H
 
+// Converted unsigned int (32b) to smaller sizes to reduce memory footprint - EFP3
+// Smaller table runs faster because of flash XIP latency
+#include <stdint.h>
+
 // Use ints instead of bitfields. This'll make the structure way larger, but allow
 // for easy direct access w/o any helper functions when placed in PROGMEM
 
 union huffquad {
     struct {
-        unsigned int final;
-        unsigned int bits;
-        unsigned int offset;
+        uint8_t final;
+        uint16_t bits;
+        uint16_t offset;
     } ptr;
     struct {
-        unsigned int final;
-        unsigned int hlen;
-        unsigned int v;
-        unsigned int w;
-        unsigned int x;
-        unsigned int y;
+        uint8_t final;
+        uint8_t hlen;
+        uint8_t v;
+        uint8_t w;
+        uint8_t x;
+        uint8_t y;
     } value;
-    unsigned int final ;
+    uint16_t final ;
 };
 
 union huffpair {
     struct {
-        unsigned int final;
-        unsigned int bits;
-        unsigned int offset;
+        uint8_t final;
+        uint16_t bits;
+        uint16_t offset;
     } ptr;
     struct {
-        unsigned int final;
-        unsigned int hlen;
-        unsigned int x;
-        unsigned int y;
+        uint8_t final;
+        uint8_t hlen;
+        uint8_t x;
+        uint8_t y;
     } value;
-    unsigned int final;
+    uint16_t final;
 };
 
 struct hufftable {
     union huffpair const *table;
-    unsigned int linbits;
-    unsigned int startbits;
+    uint16_t linbits;
+    uint16_t startbits;
 };
 
 extern union huffquad const *const mad_huff_quad_table[2];
