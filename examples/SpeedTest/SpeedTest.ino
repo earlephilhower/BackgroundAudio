@@ -28,9 +28,6 @@ uint32_t aacheframes = 0;
 uint32_t mp3frames = 0;
 
 void setup() {
-  while (!Serial) {
-    delay(100);
-  }
   _hAACDecoder = AACInitDecoder();
   int idx = 0;
   uint64_t now = rp2040.getCycleCount64();
@@ -114,9 +111,16 @@ void setup() {
   cyclesMP3 = done - now;
 }
 
+void report(const char *name, int frames, uint64_t cyclesttl, int samplesperframe) {
+  double cyclesPerSample = cyclesttl / (double)(frames * samplesperframe);
+  double mhzUsed = (44100.0 * cyclesPerSample) / 1000000.0;
+  Serial.printf("%s decode cycles: %llu, frames %lu, cycles/sample %0.2f, MHZ %0.0f\r\n", name, cyclesttl, frames, cyclesPerSample, mhzUsed);
+}
+
 void loop() {
-  Serial.printf("HE-AAC decode cycles: %llu, frames %lu, cycles/sample %0.2f\r\n", cyclesAAC, aacheframes, (double)cyclesAACHE / (double)(aacheframes * 2048.0));
-  Serial.printf("AAC decode cycles: %llu, frames %lu, cycles/sample %0.2f\r\n", cyclesAAC, aacframes, (double)cyclesAAC / (double)(aacframes * 1024.0));
-  Serial.printf("MP3 decode cycles: %llu, frames %lu, cycles/sample %0.2f\r\n\r\n", cyclesMP3, mp3frames, (double)cyclesMP3 / (double)(mp3frames * 1152.0));
+  report("HE-AAC", aacheframes, cyclesAACHE, 2048);
+  report("AAC", aacframes, cyclesAAC, 1024);
+  report("MP3", mp3frames, cyclesMP3, 1152);
+  Serial.println("-------------------------------------\r\n");
   delay(1000);
 }
