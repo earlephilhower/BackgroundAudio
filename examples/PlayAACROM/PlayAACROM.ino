@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
   if (!BMP.done()) {
-    Serial.printf("Buffer: %d -- %d %d %d %d", BMP.available(), BMP.shifts(), BMP.frames(), BMP.errors(), BMP.dumps());
+    Serial.printf("Buffer: %d -- %d %d %d %d -- ", BMP.available(), BMP.shifts(), BMP.frames(), BMP.errors(), BMP.dumps());
     Serial.printf("Waiting to finish....could be doing something useful here\r\n");
     delay(100);
   } else if (!stopped) {
