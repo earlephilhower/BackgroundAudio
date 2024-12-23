@@ -179,7 +179,7 @@ enum {
 
 typedef struct _HuffInfo {
     int maxBits;							/* number of bits in longest codeword */
-    unsigned /*char*/ int count[MAX_HUFF_BITS];		/* count[i] = number of codes with length i+1 bits */
+    unsigned char count[MAX_HUFF_BITS];		/* count[i] = number of codes with length i+1 bits */
     int offset;								/* offset into symbol table */
 } HuffInfo;
 
@@ -374,7 +374,7 @@ extern const unsigned char k0Tab[NUM_SAMPLE_RATES_SBR][16];
 extern const unsigned char k2Tab[NUM_SAMPLE_RATES_SBR][14];
 extern const unsigned char goalSBTab[NUM_SAMPLE_RATES_SBR];
 extern const HuffInfo huffTabSBRInfo[10];
-extern const signed int /*short*/ huffTabSBR[604];
+extern const signed short huffTabSBR[604];
 extern const int log2Tab[65];
 extern const int noiseTab[512 * 2];
 extern const int cTabA[165];
