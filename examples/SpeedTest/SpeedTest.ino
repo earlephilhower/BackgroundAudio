@@ -43,7 +43,7 @@ void setup() {
       idx += sizeof(aac) - idx - bytesLeft;
     } else {
       idx = sizeof(aac);
-      Serial.printf("err %d\r\n", aacframes);
+      Serial.printf("err %lu\r\n", aacframes);
     }
   }
   uint64_t done = rp2040.getCycleCount64();
@@ -66,7 +66,7 @@ void setup() {
       idx += sizeof(aache) - idx - bytesLeft;
     } else {
       idx = sizeof(aache);
-      Serial.printf("err %d\r\n", aacheframes);
+      Serial.printf("err %lu\r\n", aacheframes);
     }
   }
   done = rp2040.getCycleCount64();
@@ -114,7 +114,7 @@ void setup() {
 void report(const char *name, int frames, uint64_t cyclesttl, int samplesperframe) {
   double cyclesPerSample = cyclesttl / (double)(frames * samplesperframe);
   double mhzUsed = (44100.0 * cyclesPerSample) / 1000000.0;
-  Serial.printf("%s decode cycles: %llu, frames %lu, cycles/sample %0.2f, MHZ %0.0f\r\n", name, cyclesttl, frames, cyclesPerSample, mhzUsed);
+  Serial.printf("%s decode cycles: %llu, frames %d, cycles/sample %0.2f, MHZ %0.0f\r\n", name, cyclesttl, frames, cyclesPerSample, mhzUsed);
 }
 
 void loop() {
