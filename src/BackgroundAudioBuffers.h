@@ -23,6 +23,7 @@
 #include <Arduino.h>
 
 // Interrupt-safe, multicore-safe biftable buffer for libmad raw data.
+template <size_t bytes>
 class RawDataBuffer {
 public:
     RawDataBuffer() {
@@ -93,7 +94,7 @@ public:
     }
 
 private:
-    static const size_t count = 8 * 1024;
+    static const size_t count = bytes;
     uint8_t _buff[count];
     size_t _len;
     mutex_t _mtx;

@@ -9,6 +9,10 @@
 BackgroundAudioAAC	KEYWORD1
 BackgroundAudioMP3	KEYWORD1
 BackgroundAudioWAV	KEYWORD1
+BackgroundAudioAACClass	KEYWORD1
+BackgroundAudioMP3Class	KEYWORD1
+BackgroundAudioWAVClass	KEYWORD1
+RawDataBuffer	KEYWORD1
 ROMBackgroundAudioAAC	KEYWORD1
 ROMBackgroundAudioMP3	KEYWORD1
 ROMBackgroundAudioWAV	KEYWORD1

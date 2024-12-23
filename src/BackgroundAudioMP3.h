@@ -235,5 +235,5 @@ private:
     uint32_t _dumps = 0;
 };
 
-using BackgroundAudioMP3 = BackgroundAudioMP3Class<RawDataBuffer>;
+using BackgroundAudioMP3 = BackgroundAudioMP3Class<RawDataBuffer<8 * 1024>>;
 using ROMBackgroundAudioMP3 = BackgroundAudioMP3Class<ROMDataBuffer>;

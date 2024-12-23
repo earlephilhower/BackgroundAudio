@@ -27,7 +27,8 @@ const int _SCK = 6;
 
 // I2S out(OUTPUT, 0, 2);
 PWMAudio audio(0);
-BackgroundAudioMP3 BMP(audio);
+// We will make a larger buffer because SD cards can sometime take a long time to read
+BackgroundAudioMP3Class<RawDataBuffer<16 * 1024>> BMP(audio);
 
 // List of all MP3 files in the root directory
 std::vector<String> mp3list;

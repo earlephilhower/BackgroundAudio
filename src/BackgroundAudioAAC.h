@@ -217,5 +217,5 @@ private:
     uint32_t _dumps = 0;
 };
 
-using BackgroundAudioAAC = BackgroundAudioAACClass<RawDataBuffer>;
+using BackgroundAudioAAC = BackgroundAudioAACClass<RawDataBuffer<8 * 1024>>;
 using ROMBackgroundAudioAAC = BackgroundAudioAACClass<ROMDataBuffer>;
