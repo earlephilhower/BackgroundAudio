@@ -239,30 +239,124 @@ void processID3(File f, void(*cb)(int vers, char *field, int encoding, char *val
   }
 }
 
-// UNICODE 16 conversion routine and temp storage because many fields are stored in UTF-16
-static char _wcsbuff[4096]  __attribute__((aligned(2))); // Need to align to int16
-std::string decode(int encoding, char *str) {
-  if ((encoding == 0) || (encoding == 3)) {
-    return std::string(str);
-  } else if ((encoding == 1) || (encoding == 2)) {
-    // Need to 16-bit align input string since we're interpreting it as char16_t
-    bool needAlign = ((uint32_t)str) & 1;
-    if (needAlign) {
-      int i;
-      for (i = 0; (i < (int)sizeof(_wcsbuff) - 2) && (str[i] || str[i + 1]); i++) {
-        _wcsbuff[i] = str[i];
-      }
-      _wcsbuff[i++] = 0;
-      _wcsbuff[i++] = 0;
+static char _utf8buff[4096]; // UTF16->UTF8 temporary buffer, on heap so it can be big
+static constexpr uint32_t INVALID = 0xfffd; // U+FFFD � REPLACEMENT CHARACTER
+
+// Convert from UTF-16 to UTF-32 with very basic error checking
+static inline uint32_t from16(uint16_t const* utf16, size_t len, size_t* index, bool be) {
+  uint8_t *ptr = (uint8_t *)utf16; // All reads of the u16 chars will be byte-wide to allow misalignment
+  uint16_t high = be ? ptr[*index * 2] | (ptr[*index * 2 + 1] << 8) : ptr[*index * 2 + 1] | (ptr[*index * 2] << 8);
+
+  if (!(high & 0xf800)) {
+    // This is a short char, fall through
+    return high;
+  }
+  if ((high & 0xfc00) != 0xd800) {
+    // Not a high half?!
+    return INVALID;
+  }
+  if (*index == len - 1) {
+    // can't read more but need more
+    return INVALID;
+  }
+
+  (*index)++; // We ate the 1st char, this next one implied
+  
+  uint16_t low = be ? ptr[(*index + 1) * 2] | (ptr[(*index + 1) * 2 + 1] << 8) : ptr[(*index + 1) * 2 + 1] | (ptr[(*index + 1) * 2] << 8);
+  // Better be a low half marker
+  if ((low & 0xfc00) != 0xdc00) {
+    return INVALID;
+  }
+  uint32_t result;
+  result = high & ((1<<10) - 1);
+  result <<= 10;
+  result |= low & ((1<<10) - 1);
+  result |= 0x10000; // Implied bit
+  
+  // And if all else fails, it's valid
+  return result;
+}
+
+// Convert UTF-32 to a potentially multibyte UTF-8 encode
+static inline size_t to8(uint32_t u32, uint8_t* utf8, size_t len, size_t index) {
+  if (u32 <= 0x7f) {
+    if (index + 1 >= len) {
+      return 0;
     }
-    std::u16string s = std::u16string((char16_t*)((needAlign ? _wcsbuff : str) + (encoding == 1 ? 2 : 0)));
-    std::wstring_convert<std::codecvt_utf8_utf16<char16_t, 0x10ffff, std::codecvt_mode::consume_header>, char16_t> cnv;
-    std::string utf8 = cnv.to_bytes(s);
-    return utf8;
+    utf8[index] = u32; // Already know 0-7F
+    return 1;
+  } else if (u32 <= 0x7ff) {
+    if (index + 2 >= len) {
+      return 0;
+    }
+    utf8[index] = (0x80 + 0x40) | u32 >> 6;
+    utf8[index + 1] = 0x80 | (u32 & ~0xc0);
+    return 2;
+  } else if (u32 <= 0xffff) {
+    if (index + 3 >= len) {
+      return 0;
+    }
+    utf8[index] = (0x80 + 0x40 + 0x20) | (u32 >> 12);
+    utf8[index + 1] = 0x80 | ((u32 >> 6) & ~0xc0);
+    utf8[index + 2] = 0x80 | ((u32 >> 0) & ~0xc0);
+    return 3;
+  } else if (u32 <= 0x10ffff) {
+    if (index + 4 >= len) {
+      return 0;
+    }
+    utf8[index] = (0x80 + 40 + 20 + 10) | (u32 >> 18);
+    utf8[index + 1] = 0x80 | ((u32 >> 12) & ~0xc0);
+    utf8[index + 2] = 0x80 | ((u32 >> 6) & ~0xc0);
+    utf8[index + 3] = 0x80 | ((u32 >> 0) & ~0xc0);
+    return 4;
   } else {
-    return std::string("unk");
+    return 0;
   }
 }
+
+const char *toUTF8(int encoding, const char *str, int strBytes) {
+  if ((encoding == 0) || (encoding == 3)) {
+    return str;
+  } else if ((encoding == 1) || (encoding == 2)) {
+    const uint16_t *utf16 = (const uint16_t *)str;
+    size_t utf16_len = strBytes / 2;
+  
+    // Easy-peasy
+    if (!utf16_len) {
+      _utf8buff[0] = 0;
+      return _utf8buff;
+    }
+
+    // Silently detect and eat BOM...yum
+    bool be;
+    if (*str == 0xff && *(str + 1) == 0xfe) {
+      be = true;
+      utf16_len--;
+      utf16++;
+    } else if (*str == 0xfe && *(str + 1) == 0xff) {
+      be = false;
+      utf16_len--;
+      utf16++;
+    } else {
+      be = true;
+    }
+
+    size_t utf8_index = 0;
+    for (size_t utf16_index = 0; utf16_index < utf16_len; utf16_index++) {
+      uint32_t u32 = from16(utf16, utf16_len, &utf16_index, be);
+      if (u32 == 0) {
+        // End of string detected
+        break;
+      }
+      utf8_index += to8(u32, (uint8_t*)_utf8buff, sizeof(_utf8buff), utf8_index);
+    }
+    _utf8buff[utf8_index] = 0;
+    return _utf8buff;
+  } else {
+    return "unk";
+  }
+}
+
 
 int myu16strlen(const char *ptr) {
   int cnt = 0;

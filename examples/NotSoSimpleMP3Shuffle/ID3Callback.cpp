@@ -36,7 +36,6 @@ void id3Callback(int vers, char *field, int encoding, char *value, int valueLen)
   char *text;
   char *mime;
   char *name;
-  std::string str;
 
   switch (f32) {
     case M("COMM"):
@@ -47,7 +46,8 @@ void id3Callback(int vers, char *field, int encoding, char *value, int valueLen)
       } else {
         text = desc + strlen(desc) + 1;
       }
-      Serial.printf("Comment: %s[%s] = %s\n", decode(encoding, desc).c_str(), lang, decode(encoding, text).c_str());
+      Serial.printf("Comment: %s[%s] = ", toUTF8(encoding, desc, myu16strlen(desc)), lang);
+      Serial.printf("%s\n", toUTF8(encoding, text, myu16strlen(text)));
       break;
     case M("TXX"):
     case M("TXXX"):
@@ -57,7 +57,8 @@ void id3Callback(int vers, char *field, int encoding, char *value, int valueLen)
       } else {
         text = desc + strlen(desc) + 1;
       }
-      Serial.printf("User Defined: %s = %s\n", decode(encoding, desc).c_str(), decode(encoding, text).c_str());
+      Serial.printf("User Defined: %s = ", toUTF8(encoding, desc, myu16strlen(desc)));
+      Serial.printf("%s\n", toUTF8(encoding, text, myu16strlen(text)));
       break;
     case M("PRIV"):
       Serial.printf("Private Field: %s=", value);
@@ -91,7 +92,8 @@ void id3Callback(int vers, char *field, int encoding, char *value, int valueLen)
       } else {
         text = desc + strlen(desc) + 1;
       }
-      Serial.printf("Unsynchronized Lyrics: %s[%s] = %s\n", decode(encoding, desc).c_str(), lang, decode(encoding, text).c_str());
+      Serial.printf("Unsynchronized Lyrics: %s[%s] = ", toUTF8(encoding, desc, myu16strlen(desc)), lang);
+      Serial.printf("%s\n", toUTF8(encoding, text, myu16strlen(text)));
       break;
     case M("MCI"): // Reach out and touch someone for less
     case M("MCDI"):
@@ -130,104 +132,84 @@ void id3Callback(int vers, char *field, int encoding, char *value, int valueLen)
       break;
     case M("TALB"):
     case M("TAL"):
-      str = decode(encoding, value);
-      Serial.printf("Album: %s\n", str.c_str());
+      Serial.printf("Album: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TPE1"):
     case M("TP1"):
-      str = decode(encoding, value);
-      Serial.printf("Artist: %s\n", str.c_str());
+      Serial.printf("Artist: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TPE2"):
     case M("TP2"):
-      str = decode(encoding, value);
-      Serial.printf("Band: %s\n", str.c_str());
+      Serial.printf("Band: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TPE3"):
     case M("TP3"):
-      str = decode(encoding, value);
-      Serial.printf("Conductor: %s\n", str.c_str());
+      Serial.printf("Conductor: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TIT2"):
     case M("TT2"):
-      str = decode(encoding, value);
-      Serial.printf("Title: %s\n", str.c_str());
+      Serial.printf("Title: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TENC"):
     case M("TEN"):
-      str = decode(encoding, value);
-      Serial.printf("Encoded By: %s\n", str.c_str());
+      Serial.printf("Encoded By: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TDRC"):
-      str = decode(encoding, value);
-      Serial.printf("Recording Time: %s\n", str.c_str());
+      Serial.printf("Recording Time: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TLEN"):
-      str = decode(encoding, value);
-      Serial.printf("Length(ms): %s\n", str.c_str());
+      Serial.printf("Length(ms): %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TDRL"):
     case M("TRD"):
-      str = decode(encoding, value);
-      Serial.printf("Release Time: %s\n", str.c_str());
+      Serial.printf("Release Time: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TDAT"):
     case M("TDA"):
-      str = decode(encoding, value);
-      Serial.printf("Release Date: %s\n", str.c_str());
+      Serial.printf("Release Date: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TPUB"):
     case M("TPB"):
-      str = decode(encoding, value);
-      Serial.printf("Publisher: %s\n", str.c_str());
+      Serial.printf("Publisher: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TCOM"):
     case M("TCM"):
-      str = decode(encoding, value);
-      Serial.printf("Composer: %s\n", str.c_str());
+      Serial.printf("Composer: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TLAN"):
     case M("TLA"):
-      str = decode(encoding, value);
-      Serial.printf("Language: %s\n", str.c_str());
+      Serial.printf("Language: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TFLT"):
     case M("TFT"):
-      str = decode(encoding, value);
-      Serial.printf("File Type: %s\n", str.c_str());
+      Serial.printf("File Type: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TYER"):
     case M("TYE"):
-      str = decode(encoding, value);
-      Serial.printf("Year: %s\n", str.c_str());
+      Serial.printf("Year: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TRCK"):
     case M("TRK"):
-      str = decode(encoding, value);
-      Serial.printf("Track: %s\n", str.c_str());
+      Serial.printf("Track: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TCON"):
     case M("TCO"):
-      str = decode(encoding, value);
-      Serial.printf("Content Type: %s\n", str.c_str());
+      Serial.printf("Content Type: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TPOS"):
     case M("TPA") :
-      str = decode(encoding, value);
-      Serial.printf("Part of Set: %s\n", str.c_str());
+      Serial.printf("Part of Set: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TSSE"):
     case M("TSS"):
-      str = decode(encoding, value);
-      Serial.printf("Encoder: %s\n", str.c_str());
+      Serial.printf("Encoder: %s\n", toUTF8(encoding, value, valueLen));
       break;
     case M("TBPM"):
     case M("TBP"):
-      str = decode(encoding, value);
-      Serial.printf("BPM: %s\n", str.c_str());
+      Serial.printf("BPM: %s\n", toUTF8(encoding, value, valueLen));
       break;
     default:
-      Serial.printf("**** %d: %s(%d): %s\n", vers, field, encoding, value);
+      Serial.printf("**** %d: %s(%d): %s\n", vers, field, encoding, toUTF8(encoding, value, valueLen));
       break;
   }
 }

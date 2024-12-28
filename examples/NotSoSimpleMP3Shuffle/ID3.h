@@ -26,7 +26,6 @@
 
 #include <Arduino.h>
 #include <FS.h>
-#include <string>
 
 // Check if there is an ID3 header and decode frames with a callback
 extern void processID3(File f, void(*cb)(int vers, char *field, int encoding, char *value, int valueLen));
@@ -36,8 +35,8 @@ static inline constexpr uint32_t M(const char *s) {
   return s[0] | (s[1] << 8) | (s[2] << 16) | (s[3] << 24);
 }
 
-// Convert a UTF-16 encoded string to a UTF-8 one for easier display
-std::string decode(int encoding, char *str);
+// Convert a potentially UTF-16 encoded string to a UTF-8 one for easier display.  Only 1 shared buffer so copy out before calling again!
+const char *toUTF8(int encoding, const char *str, int strBytes);
 
 // strlen for utf-16 without alignment restriction of std library
 int myu16strlen(const char *ptr);
