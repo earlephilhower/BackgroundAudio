@@ -71,8 +71,10 @@ jobs:
     - name: Build examples RP2040
       run: |
         mkdir rp2040
-        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -exec bash ./tests/build-ci.sh \{\} rp2040:rp2040:rpipico rp2040 \;
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci.sh rp2040:rp2040:rpipico rp2040
+        size rp2040/*.elf
     - name: Build examples RP2350
       run: |
         mkdir rp2350
-        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -exec bash ./tests/build-ci.sh \{\} rp2040:rp2040:rpipico2 rp2350 \;
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci.sh rp2040:rp2040:rpipico2 rp2350
+        size rp2350/*.elf
