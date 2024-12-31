@@ -65,7 +65,8 @@ jobs:
         ./arduino-cli config set library.enable_unsafe_install true
         ./arduino-cli core update-index
         ./arduino-cli core install rp2040:rp2040
-        sed -i  's/-Wextra/-Wextra -Werror -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Enable -Werror
+        sed -i 's/-Wextra/-Wextra -Werror/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Enable -Werror
+        sed -i 's/-std=gnu++17/-std=gnu++17 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
         mkdir -p ~/Arduino/libraries
         cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
     - name: Build examples RP2040
