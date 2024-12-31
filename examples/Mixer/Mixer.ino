@@ -30,7 +30,7 @@ void setup() {
 
   wav.setDevice(mixer.add());
   aac.setDevice(mixer.add());
-  
+
   // Start the background player
   mixer.begin();
   wav.begin();
