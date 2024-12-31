@@ -33,15 +33,19 @@
 template<class DataBuffer>
 class BackgroundAudioAACClass {
 public:
+    BackgroundAudioAACClass() {
+        _playing = false;
+        _out = nullptr;
+    }
     BackgroundAudioAACClass(AudioOutputBase &d) {
         _playing = false;
-        setDevice(d);
+        setDevice(&d);
     }
     ~BackgroundAudioAACClass() {}
 
-    bool setDevice(AudioOutputBase &d) {
+    bool setDevice(AudioOutputBase *d) {
         if (!_playing) {
-            _out = &d;
+            _out = d;
             return true;
         }
         return false;
