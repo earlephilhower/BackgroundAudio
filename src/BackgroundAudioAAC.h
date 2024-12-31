@@ -174,7 +174,7 @@ private:
                 _accumShift = inBuff - _ib.buffer();
                 _frames++;
                 if (fi.nChans == 1) {
-                    for (size_t i = 0; i < _outSamples; i++) {
+                    for (int i = 0; i < _outSamples; i++) {
                         _outSample[i][1] = _outSample[1][0];
                     }
                 }
@@ -192,7 +192,7 @@ private:
     }
 
     void pump() {
-        while (_out->availableForWrite() >= framelen) {
+        while (_out->availableForWrite() >= (int)framelen) {
             generateOneFrame();
             if (_sampleRate) {
                 _out->setFrequency(_sampleRate);

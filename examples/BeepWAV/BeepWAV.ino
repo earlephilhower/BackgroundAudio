@@ -13,7 +13,7 @@
 
 #include <BackgroundAudioWAV.h>
 #include <PWMAudio.h>
-#include "wav.h"
+#include <__example_beepwav.h>
 
 PWMAudio pwm(0);
 ROMBackgroundAudioWAV BMP(pwm);
@@ -31,7 +31,7 @@ uint32_t last = 0;
 void loop() {
   if (BOOTSEL) {
     BMP.flush(); // Stop any existing output, reset for new file
-    BMP.write(wav, sizeof(wav));
+    BMP.write(beepwav, sizeof(beepwav));
     while (BOOTSEL) {
       /* wait for button release */
       delay(1);

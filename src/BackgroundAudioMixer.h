@@ -39,7 +39,7 @@ class BackgroundAudioMixerInput : public AudioOutputBase {
 private:
   // Forward definitions
   template<size_t> friend class BackgroundAudioMixer;
-  typedef struct AudioBuffer;
+  struct AudioBuffer;
 
 public:
   BackgroundAudioMixerInput(int outputRate, size_t outputBufferWords) {
@@ -80,7 +80,7 @@ public:
   }
 
   virtual bool setFrequency(int freq) override {
-    if (_inputRate != freq) {
+    if ((int)_inputRate != freq) {
       _readOff = 0;
     }
 

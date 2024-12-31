@@ -1,8 +1,8 @@
-// PlayWAV - Earle F. Philhower, III <earlephilhower@yahoo.com>
+// Mixer - Earle F. Philhower, III <earlephilhower@yahoo.com>
 // Released to the public domain December 2024.
 //
-// When BOOTSEL preseed, plays a small WAV file from ROM
-// asynchronously with a single call.
+// Plays an AAC from ROM to the speaker and overlays "beep" when
+// BOOTSEL is pressed.
 // Hook up an earphone to pins 0, 1, and GND to hear the PWM output.
 //
 // Generate the ROM file by using "xxd -i file.wav file.h" and then
@@ -15,8 +15,8 @@
 #include <BackgroundAudioAAC.h>
 #include <BackgroundAudioMixer.h>
 #include <PWMAudio.h>
-#include "wav.h"
-#include "pianoaac.h"
+#include <__example_beepwav.h>
+#include <__example_pianoaac.h>
 
 PWMAudio pwm(0);
 BackgroundAudioMixer<512> mixer(pwm, 44100);
