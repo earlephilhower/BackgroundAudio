@@ -46,7 +46,7 @@
 
 #include "sbr.h"
 
-#define DPROGMEM __attribute__(( section(".data") ))
+#define DPROGMEM __attribute__(( section(".time_critical.data") ))
 
 /*  k0Tab[sampRateIdx][k] = k0 = startMin + offset(bs_start_freq) for given sample rate (4.6.18.3.2.1)
     downsampled (single-rate) SBR not currently supported
