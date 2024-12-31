@@ -26,7 +26,6 @@
 #include "BackgroundAudioBuffers.h"
 #include "libhelix-aac/aacdec.h"
 
-
 // Interrupt-driven AAC decoder.  Generates a full frame of samples each cycle
 // and uses the RawBuffer to safely hand data from the app to the decompressor.
 // Templated to avoid VTable indirection while supporting I2S and PWM.
@@ -56,7 +55,7 @@ public:
             return false;
         }
 
-        _hAACDecoder = AACInitDecoder();
+        _hAACDecoder = AACInitDecoderPre(_private, sizeof(_private));
         if (!_hAACDecoder) {
             return false;
         }
@@ -82,7 +81,7 @@ public:
     void end() {
         if (_playing) {
             _out->end();
-            AACFreeDecoder(_hAACDecoder);
+            //AACFreeDecoder(_hAACDecoder);
         }
     }
 
@@ -200,6 +199,7 @@ private:
 private:
     AudioOutputBase *_out = nullptr;
     HAACDecoder _hAACDecoder;
+    uint8_t _private[/*sizeof(AACDecInfo)*/ 96 + /*sizeof(PSInfoBase)*/ 28752 + /*sizeof(PSInfoSBR)*/ 50788 + 16];
     bool _playing = false;
     static const size_t framelen = 2048;
     int16_t _outSample[framelen][2] __attribute__((aligned(4)));
