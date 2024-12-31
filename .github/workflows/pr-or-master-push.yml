@@ -10,6 +10,7 @@ on:
 jobs:
 
   lint:
+    name: Arduino library linter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,9 +18,9 @@ jobs:
         with:
           library-manager: 'update'
 
-# Validate orthography
-  code-spell:
-    name: Check spelling
+# Validate orthography, formatting
+  code-spell-astyle:
+    name: Check spelling and formatting
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,3 +34,10 @@ jobs:
       with:
         skip: ./src/libmad,./src/libhelix-aac
         ignore_words_list: ESP8266,esp8266,esp,dout,DOUT,ser,ans,inout,numer,hist,aache,TYE
+    - name: Run astyle on all code/examples
+      run: |
+        sudo apt update
+        sudo apt install astyle
+        ./tests/restyle.sh
+        # If anything changed, GIT should return an error and fail the test
+        git diff --exit-code

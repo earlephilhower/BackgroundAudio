@@ -90,7 +90,7 @@ void scanDirectory(const char *dirname) {
 void setup() {
   // Ensure a different random sequence every time we start up
   srand(rp2040.hwrand32());
-  
+
   // Initialize the SD card
   bool sdInitialized = false;
   if (_MISO == 0 || _MISO == 4 || _MISO == 16) {
