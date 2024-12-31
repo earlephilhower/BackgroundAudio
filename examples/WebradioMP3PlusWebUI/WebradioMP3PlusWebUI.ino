@@ -246,7 +246,7 @@ void loop() {
   // Can do UI processing, etc. at this point  Just be sure to run loop() often enough to get the 20-30KB/s of transfers needed for MP3 streaming
   if ((millis() - last) > 1000) {
     last = millis();
-    sprintf((char *)buff, "buffer: %d, frames %d, shifts %d, underflows %d, errors %d, dumps %d, uptime %d", mp3.available(), mp3.frames(), mp3.shifts(), mp3.underflows(), mp3.errors(), mp3.dumps(), last);
+    sprintf((char *)buff, "buffer: %d, frames %lu, shifts %lu, underflows %lu, errors %lu, dumps %lu, uptime %lu", mp3.available(), mp3.frames(), mp3.shifts(), mp3.underflows(), mp3.errors(), mp3.dumps(), last);
     Serial.println((char*)buff);
     status = (char*)buff;
   }
