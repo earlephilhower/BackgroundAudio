@@ -48,7 +48,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnarrowing"
 
-#define DPROGMEM __attribute__(( section(".data") ))
+#define DPROGMEM __attribute__(( section(".time_critical.data") ))
 
 const int cos4sin4tabOffset[NUM_IMDCT_SIZES] DPROGMEM = {0, 128};
 
