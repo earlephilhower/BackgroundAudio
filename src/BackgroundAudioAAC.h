@@ -33,15 +33,19 @@
 template<class DataBuffer>
 class BackgroundAudioAACClass {
 public:
+    BackgroundAudioAACClass() {
+        _playing = false;
+        _out = nullptr;
+    }
     BackgroundAudioAACClass(AudioOutputBase &d) {
         _playing = false;
-        setDevice(d);
+        setDevice(&d);
     }
     ~BackgroundAudioAACClass() {}
 
-    bool setDevice(AudioOutputBase &d) {
+    bool setDevice(AudioOutputBase *d) {
         if (!_playing) {
-            _out = &d;
+            _out = d;
             return true;
         }
         return false;
@@ -170,7 +174,7 @@ private:
                 _accumShift = inBuff - _ib.buffer();
                 _frames++;
                 if (fi.nChans == 1) {
-                    for (size_t i = 0; i < _outSamples; i++) {
+                    for (int i = 0; i < _outSamples; i++) {
                         _outSample[i][1] = _outSample[1][0];
                     }
                 }
@@ -188,7 +192,7 @@ private:
     }
 
     void pump() {
-        while (_out->availableForWrite() >= framelen) {
+        while (_out->availableForWrite() >= (int)framelen) {
             generateOneFrame();
             if (_sampleRate) {
                 _out->setFrequency(_sampleRate);

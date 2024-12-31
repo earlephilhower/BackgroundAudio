@@ -30,15 +30,19 @@
 template<class DataBuffer>
 class BackgroundAudioWAVClass {
 public:
+    BackgroundAudioWAVClass() {
+        _playing = false;
+        _out = nullptr;
+    }
     BackgroundAudioWAVClass(AudioOutputBase &d) {
         _playing = false;
-        setDevice(d);
+        setDevice(&d);
     }
     ~BackgroundAudioWAVClass() {}
 
-    bool setDevice(AudioOutputBase &d) {
+    bool setDevice(AudioOutputBase *d) {
         if (!_playing) {
-            _out = &d;
+            _out = d;
             return true;
         }
         return false;
@@ -65,7 +69,7 @@ public:
         _out->begin();
 
         // Stuff with silence to start
-        uint16_t zeros[32] = {};
+        uint32_t zeros[32] = {};
         while (_out->availableForWrite() > 32) {
             _out->write((uint8_t *)zeros, sizeof(zeros));
         }
@@ -237,6 +241,7 @@ private:
                     if ((_channels == 0) || (_channels > 2) || !((_bps == 8) || (_bps == 16)) || (_sampleRate < 4000) || (_sampleRate > 48000)) {
                         // Invalid config, we can't play
                         _errors++;
+                        _sampleRate = 0;
                         _seenRIFF = false;
                         _accumShift++;
                         continue;

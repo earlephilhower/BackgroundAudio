@@ -20,6 +20,7 @@
 */
 
 #pragma once
-#include <BackgroundAudioAAC.h>
-#include <BackgroundAudioMP3.h>
-#include <BackgroundAudioWAV.h>
+#include "BackgroundAudioAAC.h"
+#include "BackgroundAudioMP3.h"
+#include "BackgroundAudioWAV.h"
+#include "BackgroundAudioMixer.h"

@@ -12,7 +12,7 @@
 
 #include <BackgroundAudioAAC.h>
 #include <I2S.h>
-#include "pianoaac.h"
+#include <__example_pianoaac.h>
 
 I2S i2s(OUTPUT, 0, 2);
 ROMBackgroundAudioAAC BMP(i2s);
