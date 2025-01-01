@@ -19,7 +19,7 @@
 #include <__example_pianoaac.h>
 
 PWMAudio pwm(0);
-BackgroundAudioMixer<512> mixer(pwm, 44100);
+BackgroundAudioMixer<640> mixer(pwm, 44100);
 ROMBackgroundAudioWAV wav;
 ROMBackgroundAudioAAC aac;
 
