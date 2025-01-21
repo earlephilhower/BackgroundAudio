@@ -28,7 +28,11 @@ class RawDataBuffer {
 public:
     RawDataBuffer() {
         _len = 0;
+#if defined(ESP32)
+        _mtx = portMUX_INITIALIZER_UNLOCKED;
+#else
         mutex_init(&_mtx);
+#endif
     }
 
     ~RawDataBuffer() {
@@ -52,32 +56,52 @@ public:
     }
 
     inline size_t write(const uint8_t *data, size_t cnt) {
+#if defined(ESP32)
+        taskENTER_CRITICAL(&_mtx);
+#else
         noInterrupts();
         mutex_enter_blocking(&_mtx);
+#endif
         size_t maxWritable = count - _len;
         size_t toWrite = std::min(cnt, maxWritable);
         memcpy(_buff + _len, data, toWrite);
         _len += toWrite;
+#if defined(ESP32)
+        taskEXIT_CRITICAL(&_mtx);
+#else
         mutex_exit(&_mtx);
         interrupts();
+#endif
         return toWrite;
     }
 
     inline size_t write0(size_t cnt) {
+#if defined(ESP32)
+        taskENTER_CRITICAL(&_mtx);
+#else
         noInterrupts();
         mutex_enter_blocking(&_mtx);
+#endif
         size_t maxWritable = count - _len;
         size_t toWrite = std::min(cnt, maxWritable);
         bzero(_buff + _len, toWrite);
         _len += toWrite;
+#if defined(ESP32)
+        taskEXIT_CRITICAL(&_mtx);
+#else
         mutex_exit(&_mtx);
         interrupts();
+#endif        
         return toWrite;
     }
 
     inline void shiftUp(size_t cnt) {
+#if defined(ESP32)
+        taskENTER_CRITICAL(&_mtx);
+#else
         noInterrupts();
         mutex_enter_blocking(&_mtx);
+#endif
         if (cnt <= _len) {
             size_t toShift = _len - cnt;
             memmove(_buff, _buff + cnt, toShift);
@@ -85,8 +109,12 @@ public:
         } else {
             _len = 0;
         }
+#if defined(ESP32)
+        taskEXIT_CRITICAL(&_mtx);
+#else
         mutex_exit(&_mtx);
         interrupts();
+#endif
     }
 
     inline void flush() {
@@ -97,7 +125,11 @@ private:
     static const size_t count = bytes;
     uint8_t _buff[count];
     size_t _len;
+#if defined(ESP32)
+    portMUX_TYPE _mtx;
+#else
     mutex_t _mtx;
+#endif
 };
 
 
@@ -107,7 +139,11 @@ public:
         _buff = nullptr;
         _len = 0;
         _count = 0;
+#if defined(ESP32)
+        _mtx = portMUX_INITIALIZER_UNLOCKED;
+#else
         mutex_init(&_mtx);
+#endif
     }
 
     ~ROMDataBuffer() {
@@ -142,16 +178,24 @@ public:
     }
 
     inline void shiftUp(size_t cnt) {
+#if defined(ESP32)
+        taskENTER_CRITICAL(&_mtx);
+#else
         noInterrupts();
         mutex_enter_blocking(&_mtx);
+#endif
         if (cnt <= _len) {
             _buff += cnt;
             _len -= cnt;
         } else {
             _len = 0;
         }
+#if defined(ESP32)
+        taskEXIT_CRITICAL(&_mtx);
+#else
         mutex_exit(&_mtx);
         interrupts();
+#endif
     }
 
     inline void flush() {
@@ -162,5 +206,9 @@ private:
     const uint8_t *_buff;
     size_t _len;
     size_t _count;
+#if defined(ESP32)
+    portMUX_TYPE _mtx;
+#else
     mutex_t _mtx;
+#endif
 };

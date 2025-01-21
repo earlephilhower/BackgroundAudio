@@ -21,7 +21,7 @@
 
 #pragma once
 #include <Arduino.h>
-#include <AudioOutputBase.h>
+#include "WrappedAudioOutputBase.h"
 #include <vector>
 
 // The mixer input will buffer output from one audio source and resample to
@@ -188,8 +188,7 @@ public:
     }
 
 private:
-    // Can't use std::list because we need to put in RAM for IRQ use, so roll our own
-    void __not_in_flash_func(_addToList)(AudioBuffer **list, AudioBuffer *element) {
+    void _addToList(AudioBuffer **list, AudioBuffer *element) {
         noInterrupts();
         // Find end of list, if any
         while ((*list) && ((*list)->next != nullptr)) {
@@ -204,7 +203,7 @@ private:
         interrupts();
     }
 
-    AudioBuffer *__not_in_flash_func(_takeFromList)(AudioBuffer **list) {
+    AudioBuffer *_takeFromList(AudioBuffer **list) {
         noInterrupts();
         auto ret = *list;
         if (ret) {

@@ -8,8 +8,6 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <BackgroundAudio.h>
-#include <I2S.h>
-#include <PWMAudio.h>
 #include <WebServer.h>
 
 #ifndef STASSID
@@ -20,13 +18,25 @@
 const char *ssid = STASSID;
 const char *pass = STAPSK;
 
+#ifdef ESP32
+#include <ESP32I2SAudio.h>
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
+#else
+#include <I2S.h>
+#include <PWMAudio.h>
 // Uncomment either the PWM or I2S version, being sure to adjust the PWM pin or (BCLK,DATA) pins.
 I2S audio(OUTPUT, 0, 2);
 //PWMAudio audio(0);
+#endif
+
 BackgroundAudioMP3 mp3(audio);
+#ifdef ESP32
+NetworkClientSecure client;
+#else
 WiFiClientSecure client;  // Because URL is HTTPS, need a WiFiSecureClient.  Plain HTTP can use WiFiClient
-HTTPClient http;
+#endif
 String url = "https://cromwell-ice.streamguys1.com/WCJZFM"; // "https://ice.audionow.com/485BBCWorld.mp3"; // Check out https://fmstream.org/index.php?c=FT for others
+HTTPClient http;
 uint8_t buff[512]; // HTTP reads into this before sending to MP3
 WebServer web(80); // The HTTP interface for remote control
 
@@ -90,10 +100,12 @@ Change URL: <input type="text" name="url">
 
 
 void ConnectWiFi() {
+#ifndef ESP32
   WiFi.end();
+#endif
   Serial.print("Connecting to WiFi...");
   WiFi.begin(ssid, pass);
-  while (!WiFi.connected()) {
+  while (!WiFi.isConnected()) {
     Serial.print("..");
     delay(100);
   }
@@ -131,6 +143,7 @@ void handleURL() {
 }
 
 void setup() {
+  Serial.begin(115200);
   delay(5000);
   printHelp();
   client.setInsecure(); // Don't worry about certs, just use encryption
@@ -148,7 +161,7 @@ void loop() {
   static uint32_t last = 0;
 
   // Ensure WiFi is up.  If not, retry
-  if (!WiFi.connected()) {
+  if (!WiFi.isConnected()) {
     ConnectWiFi();
     return;
   }

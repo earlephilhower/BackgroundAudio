@@ -27,7 +27,13 @@ uint32_t aacframes = 0;
 uint32_t aacheframes = 0;
 uint32_t mp3frames = 0;
 
+#ifdef ESP32
+#define rp2040 ESP
+#define getCycleCount64 getCycleCount
+#endif
+
 void setup() {
+  Serial.begin(115200);
   _hAACDecoder = AACInitDecoder();
   int idx = 0;
   uint64_t now = rp2040.getCycleCount64();
