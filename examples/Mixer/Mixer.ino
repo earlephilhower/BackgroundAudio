@@ -25,7 +25,7 @@ ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
 PWMAudio audio(0);
 #endif
 
-BackgroundAudioMixer<512> mixer(audio, 44100);
+BackgroundAudioMixer<640> mixer(audio, 44100);
 ROMBackgroundAudioWAV wav;
 ROMBackgroundAudioAAC aac;
 

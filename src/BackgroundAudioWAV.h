@@ -246,6 +246,7 @@ private:
                         _accumShift++;
                         continue;
                     }
+                    _accumShift += 24;
                     _seenFMT = true;
                 } else if (_seenRIFF && _seenFMT && !_seenDATA && !memcmp(b, "data", 4)) {
                     if (avail < 8) {

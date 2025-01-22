@@ -244,7 +244,6 @@ private:
                 }
                 if (!_filled) {
                     _underflow = true;
-                    digitalWrite(LED_BUILTIN, LOW);
                 }
                 *(p++) = _filled ? _filled->buff[_readOff++] : _silenceSample;
             }
@@ -260,7 +259,6 @@ private:
                 }
                 if (!_filled) {
                     _underflow = true;
-                    digitalWrite(LED_BUILTIN, LOW);
                 }
                 *(p++) = _filled ? _filled->buff[_readOff >> 16] : _silenceSample;
                 if (_filled) {
