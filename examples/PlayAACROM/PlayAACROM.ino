@@ -15,7 +15,7 @@
 
 #ifdef ESP32
 #include <ESP32I2SAudio.h>
-ESP32I2SAudio i2s(4, 5, 6); // BCLK, LRCLK, DOUT
+ESP32I2SAudio i2s(4, 5, 6); // BCLK, LRCLK, DOUT (,MCLK)
 #else
 #include <I2S.h>
 I2S i2s(OUTPUT, 0, 2);

@@ -41,7 +41,7 @@ const int _SCK = 6;
 
 #ifdef ESP32
 #include <ESP32I2SAudio.h>
-ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT (,MCLK)
 #else
 #include <PWMAudio.h>
 #include <I2S.h>

@@ -35,12 +35,16 @@ class BackgroundAudioAACClass {
 public:
     BackgroundAudioAACClass() {
         _playing = false;
+        _paused = false;
         _out = nullptr;
     }
+
     BackgroundAudioAACClass(AudioOutputBase &d) {
         _playing = false;
+        _paused = false;
         setDevice(&d);
     }
+
     ~BackgroundAudioAACClass() {}
 
     bool setDevice(AudioOutputBase *d) {
@@ -137,6 +141,18 @@ public:
         interrupts();
     }
 
+    void pause() {
+        _paused = true;
+    }
+
+    bool paused() {
+        return _paused;
+    }
+
+    void unpause() {
+        _paused = false;
+    }
+
 private:
     static void _cb(void *ptr) {
         ((BackgroundAudioAACClass*)ptr)->pump();
@@ -193,9 +209,13 @@ private:
 
     void pump() {
         while (_out->availableForWrite() >= (int)framelen) {
-            generateOneFrame();
-            if (_sampleRate) {
-                _out->setFrequency(_sampleRate);
+            if (_paused) {
+                bzero((uint8_t *)_outSample, _outSamples * 2 * sizeof(int16_t));
+            } else {
+                generateOneFrame();
+                if (_sampleRate) {
+                    _out->setFrequency(_sampleRate);
+                }
             }
             _out->write((uint8_t *)_outSample, _outSamples * 2 * sizeof(int16_t));
         }
@@ -205,6 +225,7 @@ private:
     AudioOutputBase *_out = nullptr;
     HAACDecoder _hAACDecoder;
     bool _playing = false;
+    bool _paused = false;
     static const size_t framelen = 2048;
     int16_t _outSample[framelen][2] __attribute__((aligned(4)));
     int _outSamples = 1024;

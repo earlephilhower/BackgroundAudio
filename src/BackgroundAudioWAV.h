@@ -32,10 +32,12 @@ class BackgroundAudioWAVClass {
 public:
     BackgroundAudioWAVClass() {
         _playing = false;
+        _paused = false;
         _out = nullptr;
     }
     BackgroundAudioWAVClass(AudioOutputBase &d) {
         _playing = false;
+        _paused = false;
         setDevice(&d);
     }
     ~BackgroundAudioWAVClass() {}
@@ -132,6 +134,18 @@ public:
         _dataRemaining = 0;
         _accumShift = 0;
         interrupts();
+    }
+
+    void pause() {
+        _paused = true;
+    }
+
+    bool paused() {
+        return _paused;
+    }
+
+    void unpause() {
+        _paused = false;
     }
 
 private:
@@ -292,9 +306,13 @@ underflow:
 
     void pump() {
         while (_out->availableForWrite() >= (int)framelen) {
-            generateOneFrame();
-            if (_sampleRate) {
-                _out->setFrequency(_sampleRate);
+            if (_paused) {
+                bzero((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
+            } else {
+                generateOneFrame();
+                if (_sampleRate) {
+                    _out->setFrequency(_sampleRate);
+                }
             }
             _out->write((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
         }
@@ -303,6 +321,7 @@ underflow:
 private:
     AudioOutputBase *_out;
     bool _playing = false;
+    bool _paused = false;
     static const size_t framelen = 512;
     DataBuffer _ib;
     int16_t _outSample[framelen * 2] __attribute__((aligned(4)));
