@@ -36,11 +36,15 @@ public:
     BackgroundAudioMP3Class() {
         _playing = false;
         _out = nullptr;
+        _paused = false;
     }
+
     BackgroundAudioMP3Class(AudioOutputBase &d) {
         _playing = false;
+        _paused = false;
         setDevice(&d);
     }
+
     ~BackgroundAudioMP3Class() {}
 
     bool setDevice(AudioOutputBase *d) {
@@ -128,6 +132,18 @@ public:
         return _dumps;
     }
 
+    void pause() {
+        _paused = true;
+    }
+
+    bool paused() {
+        return _paused;
+    }
+
+    void unpause() {
+        _paused = false;
+    }
+
     void flush() {
         noInterrupts();
         _ib.flush();
@@ -211,9 +227,13 @@ private:
 
     void pump() {
         while (_out->availableForWrite() >= (int)framelen) {
-            generateOneFrame();
-            if (_synth.pcm.samplerate) {
-                _out->setFrequency(_synth.pcm.samplerate);
+            if (_paused) {
+                bzero(_synth.pcm.samplesX, _synth.pcm.length * 4);
+            } else {
+                generateOneFrame();
+                if (_synth.pcm.samplerate) {
+                    _out->setFrequency(_synth.pcm.samplerate);
+                }
             }
             _out->write((uint8_t *)_synth.pcm.samplesX, _synth.pcm.length * 4);
         }
@@ -222,6 +242,7 @@ private:
 private:
     AudioOutputBase *_out;
     bool _playing = false;
+    bool _paused = false;
     static const size_t framelen = 1152;
     static const size_t maxFrameSize = 2881;
     DataBuffer _ib;

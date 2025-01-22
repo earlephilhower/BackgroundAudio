@@ -11,8 +11,8 @@
 #include <WebServer.h>
 
 #ifndef STASSID
-#define STASSID "your-ssid"
-#define STAPSK "your-password"
+#define STASSID "NOBABIES"
+#define STAPSK "ElephantsAreGreat"
 #endif
 
 const char *ssid = STASSID;
@@ -20,7 +20,7 @@ const char *pass = STAPSK;
 
 #ifdef ESP32
 #include <ESP32I2SAudio.h>
-ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT (, MCLK)
 #else
 #include <I2S.h>
 #include <PWMAudio.h>
@@ -29,12 +29,23 @@ I2S audio(OUTPUT, 0, 2);
 //PWMAudio audio(0);
 #endif
 
-BackgroundAudioMP3 mp3(audio);
+#ifdef ESP32
+// The ESP32 devices seem to have very variable HTTP performance.  Increase the buffer here to sort-of compensate
+#define STREAMBUFF (32 * 1024)
+#else
+// Pico and PicoW work well with much smaller compressed/raw buffer...
+#define STREAMBUFF (16 * 1024)
+#endif
+
+// Instantiate a MP3 player with the specified raw (compressed) data buffer
+BackgroundAudioMP3Class<RawDataBuffer<STREAMBUFF>> mp3(audio);
+
 #ifdef ESP32
 NetworkClientSecure client;
 #else
 WiFiClientSecure client;  // Because URL is HTTPS, need a WiFiSecureClient.  Plain HTTP can use WiFiClient
 #endif
+
 String url = "https://cromwell-ice.streamguys1.com/WCJZFM"; // "https://ice.audionow.com/485BBCWorld.mp3"; // Check out https://fmstream.org/index.php?c=FT for others
 HTTPClient http;
 uint8_t buff[512]; // HTTP reads into this before sending to MP3
@@ -212,6 +223,14 @@ void loop() {
       return; // Error in the read
     }
     mp3.write(buff, read);
+
+    // If we drop too low, pause playback to let us catch up
+    if (mp3.available() < 1024) {
+      mp3.pause();
+    } else if (mp3.paused() && mp3.available() > (STREAMBUFF / 2)) { // When paused wait until kind-of full before restarting
+      mp3.unpause();
+    }
+
     icyDataLeft -= read;
     if (icyMetaInt && !icyDataLeft) {
       while (!stream->available() && stream->connected()) {

@@ -19,7 +19,7 @@
 
 #ifdef ESP32
 #include <ESP32I2SAudio.h>
-ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT (,MCLK)
 #else
 #include <PWMAudio.h>
 PWMAudio audio(0);
