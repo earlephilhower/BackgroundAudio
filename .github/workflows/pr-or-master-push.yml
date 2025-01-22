@@ -81,3 +81,32 @@ jobs:
         rm -f *.elf
         find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci.sh rp2040:rp2040:rpipico2 rp2350
         size ./*.elf
+
+# Build all ESP32
+  build-all-esp32:
+    name: Build all examples on Arduino-ESP32 latest release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Install Arduino-CLI, ESP32 core, this library
+      run: |
+        wget https://downloads.arduino.cc/arduino-cli/nightly/arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        tar xf arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        ./arduino-cli config init
+        ./arduino-cli config add board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+        ./arduino-cli config set library.enable_unsafe_install true
+        ./arduino-cli core update-index
+        ./arduino-cli core install esp32:esp32
+        mkdir -p ~/Arduino/libraries
+        cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
+    - name: Build examples ESP32C6
+      run: |
+        mkdir esp32c6
+        rm -f *.elf
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci-esp32.sh esp32:esp32:esp32c6 esp32c6
+        size ./*.elf
