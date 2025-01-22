@@ -12,13 +12,20 @@
 // Intended as a simple demonstration of BackgroundAudio usage.
 
 #include <BackgroundAudioWAV.h>
-#include <PWMAudio.h>
 #include <__example_beepwav.h>
 
-PWMAudio pwm(0);
-ROMBackgroundAudioWAV BMP(pwm);
+#ifdef ESP32
+#include <ESP32I2SAudio.h>
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
+#else
+#include <PWMAudio.h>
+PWMAudio audio(0);
+#endif
+ROMBackgroundAudioWAV BMP(audio);
 
 void setup() {
+  Serial.begin(115200);
+
   // Signal we've started
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -29,6 +36,14 @@ void setup() {
 
 uint32_t last = 0;
 void loop() {
+#ifdef ESP32
+  if (millis() - last > 3500) {
+    Serial.printf("Runtime: %lu, %d\r\n", millis(), audio._frames);
+    last = millis();
+    BMP.flush(); // Stop any existing output, reset for new file
+    BMP.write(beepwav, sizeof(beepwav));
+  }
+#else
   if (BOOTSEL) {
     BMP.flush(); // Stop any existing output, reset for new file
     BMP.write(beepwav, sizeof(beepwav));
@@ -42,4 +57,5 @@ void loop() {
     Serial.printf("Runtime: %lu\r\n", millis());
     last = millis();
   }
+#endif
 }

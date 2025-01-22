@@ -21,7 +21,7 @@
 
 #pragma once
 #include <Arduino.h>
-#include <AudioOutputBase.h>
+#include "WrappedAudioOutputBase.h"
 #include "BackgroundAudioBuffers.h"
 #include "BackgroundAudioGain.h"
 

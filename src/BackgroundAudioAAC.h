@@ -21,7 +21,7 @@
 
 #pragma once
 #include <Arduino.h>
-#include <AudioOutputBase.h>
+#include "WrappedAudioOutputBase.h"
 #include "BackgroundAudioGain.h"
 #include "BackgroundAudioBuffers.h"
 #include "libhelix-aac/aacdec.h"

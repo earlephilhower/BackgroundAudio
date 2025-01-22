@@ -46,7 +46,11 @@
 
 #include "sbr.h"
 
+#if defined(PICO_RP2040) || defined(PICO_RP2350)
 #define DPROGMEM __attribute__(( section(".time_critical.data") ))
+#else
+#define DPROGMEM PROGMEM
+#endif
 
 /*  k0Tab[sampRateIdx][k] = k0 = startMin + offset(bs_start_freq) for given sample rate (4.6.18.3.2.1)
     downsampled (single-rate) SBR not currently supported
