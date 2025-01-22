@@ -91,7 +91,7 @@ public:
 #else
         mutex_exit(&_mtx);
         interrupts();
-#endif        
+#endif
         return toWrite;
     }
 

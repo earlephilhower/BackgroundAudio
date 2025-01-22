@@ -117,11 +117,11 @@ public:
         i2s_channel_init_std_mode(_tx_handle, &std_cfg);
 
         // Prefill silence and calculate how bug we really have
-        int16_t a[2] = {0,0};
+        int16_t a[2] = {0, 0};
         size_t written = 0;
         do {
-          i2s_channel_preload_data(_tx_handle, (void*)a, sizeof(a), &written);
-          _totalAvailable += written;
+            i2s_channel_preload_data(_tx_handle, (void*)a, sizeof(a), &written);
+            _totalAvailable += written;
         } while (written);
 
         // The IRQ callbacks which will just trigger the playback task
@@ -138,12 +138,12 @@ public:
     }
 
     static bool _onSent(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
-      return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event);
+        return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event);
     }
 
 
     static bool _onSentUnder(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
-      return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event, true);
+        return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event, true);
     }
 
     static void _taskShim(void *pvParameters) {
@@ -162,7 +162,7 @@ public:
             }
             _available += size;
             if (_available > _totalAvailable) {
-              _available = _totalAvailable;
+                _available = _totalAvailable;
             }
             if (_cb) {
                 _cb(_cbData);
@@ -203,18 +203,18 @@ public:
 
     // From Print
     size_t write(const uint8_t *buffer, size_t size) override {
-      size_t written = 0;
-      i2s_channel_write(_tx_handle, buffer, size, &written, 0);
-      noInterrupts(); // TODO - Freertos task protection instead?
-      if (written != size) {
-        _available = 0;
-      } else if (_available >= written) {
-        _available -= written;
-      } else {
-        _available = 0;
-      }
-      interrupts();
-      return  written;
+        size_t written = 0;
+        i2s_channel_write(_tx_handle, buffer, size, &written, 0);
+        noInterrupts(); // TODO - Freertos task protection instead?
+        if (written != size) {
+            _available = 0;
+        } else if (_available >= written) {
+            _available -= written;
+        } else {
+            _available = 0;
+        }
+        interrupts();
+        return  written;
     }
 
     size_t write(uint8_t d) override {
