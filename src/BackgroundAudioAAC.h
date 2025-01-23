@@ -40,6 +40,11 @@ public:
         _out = nullptr;
     }
 
+    /**
+        @brief Construct an AAC decoder with a given AudioOutputBase
+
+        @param [in] d AudioOutputBase device (MixerInput or I2S or PWM, etc.) to decode tp
+    */
     BackgroundAudioAACClass(AudioOutputBase &d) {
         _playing = false;
         _paused = false;
@@ -51,7 +56,7 @@ public:
     /**
            @brief Set an output device before `begin`
 
-           @param [in] device Pointer to `AudioOutputDevice` to send decoded data to
+           @param [in] d Pointer to `AudioOutputDevice` to send decoded data to
 
            @return True on success
     */

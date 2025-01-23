@@ -83,7 +83,7 @@ public:
         @brief Copy a block of memory into the buffer. Will not block
 
         @param [in] data Raw data bytes
-        @param [in] cnd Number of bytes to write
+        @param [in] cnt Number of bytes to write
 
         @return Number of bytes actually written
     */
@@ -109,7 +109,7 @@ public:
     /**
         @brief 0-fill a portion of the buffer
 
-        @param [in] cnd Number of 0 bytes to write
+        @param [in] cnt Number of 0 bytes to write
 
         @return Number of bytes actually written
     */
@@ -252,7 +252,7 @@ public:
         using `flush`.
 
         @param [in] data Raw data bytes
-        @param [in] cnd Number of bytes to write
+        @param [in] cnt Number of bytes to write
 
         @return Number of bytes actually written
     */
@@ -266,7 +266,7 @@ public:
     /**
         @brief 0-fill a portion of the buffer, but will fail because there is no buffer here
 
-        @param [in] cnd Number of 0 bytes to write
+        @param [in] cnt Number of 0 bytes to write
 
         @return 0 due to unsupported
     */
@@ -310,6 +310,9 @@ public:
 #endif
     }
 
+    /**
+        @brief Throw away (flush) the input buffer
+    */
     inline void flush() {
         _len  = 0;
     }

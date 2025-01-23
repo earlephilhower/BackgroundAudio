@@ -397,6 +397,12 @@ private:
 template<size_t _outWords = 512>
 class BackgroundAudioMixer {
 public:
+    /**
+        @brief Construct a mixer with output device and constant sample rate
+
+        @param [in] d AudioOutputBase to actually output sound to
+        @param [in] outputRate Fixed output sample rate.  All input legs will be resampled to this rate.
+    */
     BackgroundAudioMixer(AudioOutputBase &d, int outputRate) {
         _running = false;
         _out = &d;
