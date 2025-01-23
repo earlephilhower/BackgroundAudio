@@ -262,11 +262,11 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            uint32_t ulNotifiedValue;</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            xTaskNotifyWait(0, ULONG_MAX, &amp;ulNotifiedValue, portMAX_DELAY);</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            <span class="comment">// One DMA transfer == one frame</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            _frames++;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <a class="code hl_variable" href="classESP32I2SAudio.html#a94a92b72c96346eed0eca033fcf43494">_frames</a>++;</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="comment">// Use the notification value to transmit how much data was in the DMA block.  When negative this was an underflow notification</span></div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            int32_t size = (int32_t)ulNotifiedValue;</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keywordflow">if</span> (size &lt; 0) {</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                _underflows++;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                <a class="code hl_variable" href="classESP32I2SAudio.html#a274d216f7f1b29a5a0797ed004dd6d74">_underflows</a>++;</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                size = -size;</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            }</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="comment">// Track the amount believed available, with some sanity checking</span></div>
@@ -282,114 +282,117 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    }</div>
 </div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    uint32_t _irqs = 0; <span class="comment">// Number of I2S IRQs received</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    uint32_t _frames = 0; <span class="comment">// Number of DMA buffers sent</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    uint32_t _underflows = 0; <span class="comment">// Number of underflowed DMA buffers</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
-<div class="foldopen" id="foldopen00268" data-start="{" data-end="}">
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">  268</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">_onSentCB</a>(i2s_chan_handle_t handle, i2s_event_data_t *event, <span class="keywordtype">bool</span> underflow = <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        BaseType_t xHigherPriorityTaskWoken;</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        xHigherPriorityTaskWoken = pdFALSE;</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keywordflow">if</span> (_taskHandle) {</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            _irqs++;</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            xTaskNotifyFromISR(_taskHandle, event-&gt;size * (underflow ? -1 : 1), eSetValueWithOverwrite, &amp;xHigherPriorityTaskWoken);</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        }</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keywordflow">return</span> (<span class="keywordtype">bool</span>)xHigherPriorityTaskWoken;</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    }</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a7802da4433e6e81485e0eaf4db9b9fe6">  262</a></span>    uint32_t <a class="code hl_variable" href="classESP32I2SAudio.html#a7802da4433e6e81485e0eaf4db9b9fe6">_irqs</a> = 0; <span class="comment">// Number of I2S IRQs received</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a94a92b72c96346eed0eca033fcf43494">  266</a></span>    uint32_t <a class="code hl_variable" href="classESP32I2SAudio.html#a94a92b72c96346eed0eca033fcf43494">_frames</a> = 0; <span class="comment">// Number of DMA buffers sent</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a274d216f7f1b29a5a0797ed004dd6d74">  270</a></span>    uint32_t <a class="code hl_variable" href="classESP32I2SAudio.html#a274d216f7f1b29a5a0797ed004dd6d74">_underflows</a> = 0; <span class="comment">// Number of underflowed DMA buffers</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
+<div class="foldopen" id="foldopen00277" data-start="{" data-end="}">
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">  277</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">_onSentCB</a>(i2s_chan_handle_t handle, i2s_event_data_t *event, <span class="keywordtype">bool</span> underflow = <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        BaseType_t xHigherPriorityTaskWoken;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        xHigherPriorityTaskWoken = pdFALSE;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="keywordflow">if</span> (_taskHandle) {</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            <a class="code hl_variable" href="classESP32I2SAudio.html#a7802da4433e6e81485e0eaf4db9b9fe6">_irqs</a>++;</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            xTaskNotifyFromISR(_taskHandle, event-&gt;size * (underflow ? -1 : 1), eSetValueWithOverwrite, &amp;xHigherPriorityTaskWoken);</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        }</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        <span class="keywordflow">return</span> (<span class="keywordtype">bool</span>)xHigherPriorityTaskWoken;</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    }</div>
 </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="foldopen" id="foldopen00284" data-start="{" data-end="}">
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">  284</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">end</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="comment">// TODO</span></div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    }</div>
-</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
-<div class="foldopen" id="foldopen00294" data-start="{" data-end="}">
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a9e69f88f55b6d98fba857d966bddcdef">  294</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a9e69f88f55b6d98fba857d966bddcdef">getUnderflow</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>; <span class="comment">// TODO</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="foldopen" id="foldopen00293" data-start="{" data-end="}">
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">  293</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">end</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="comment">// TODO</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    }</div>
 </div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="foldopen" id="foldopen00304" data-start="{" data-end="}">
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e">  304</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e">onTransmit</a>(<span class="keywordtype">void</span>(*cb)(<span class="keywordtype">void</span> *), <span class="keywordtype">void</span> *cbData)<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        noInterrupts();</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        _cb = cb;</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        _cbData = cbData;</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        interrupts();</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    }</div>
+<div class="foldopen" id="foldopen00303" data-start="{" data-end="}">
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a9e69f88f55b6d98fba857d966bddcdef">  303</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a9e69f88f55b6d98fba857d966bddcdef">getUnderflow</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>; <span class="comment">// TODO</span></div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    }</div>
 </div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
-<div class="foldopen" id="foldopen00319" data-start="{" data-end="}">
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76">  319</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_function" href="classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76">write</a>(<span class="keyword">const</span> uint8_t *buffer, <span class="keywordtype">size_t</span> size)<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordtype">size_t</span> written = 0;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        i2s_channel_write(_tx_handle, buffer, size, &amp;written, 0);</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        noInterrupts(); <span class="comment">// TODO - Freertos task protection instead?</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <span class="keywordflow">if</span> (written != size) {</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            _available = 0;</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (_available &gt;= written) {</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            _available -= written;</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            _available = 0;</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        }</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        interrupts();</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <span class="keywordflow">return</span>  written;</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    }</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
+<div class="foldopen" id="foldopen00313" data-start="{" data-end="}">
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e">  313</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e">onTransmit</a>(<span class="keywordtype">void</span>(*cb)(<span class="keywordtype">void</span> *), <span class="keywordtype">void</span> *cbData)<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        noInterrupts();</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        _cb = cb;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        _cbData = cbData;</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        interrupts();</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    }</div>
 </div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span> </div>
-<div class="foldopen" id="foldopen00339" data-start="{" data-end="}">
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7">  339</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_function" href="classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7">write</a>(uint8_t d)<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keywordflow">return</span> 0; <span class="comment">// No bytes!</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="foldopen" id="foldopen00328" data-start="{" data-end="}">
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76">  328</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_function" href="classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76">write</a>(<span class="keyword">const</span> uint8_t *buffer, <span class="keywordtype">size_t</span> size)<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keywordtype">size_t</span> written = 0;</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        i2s_channel_write(_tx_handle, buffer, size, &amp;written, 0);</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        noInterrupts(); <span class="comment">// TODO - Freertos task protection instead?</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">if</span> (written != size) {</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>            _available = 0;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (_available &gt;= written) {</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            _available -= written;</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            _available = 0;</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        }</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        interrupts();</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keywordflow">return</span>  written;</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    }</div>
 </div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
 <div class="foldopen" id="foldopen00348" data-start="{" data-end="}">
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">  348</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">availableForWrite</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="keywordflow">return</span> _available; <span class="comment">// It&#39;s our best guess for now</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7">  348</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_function" href="classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7">write</a>(uint8_t d)<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="keywordflow">return</span> 0; <span class="comment">// No bytes!</span></div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    }</div>
 </div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    <span class="keywordtype">bool</span> _running;</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    int8_t _bclk = 0;</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    int8_t _ws = 1;</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    int8_t _dout = 2;</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    int8_t _mclk = -1;</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    <span class="keywordtype">bool</span> _bclkInv = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="keywordtype">bool</span> _wsInv = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keywordtype">bool</span> _mclkInv = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keywordtype">size_t</span> _sampleRate;</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keywordtype">size_t</span> _buffers;</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="keywordtype">size_t</span> _bufferWords;</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    uint32_t _silenceSample;</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    TaskHandle_t _taskHandle = 0;</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    void (*_cb)(<span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordtype">void</span> *_cbData;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="comment">// I2S IDF object and info</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    i2s_chan_handle_t _tx_handle;</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordtype">size_t</span> _totalAvailable = 0;</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">size_t</span> _available = 0;</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>};</div>
+<div class="foldopen" id="foldopen00357" data-start="{" data-end="}">
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">  357</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">availableForWrite</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        <span class="keywordflow">return</span> _available; <span class="comment">// It&#39;s our best guess for now</span></div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    }</div>
+</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keywordtype">bool</span> _running;</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    int8_t _bclk = 0;</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    int8_t _ws = 1;</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    int8_t _dout = 2;</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    int8_t _mclk = -1;</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordtype">bool</span> _bclkInv = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keywordtype">bool</span> _wsInv = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keywordtype">bool</span> _mclkInv = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordtype">size_t</span> _sampleRate;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">size_t</span> _buffers;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordtype">size_t</span> _bufferWords;</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    uint32_t _silenceSample;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    TaskHandle_t _taskHandle = 0;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    void (*_cb)(<span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordtype">void</span> *_cbData;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="comment">// I2S IDF object and info</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    i2s_chan_handle_t _tx_handle;</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordtype">size_t</span> _totalAvailable = 0;</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordtype">size_t</span> _available = 0;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>};</div>
 </div>
 <div class="ttc" id="aclassESP32I2SAudio_html"><div class="ttname"><a href="classESP32I2SAudio.html">ESP32I2SAudio</a></div><div class="ttdoc">I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:30</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_a097dee2102c8527672fcd5eb7227f75a"><div class="ttname"><a href="classESP32I2SAudio.html#a097dee2102c8527672fcd5eb7227f75a">ESP32I2SAudio::ESP32I2SAudio</a></div><div class="ttdeci">ESP32I2SAudio(int8_t bclk=0, int8_t ws=1, int8_t dout=2, int8_t mclk=-1)</div><div class="ttdoc">Construct ESP32-based I2S object with IRQ-based callbacks to a FreeRTOS task, for use with Background...</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:40</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_a0a1a623a62e49d740e0dd579a3d6624a"><div class="ttname"><a href="classESP32I2SAudio.html#a0a1a623a62e49d740e0dd579a3d6624a">ESP32I2SAudio::_taskShim</a></div><div class="ttdeci">static void _taskShim(void *pvParameters)</div><div class="ttdoc">C-language shim to start the real object's task.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:227</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_a0d338d0dfcf436bf5b1c8265c926409a"><div class="ttname"><a href="classESP32I2SAudio.html#a0d338d0dfcf436bf5b1c8265c926409a">ESP32I2SAudio::_backgroundTask</a></div><div class="ttdeci">void _backgroundTask()</div><div class="ttdoc">Background I2S DMA buffer notification task. Tracks number of bytes available to be written.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:234</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_a1e55040d0ba29a56bd3e4e93459127d4"><div class="ttname"><a href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">ESP32I2SAudio::end</a></div><div class="ttdeci">bool end() override</div><div class="ttdoc">Stop the I2S device.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:284</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_a3a2e5ef52b6b1ee7fffb843df23970ed"><div class="ttname"><a href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">ESP32I2SAudio::_onSentCB</a></div><div class="ttdeci">bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow=false)</div><div class="ttdoc">Object-based callback for I2S Sent notification.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:268</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_a1e55040d0ba29a56bd3e4e93459127d4"><div class="ttname"><a href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">ESP32I2SAudio::end</a></div><div class="ttdeci">bool end() override</div><div class="ttdoc">Stop the I2S device.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:293</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_a274d216f7f1b29a5a0797ed004dd6d74"><div class="ttname"><a href="classESP32I2SAudio.html#a274d216f7f1b29a5a0797ed004dd6d74">ESP32I2SAudio::_underflows</a></div><div class="ttdeci">uint32_t _underflows</div><div class="ttdoc">Number of underflowed DMA buffers since begin</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:270</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_a3a2e5ef52b6b1ee7fffb843df23970ed"><div class="ttname"><a href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">ESP32I2SAudio::_onSentCB</a></div><div class="ttdeci">bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow=false)</div><div class="ttdoc">Object-based callback for I2S Sent notification.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:277</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_a5c788caa3ac169f3cb24095274a22379"><div class="ttname"><a href="classESP32I2SAudio.html#a5c788caa3ac169f3cb24095274a22379">ESP32I2SAudio::setStereo</a></div><div class="ttdeci">bool setStereo(bool stereo=true) override</div><div class="ttdoc">Set mono or stereo mode. Only stereo supported.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:142</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_a625a38aadf84bc9e41d3c6181ed0ff05"><div class="ttname"><a href="classESP32I2SAudio.html#a625a38aadf84bc9e41d3c6181ed0ff05">ESP32I2SAudio::setFrequency</a></div><div class="ttdeci">bool setFrequency(int freq) override</div><div class="ttdoc">Set the sample rate (LRCLK/WS) of the I2S interface. Can be called while running.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:123</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_a7802da4433e6e81485e0eaf4db9b9fe6"><div class="ttname"><a href="classESP32I2SAudio.html#a7802da4433e6e81485e0eaf4db9b9fe6">ESP32I2SAudio::_irqs</a></div><div class="ttdeci">uint32_t _irqs</div><div class="ttdoc">Number of I2S interrupts that have been triggered since begin</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:262</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_a94a92b72c96346eed0eca033fcf43494"><div class="ttname"><a href="classESP32I2SAudio.html#a94a92b72c96346eed0eca033fcf43494">ESP32I2SAudio::_frames</a></div><div class="ttdeci">uint32_t _frames</div><div class="ttdoc">Number of DMA buffers that have been transferred successfully since begin</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:266</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_a9742e2a4a10af3958fc0ac2fe2ff22a0"><div class="ttname"><a href="classESP32I2SAudio.html#a9742e2a4a10af3958fc0ac2fe2ff22a0">ESP32I2SAudio::setPins</a></div><div class="ttdeci">void setPins(int8_t bclk, int8_t ws, int8_t dout, int8_t mclk=-1)</div><div class="ttdoc">Set the I2S GPIO pins before calling begin</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:64</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_a9e69f88f55b6d98fba857d966bddcdef"><div class="ttname"><a href="classESP32I2SAudio.html#a9e69f88f55b6d98fba857d966bddcdef">ESP32I2SAudio::getUnderflow</a></div><div class="ttdeci">bool getUnderflow() override</div><div class="ttdoc">Determine if there was an underflow since the last time this was called. Cleared on read.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:294</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_aa3a026d17e68cf3559db77c8875c0136"><div class="ttname"><a href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">ESP32I2SAudio::availableForWrite</a></div><div class="ttdeci">int availableForWrite() override</div><div class="ttdoc">Determine the number of bytes we can write to the DMA buffers at this instant.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:348</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_ab6dd7004d4b33df82fa48aafb71aedb7"><div class="ttname"><a href="classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7">ESP32I2SAudio::write</a></div><div class="ttdeci">size_t write(uint8_t d) override</div><div class="ttdoc">Write single byte to I2S buffers. Not supported.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:339</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_a9e69f88f55b6d98fba857d966bddcdef"><div class="ttname"><a href="classESP32I2SAudio.html#a9e69f88f55b6d98fba857d966bddcdef">ESP32I2SAudio::getUnderflow</a></div><div class="ttdeci">bool getUnderflow() override</div><div class="ttdoc">Determine if there was an underflow since the last time this was called. Cleared on read.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:303</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_aa3a026d17e68cf3559db77c8875c0136"><div class="ttname"><a href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">ESP32I2SAudio::availableForWrite</a></div><div class="ttdeci">int availableForWrite() override</div><div class="ttdoc">Determine the number of bytes we can write to the DMA buffers at this instant.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:357</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_ab6dd7004d4b33df82fa48aafb71aedb7"><div class="ttname"><a href="classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7">ESP32I2SAudio::write</a></div><div class="ttdeci">size_t write(uint8_t d) override</div><div class="ttdoc">Write single byte to I2S buffers. Not supported.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:348</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_abc93d03ee93974abefc7216380c0d549"><div class="ttname"><a href="classESP32I2SAudio.html#abc93d03ee93974abefc7216380c0d549">ESP32I2SAudio::_onSentUnder</a></div><div class="ttdeci">static bool _onSentUnder(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</div><div class="ttdoc">C-language wrapper for I2S Sent Underflow event.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:220</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_acb96b3a1928b86cd1bd621988011e7ba"><div class="ttname"><a href="classESP32I2SAudio.html#acb96b3a1928b86cd1bd621988011e7ba">ESP32I2SAudio::setBuffers</a></div><div class="ttdeci">bool setBuffers(size_t buffers, size_t bufferWords, int32_t silenceSample=0) override</div><div class="ttdoc">Set the size and number of the I2S buffers before begin</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:93</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_ad32585db4ad77f106fabad6f5d0e67a1"><div class="ttname"><a href="classESP32I2SAudio.html#ad32585db4ad77f106fabad6f5d0e67a1">ESP32I2SAudio::setBitsPerSample</a></div><div class="ttdeci">bool setBitsPerSample(int bps) override</div><div class="ttdoc">Set the bits per sample for the I2S output. Only 16-bit supported.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:109</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_ada04da3edaa43b65a9ae8dd862388d5e"><div class="ttname"><a href="classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e">ESP32I2SAudio::onTransmit</a></div><div class="ttdeci">void onTransmit(void(*cb)(void *), void *cbData) override</div><div class="ttdoc">Set the callback function to be called every DMA buffer completion.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:304</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_ada04da3edaa43b65a9ae8dd862388d5e"><div class="ttname"><a href="classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e">ESP32I2SAudio::onTransmit</a></div><div class="ttdeci">void onTransmit(void(*cb)(void *), void *cbData) override</div><div class="ttdoc">Set the callback function to be called every DMA buffer completion.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:313</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_ae0d5ee21de7564bdb48c50f1c1c107d0"><div class="ttname"><a href="classESP32I2SAudio.html#ae0d5ee21de7564bdb48c50f1c1c107d0">ESP32I2SAudio::begin</a></div><div class="ttdeci">bool begin() override</div><div class="ttdoc">Start the I2S interface.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:156</div></div>
-<div class="ttc" id="aclassESP32I2SAudio_html_ae58a22299fb500d2373dafd5d2bdbd76"><div class="ttname"><a href="classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76">ESP32I2SAudio::write</a></div><div class="ttdeci">size_t write(const uint8_t *buffer, size_t size) override</div><div class="ttdoc">Write data to the I2S interface. Not legal from IRQ context. Will not block and may write less than r...</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:319</div></div>
+<div class="ttc" id="aclassESP32I2SAudio_html_ae58a22299fb500d2373dafd5d2bdbd76"><div class="ttname"><a href="classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76">ESP32I2SAudio::write</a></div><div class="ttdeci">size_t write(const uint8_t *buffer, size_t size) override</div><div class="ttdoc">Write data to the I2S interface. Not legal from IRQ context. Will not block and may write less than r...</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:328</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_ae73beb0f610e3d25d616a75e0f1173b9"><div class="ttname"><a href="classESP32I2SAudio.html#ae73beb0f610e3d25d616a75e0f1173b9">ESP32I2SAudio::_onSent</a></div><div class="ttdeci">static bool _onSent(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</div><div class="ttdoc">C-language wrapper for I2S Sent event.</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:211</div></div>
 <div class="ttc" id="aclassESP32I2SAudio_html_af0d215582edd9d37144702911cd89ea7"><div class="ttname"><a href="classESP32I2SAudio.html#af0d215582edd9d37144702911cd89ea7">ESP32I2SAudio::setInverted</a></div><div class="ttdeci">void setInverted(bool bclk, bool ws, bool mclk=false)</div><div class="ttdoc">Set the I2S GPIO inversions before calling begin</div><div class="ttdef"><b>Definition</b> ESP32I2SAudio.h:78</div></div>
 </div><!-- fragment --></div><!-- contents -->
