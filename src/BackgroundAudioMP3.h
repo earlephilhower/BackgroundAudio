@@ -41,6 +41,11 @@ public:
         _paused = false;
     }
 
+    /**
+        @brief Construct an MP3 output device using the specified physical audio output
+
+        @param [in] d AudioOutputBase device to send data to (or AudioMixerInput)
+    */
     BackgroundAudioMP3Class(AudioOutputBase &d) {
         _playing = false;
         _paused = false;
@@ -52,7 +57,7 @@ public:
     /**
         @brief Set an output device before `begin`
 
-        @param [in] device Pointer to `AudioOutputDevice` to send decoded data to
+        @param [in] d Pointer to `AudioOutputDevice` to send decoded data to
 
         @return True on success
     */

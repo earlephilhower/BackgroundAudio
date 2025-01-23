@@ -24,3 +24,9 @@
 #include "BackgroundAudioMP3.h"
 #include "BackgroundAudioWAV.h"
 #include "BackgroundAudioMixer.h"
+
+/**
+    @mainpage
+    See https://earlephilhower.github.io/BackgroundAudio/md_README.html and https://earlephilhower.github.io/BackgroundAudio/annotated.html for more details
+
+*/

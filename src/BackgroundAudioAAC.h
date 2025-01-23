@@ -51,7 +51,7 @@ public:
     /**
            @brief Set an output device before `begin`
 
-           @param [in] device Pointer to `AudioOutputDevice` to send decoded data to
+           @param [in] d Pointer to `AudioOutputDevice` to send decoded data to
 
            @return True on success
     */

@@ -256,9 +256,9 @@ public:
         }
     }
 
-    uint32_t _irqs = 0;
-    uint32_t _frames = 0;
-    uint32_t _underflows = 0;
+    uint32_t _irqs = 0; // Number of I2S IRQs received
+    uint32_t _frames = 0; // Number of DMA buffers sent
+    uint32_t _underflows = 0; // Number of underflowed DMA buffers
 
     /**
         @brief Object-based callback for I2S Sent notification
