@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['write_0',['write',['../classBackgroundAudioAACClass.html#a299e01d412074532f1f9279156a50cf8',1,'BackgroundAudioAACClass::write()'],['../classRawDataBuffer.html#a7fd3e288f26e2005fe3dfaf1e03352f7',1,'RawDataBuffer::write()'],['../classROMDataBuffer.html#a6ef9f9ca11566ea52711c53896c75174',1,'ROMDataBuffer::write()'],['../classBackgroundAudioMixerInput.html#ab9cc57d899b7737bb10d01657807378c',1,'BackgroundAudioMixerInput::write(uint8_t)'],['../classBackgroundAudioMixerInput.html#aafeb2b3126a01147f11d4f65c5f58738',1,'BackgroundAudioMixerInput::write(const uint8_t *buffer, size_t size) override'],['../classBackgroundAudioMP3Class.html#a98a05ec8be86ce4a257766b3e2bd82c4',1,'BackgroundAudioMP3Class::write()'],['../classBackgroundAudioWAVClass.html#afcc7da65d40a4f4aba18d95f5f8ce86c',1,'BackgroundAudioWAVClass::write()'],['../classESP32I2SAudio.html#ae58a22299fb500d2373dafd5d2bdbd76',1,'ESP32I2SAudio::write(const uint8_t *buffer, size_t size) override'],['../classESP32I2SAudio.html#ab6dd7004d4b33df82fa48aafb71aedb7',1,'ESP32I2SAudio::write(uint8_t d) override']]],
-  ['write0_1',['write0',['../classRawDataBuffer.html#aec876deb9c7930b320d0c716c42f702b',1,'RawDataBuffer::write0()'],['../classROMDataBuffer.html#a4313125c1ca5a12a3da6dab25bf42b1d',1,'ROMDataBuffer::write0()']]]
+  ['o3_0',['PICO, -O3',['../md_README.html#autotoc_md6',1,'']]],
+  ['o3_20arm_20mode_1',['PICO 2, -O3  (ARM mode)',['../md_README.html#autotoc_md5',1,'']]],
+  ['on_20the_20raspberry_20pi_20pico_20rp2040_20pico_202_20rp2350_20and_20esp32_2',['BackgroundAudio - Play MP3, AAC, and WAV on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32',['../md_README.html',1,'']]],
+  ['ontransmit_3',['ontransmit',['../classBackgroundAudioMixerInput.html#a7edf0d7bcf33429217ba641a0d6055d2',1,'BackgroundAudioMixerInput::onTransmit()'],['../classESP32I2SAudio.html#ada04da3edaa43b65a9ae8dd862388d5e',1,'ESP32I2SAudio::onTransmit()']]]
 ];

@@ -1,4 +1,5 @@
 <map id="ESP32I2SAudio" name="ESP32I2SAudio">
-<area shape="rect" id="node1" title="I2S object with IRQ&#45;based callbacks to a FreeRTOS task, for use with BackgroundAudio." alt="" coords="13,79,133,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,140,31"/>
+<area shape="rect" id="Node000001" title="I2S object with IRQ&#45;based callbacks to a FreeRTOS task, for use with BackgroundAudio." alt="" coords="13,79,133,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,140,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,44,75,79,70,79,70,44"/>
 </map>

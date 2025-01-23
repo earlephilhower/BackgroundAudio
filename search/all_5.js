@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['flush_0',['flush',['../classBackgroundAudioAACClass.html#a5dda53436ced8733ad26831fc2911acc',1,'BackgroundAudioAACClass::flush()'],['../classRawDataBuffer.html#a4fbff0ac2337a64e7b28ac308bb765e3',1,'RawDataBuffer::flush()'],['../classBackgroundAudioMP3Class.html#a39c1360fd89991092b46d1405012daaf',1,'BackgroundAudioMP3Class::flush()'],['../classBackgroundAudioWAVClass.html#a1ffe5b86f4716b1e50c2514903c3abbb',1,'BackgroundAudioWAVClass::flush()']]],
-  ['frames_1',['frames',['../classBackgroundAudioAACClass.html#a997ae00a178b83a27ace048e565a0470',1,'BackgroundAudioAACClass::frames()'],['../classBackgroundAudioMP3Class.html#ab4af720477afb36e7d67b806abc54d24',1,'BackgroundAudioMP3Class::frames()'],['../classBackgroundAudioWAVClass.html#ae48d24db0ead2779ae9a9927d73502fc',1,'BackgroundAudioWAVClass::frames()']]]
+  ['done_0',['done',['../classBackgroundAudioAACClass.html#ad1efa37ee619e031e2a2f60df8caa3d9',1,'BackgroundAudioAACClass::done()'],['../classBackgroundAudioMP3Class.html#a586ef017264cf9d372096af40377dde5',1,'BackgroundAudioMP3Class::done()'],['../classBackgroundAudioWAVClass.html#a4ab8a2caeb1515df5e2533887b85731c',1,'BackgroundAudioWAVClass::done()']]],
+  ['dumps_1',['dumps',['../classBackgroundAudioAACClass.html#a3ee6a9b57bc0d3877f6b1d3939c64895',1,'BackgroundAudioAACClass::dumps()'],['../classBackgroundAudioMP3Class.html#a2b0d2bc456c487cbf9493ad458453c44',1,'BackgroundAudioMP3Class::dumps()'],['../classBackgroundAudioWAVClass.html#a80a0a343eefe0ce5f245e4705dc5fef1',1,'BackgroundAudioWAVClass::dumps()']]]
 ];

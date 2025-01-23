@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['add_0',['add',['../classBackgroundAudioMixer.html#a0c956bd7f3d4c9d9a7433582ebd24b97',1,'BackgroundAudioMixer']]],
-  ['available_1',['available',['../classBackgroundAudioAACClass.html#ac18f49a9b26153c23756e97fc390f447',1,'BackgroundAudioAACClass::available()'],['../classRawDataBuffer.html#afd96298ed7ae4e314615e121580c60cf',1,'RawDataBuffer::available()'],['../classROMDataBuffer.html#ad99cc27809daac093ad37884d054c2c6',1,'ROMDataBuffer::available()'],['../classBackgroundAudioMP3Class.html#a83d9111a763708b1085746f926114c78',1,'BackgroundAudioMP3Class::available()'],['../classBackgroundAudioWAVClass.html#aa1e4219862352220936a5cbef535de54',1,'BackgroundAudioWAVClass::available()']]],
-  ['availableforwrite_2',['availableForWrite',['../classBackgroundAudioAACClass.html#ae936235a762e8d86beff16765f4a079d',1,'BackgroundAudioAACClass::availableForWrite()'],['../classRawDataBuffer.html#aca4e0546817601ec5db4cd2b4eb96b15',1,'RawDataBuffer::availableForWrite()'],['../classROMDataBuffer.html#a29f441084ba791aff7a094640517ebed',1,'ROMDataBuffer::availableForWrite()'],['../classBackgroundAudioMixerInput.html#a8af2c6458861c29b2404c3982818384c',1,'BackgroundAudioMixerInput::availableForWrite()'],['../classBackgroundAudioMP3Class.html#a15d57551d4cc68b7a2df8bddb8be9b19',1,'BackgroundAudioMP3Class::availableForWrite()'],['../classBackgroundAudioWAVClass.html#a1742bf2db5d4a51ef37d65cf0cf8b379',1,'BackgroundAudioWAVClass::availableForWrite()'],['../classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136',1,'ESP32I2SAudio::availableForWrite()']]]
+  ['_5fbackgroundtask_0',['_backgroundTask',['../classESP32I2SAudio.html#a0d338d0dfcf436bf5b1c8265c926409a',1,'ESP32I2SAudio']]],
+  ['_5fonsent_1',['_onSent',['../classESP32I2SAudio.html#ae73beb0f610e3d25d616a75e0f1173b9',1,'ESP32I2SAudio']]],
+  ['_5fonsentcb_2',['_onSentCB',['../classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed',1,'ESP32I2SAudio']]],
+  ['_5fonsentunder_3',['_onSentUnder',['../classESP32I2SAudio.html#abc93d03ee93974abefc7216380c0d549',1,'ESP32I2SAudio']]],
+  ['_5ftaskshim_4',['_taskShim',['../classESP32I2SAudio.html#a0a1a623a62e49d740e0dd579a3d6624a',1,'ESP32I2SAudio']]]
 ];
