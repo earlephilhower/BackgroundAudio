@@ -1,0 +1,4 @@
+<map id="BackgroundAudioMixerInput" name="BackgroundAudioMixerInput">
+<area shape="rect" id="node1" title="Implements an emulated AudioOutputBase and feeds resampled data from it up to an input of an AudioOut..." alt="" coords="5,79,211,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="41,5,175,31"/>
+</map>

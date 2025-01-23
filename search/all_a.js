@@ -1,0 +1,14 @@
+var searchData=
+[
+  ['setbitspersample_0',['setBitsPerSample',['../classESP32I2SAudio.html#ad32585db4ad77f106fabad6f5d0e67a1',1,'ESP32I2SAudio::setBitsPerSample()'],['../classBackgroundAudioMixerInput.html#ad14b540fcf00b938ef2e8f98429ba52b',1,'BackgroundAudioMixerInput::setBitsPerSample(int bps) override']]],
+  ['setbuffers_1',['setBuffers',['../classBackgroundAudioMixerInput.html#af10c203ff7478960849e05753d3bde5e',1,'BackgroundAudioMixerInput::setBuffers()'],['../classESP32I2SAudio.html#acb96b3a1928b86cd1bd621988011e7ba',1,'ESP32I2SAudio::setBuffers()']]],
+  ['setdevice_2',['setDevice',['../classBackgroundAudioAACClass.html#a16c8c58c2e9e9f21236b92045a1faa0e',1,'BackgroundAudioAACClass::setDevice()'],['../classBackgroundAudioMP3Class.html#a6d3549c9cf6a6130d8ab04826726aefa',1,'BackgroundAudioMP3Class::setDevice()'],['../classBackgroundAudioWAVClass.html#ad4b4961a77b6616742e2e6e62c2783f6',1,'BackgroundAudioWAVClass::setDevice()']]],
+  ['setfrequency_3',['setFrequency',['../classBackgroundAudioMixerInput.html#a74adea1979bf916821d5548aabe2bd2c',1,'BackgroundAudioMixerInput::setFrequency()'],['../classESP32I2SAudio.html#a625a38aadf84bc9e41d3c6181ed0ff05',1,'ESP32I2SAudio::setFrequency()']]],
+  ['setgain_4',['setGain',['../classBackgroundAudioWAVClass.html#aba4608b01b29129ab2d668b56c1a0013',1,'BackgroundAudioWAVClass::setGain()'],['../classBackgroundAudioMP3Class.html#a48251e99cd71b92fbf19e07102f9105d',1,'BackgroundAudioMP3Class::setGain()'],['../classBackgroundAudioAACClass.html#af8e15e4ff6c3fc4c77ceec14fef1ddea',1,'BackgroundAudioAACClass::setGain()']]],
+  ['setinverted_5',['setInverted',['../classESP32I2SAudio.html#af0d215582edd9d37144702911cd89ea7',1,'ESP32I2SAudio']]],
+  ['setpins_6',['setPins',['../classESP32I2SAudio.html#a9742e2a4a10af3958fc0ac2fe2ff22a0',1,'ESP32I2SAudio']]],
+  ['setstereo_7',['setStereo',['../classBackgroundAudioMixerInput.html#a165f1f9f3cb2265326db33a5c390bdf7',1,'BackgroundAudioMixerInput::setStereo()'],['../classESP32I2SAudio.html#a5c788caa3ac169f3cb24095274a22379',1,'ESP32I2SAudio::setStereo()']]],
+  ['shifts_8',['shifts',['../classBackgroundAudioAACClass.html#adfa517558a6edf2d6e72e9b5d5ba39cf',1,'BackgroundAudioAACClass::shifts()'],['../classBackgroundAudioMP3Class.html#a47fdbad175b575b16051d38d30969172',1,'BackgroundAudioMP3Class::shifts()'],['../classBackgroundAudioWAVClass.html#aa0b20cca7f869075ae2438a7888fa49a',1,'BackgroundAudioWAVClass::shifts()']]],
+  ['shiftup_9',['shiftUp',['../classRawDataBuffer.html#ac83e09b3f02764427bc8f194db70d6d7',1,'RawDataBuffer::shiftUp()'],['../classROMDataBuffer.html#a0c86b5455f25e891ea6e3e4c60899875',1,'ROMDataBuffer::shiftUp()']]],
+  ['size_10',['size',['../classRawDataBuffer.html#a73ecb91ae8ed235b99a516ddf9359ee0',1,'RawDataBuffer::size()'],['../classROMDataBuffer.html#a462860823893d98ca9ba67b63dc72d2a',1,'ROMDataBuffer::size()']]]
+];
