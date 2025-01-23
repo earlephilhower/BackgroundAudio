@@ -26,10 +26,11 @@
 #include "BackgroundAudioBuffers.h"
 #include "libhelix-aac/aacdec.h"
 
+/**
+    @brief Interrupt-driven AAC decoder.  Generates a full frame of samples each cycle  and uses the RawBuffer to safely hand data from the app to the decompressor.
 
-// Interrupt-driven AAC decoder.  Generates a full frame of samples each cycle
-// and uses the RawBuffer to safely hand data from the app to the decompressor.
-// Templated to avoid VTable indirection while supporting I2S and PWM.
+    @tparam DataBuffer The type of raw data buffer, either normal `RawDataBuffer` or `ROMDataBuffer` as appropriate.
+*/
 template<class DataBuffer>
 class BackgroundAudioAACClass {
 public:
@@ -47,6 +48,13 @@ public:
 
     ~BackgroundAudioAACClass() {}
 
+    /**
+           @brief Set an output device before `begin`
+
+           @param [in] device Pointer to `AudioOutputDevice` to send decoded data to
+
+           @return True on success
+    */
     bool setDevice(AudioOutputBase *d) {
         if (!_playing) {
             _out = d;
@@ -55,10 +63,24 @@ public:
         return false;
     }
 
+    /**
+                @brief Set the gain multiplier (volume) for the stream.  Takes effect immediately.
+
+                @param [in] scale Floating point value from 0.0....16.0 to multiply all audio data by
+    */
     void setGain(float scale) {
         _gain = (int32_t)(scale * (1 << 16));
     }
 
+    /**
+          @brief Starts the background AAC decoder/player.  Will initialize the output device and start sending silence immediately.
+
+          @details
+          Note that this needs to allocate a significant large and contiguout amount of heap to function,
+          so it should be called early on in the program to ensure that allocation can succeed.
+
+          @return True on success, false if already started.
+    */
     bool begin() {
         if (_playing || !_out) {
             return false;
@@ -87,53 +109,132 @@ public:
         return true;
     }
 
+
+    /**
+          @brief Stops the AAC decoder process and the calls the output device's end to shut it down, too.
+    */
     void end() {
         if (_playing) {
             _out->end();
             AACFreeDecoder(_hAACDecoder);
         }
     }
+    /**
+         @brief Determines if the AAC decoder has been started
 
+         @returns True if running
+    */
     bool playing() {
         return _playing;
     }
 
+    /**
+               @brief Writes a block of raw data to the decoder's buffer
+
+               @details
+               Copies up to `len` bytes into the raw buffer for the object.  Can be called before `begin`,
+               and can write less fewer than the number of bytes requested if there is not enough space.
+               Will not block.
+
+               For ROM buffers this does not actually copy data, only the pointer.  Therefore, for ROM
+               buffers you cannot concatenate data by calling multiple writes because the second write
+               will throw out all the data from the first one.  Use `flush` and `write` when ready for
+               a completely new buffer.
+
+               @param [in] data Uncompressed input data
+               @param [in] len Number of bytes to write
+
+               @return Number of bytes written
+    */
     size_t write(const void *data, size_t len) {
         return _ib.write((const uint8_t *)data, len);
     }
 
+    /**
+                   @brief Gets number of bytes available to write to raw buffer
+
+                   @details
+                   For ROM buffers, this is always 0 after a write has happened.  Because ROM buffers don't
+                   actually allocate any RAM for buffering and simply store the pointer passed in from `write`
+                   there is no real space available for an app to `write` to.  An app can simply `flush` and
+                   `write` a new complete buffer if needed ignoring `availableForWrite` in the ROM case.
+
+                   @return Bytes that can be written
+    */
     size_t availableForWrite() {
         return _ib.availableForWrite();
     }
 
+    /**
+              @brief Gets number of bytes already in the raw buffer
+
+              @return Bytes of raw data in the buffer
+    */
     size_t available() {
         return _ib.available() - _accumShift;
     }
 
+    /**
+             @brief Determine if no more AAC file is present in the buffer
+
+             @return True if no raw AAC data is still left to process
+    */
     bool done() {
         return available() <= 16; // Some minimum framesize
     }
 
+    /**
+             @brief Get number of "frames" (1024 or 2048 stereo samples) processed by decoder
+
+             @return Number of frames, where frames are `framelen` stereo samples in size
+    */
     uint32_t frames() {
         return _frames;
     }
 
+    /**
+                @brief Get the number of input data shifts processed by decoder since `begin`
+
+                @return Number of times data has been shifted in the raw input buffer
+    */
     uint32_t shifts() {
         return _shifts;
     }
 
+    /**
+              @brief Get the number of times the MP3 decoder has underflowed waiting on raw data since `begin`
+
+              @return Number of frames of underflow data have occurred
+    */
     uint32_t underflows() {
         return _underflows;
     }
 
+    /**
+              @brief Get tne number of decoder errors since `begin`
+
+              @return Number of decode errors encountered
+    */
     uint32_t errors() {
         return _errors;
     }
 
+    /**
+            @brief Get the number of full buffer dumps (catastrophic data error) since `begin`
+
+            @return Number of complete buffer throw-aways
+    */
     uint32_t dumps() {
         return _dumps;
     }
 
+    /**
+                @brief Flushes any existing raw data, resets the processor to start a new MP3
+
+                @details
+                This is only needed to abort a currently playing MP3 file (i.e. skipping a track in the middle).
+                Multiple MP3 files can just be concatenated together in the input buffer with `write`
+    */
     void flush() {
         noInterrupts();
         _ib->flush();
@@ -141,14 +242,25 @@ public:
         interrupts();
     }
 
+    /**
+              @brief Pause the decoder.  Won't process raw input data and will transmit silence
+    */
     void pause() {
         _paused = true;
     }
 
+    /**
+            @brief Determine if the playback is paused
+
+            @return True of WAV playback has been paused
+    */
     bool paused() {
         return _paused;
     }
 
+    /**
+           @brief Unpause previously paused playback.  Will start processing input data again
+    */
     void unpause() {
         _paused = false;
     }
@@ -234,7 +346,7 @@ private:
     int32_t _gain = 1 << 16;
     uint32_t _accumShift = 0;
 
-    // MP3 quality stats, cumulative
+    // AAC quality stats, cumulative
     uint32_t _frames = 0;
     uint32_t _shifts = 0;
     uint32_t _underflows = 0;
@@ -242,5 +354,12 @@ private:
     uint32_t _dumps = 0;
 };
 
+
+/**
+    @brief General purpose AAC background player with an 8KB buffer.  Needs to have `write` called repeatedly with data.
+*/
 using BackgroundAudioAAC = BackgroundAudioAACClass<RawDataBuffer<8 * 1024>>;
-using ROMBackgroundAudioAAC = BackgroundAudioAACClass<ROMDataBuffer>;
+
+/**
+    @brief Special purpose AAC player for use with ROM or data already completely in RAM. Does not copy any data, uses single written data pointer directly.
+*/using ROMBackgroundAudioAAC = BackgroundAudioAACClass<ROMDataBuffer>;

@@ -27,7 +27,7 @@ def main():
             for l in fin:
                 if l.startswith("version="):
                     l = "version=" + str(args.version) + "\n"
-                fout.write(l);
+                fout.write(l)
     shutil.move("library.properties.new", "library.properties")
 
     # package.json
@@ -35,7 +35,16 @@ def main():
         library = json.load(fin);
         library["version"] = str(args.version);
         with open("library.json.new", "w") as fout:
-            json.dump(library, fout, indent = 4);
+            json.dump(library, fout, indent = 4)
     shutil.move("library.json.new", "library.json")
+
+    # Doxygen
+    with open("Doxyfile", "r") as fin:
+      with open("Doxyfile.new", "w") as fout:
+        for l in fin:
+            if l.startswith("PROJECT_NUMBER"):
+                l = "PROJECT_NUMBER = "+ str(args.version) + "\n"
+            fout.write(l)
+    shutil.move("Doxyfile.new", "Doxyfile")
 
 main()

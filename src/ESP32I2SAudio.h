@@ -24,8 +24,19 @@
 #include <driver/i2s_std.h>
 #include "WrappedAudioOutputBase.h"
 
+/**
+     @brief I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio
+*/
 class ESP32I2SAudio : public AudioOutputBase {
 public:
+    /**
+         @brief Construct ESP32-based I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio
+
+         @param [in] bclk GPIO pin to use for the bit clock (BCLK)
+         @param [in] ws GPIO pin to use for the word clock (LRCLK, WS)
+         @param [in] dout GPIO pin to use as the DOUT from the I2S device (connected to DIN on the DAC)
+         @param [in] mclk Optional GPIO pin for the MCLK (multiplied clock) output, not always needed
+    */
     ESP32I2SAudio(int8_t bclk = 0, int8_t ws = 1, int8_t dout = 2, int8_t mclk = -1) {
         _bclk = bclk;
         _ws = ws;
@@ -42,6 +53,14 @@ public:
     virtual ~ESP32I2SAudio() {
     }
 
+    /**
+        @brief Set the I2S GPIO pins before calling `begin`
+
+        @param [in] bclk GPIO pin to use for the bit clock (BCLK)
+        @param [in] ws GPIO pin to use for the word clock (LRCLK, WS)
+        @param [in] dout GPIO pin to use as the DOUT from the I2S device (connected to DIN on the DAC)
+        @param [in] mclk Optional GPIO pin for the MCLK (multiplied clock) output, not always needed
+    */
     void setPins(int8_t bclk, int8_t ws, int8_t dout, int8_t mclk = -1) {
         _bclk = bclk;
         _ws = ws;
@@ -49,12 +68,28 @@ public:
         _mclk = mclk;
     }
 
+    /**
+        @brief Set the I2S GPIO inversions before calling `begin`
+
+        @param [in] bclk True to invert BCLK output
+        @param [in] ws True to invert WS/LRCLK output
+        @param [in] mclk Optionallt, true to invert the MCLK output
+    */
     void setInverted(bool bclk, bool ws, bool mclk = false) {
         _bclkInv = bclk;
         _wsInv = ws;
         _mclkInv = mclk;
     }
 
+    /**
+        @brief Set the size and number of the I2S buffers before `begin`
+
+        @param [in] buffers Number of I2S DMA buffers
+        @param [in] bufferWords Number of 32-bit words (i.e. a single stereo 16-bit sample) per each DMA buffer
+        @param [in] silenceSample Optional 32-bit value to send out in case of underflow, normally 0
+
+        @return True if parameters were successful
+    */
     bool setBuffers(size_t buffers, size_t bufferWords, int32_t silenceSample = 0) override {
         if (!_running) {
             _buffers = buffers;
@@ -64,6 +99,13 @@ public:
         return !_running;
     }
 
+    /**
+        @brief Set the bits per sample for the I2S output.  Only 16-bit supported
+
+        @param [in] bps Bits per sample, only 16-bit supported
+
+        @return True if successful
+    */
     bool setBitsPerSample(int bps) override {
         if (!_running && bps == 16)  {
             return true;
@@ -71,6 +113,13 @@ public:
         return false;
     }
 
+    /**
+        @brief Set the sample rate (LRCLK/WS) of the I2S interface.  Can be called while running
+
+        @param [in] freq New sampling frequency in hertz
+
+        @return True if succeeded
+    */
     bool setFrequency(int freq) override {
         if (_running && (_sampleRate != freq)) {
             i2s_std_clk_config_t clk_cfg;
@@ -83,10 +132,27 @@ public:
         return true;
     }
 
+    /**
+        @brief Set mono or stereo mode.  Only stereo supported
+
+        @param [in] stereo Set to true for stereo (L/R) output
+
+        @return True if success
+    */
     bool setStereo(bool stereo = true) override {
         return stereo;
     }
 
+    /**
+        @brief Start the I2S interface
+
+        @details
+        Allocates an I2S hardware device with the requested number and size of DMA buffers and pinout.
+        A FreeRTOS task is started, awoken from the I2S DMA buffer complete interrupt, to process the
+        reading and writing and keep track of the available sample space for upper layers.
+
+        @return True on success
+    */
     bool begin() override {
         if (_running) {
             return false;
@@ -137,33 +203,53 @@ public:
         return _running;
     }
 
+    /**
+        @brief C-language wrapper for I2S Sent event
+
+        @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
+    */
     static bool _onSent(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
         return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event);
     }
 
+    /**
+        @brief C-language wrapper for I2S Sent Underflow event
 
+        @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
+    */
     static bool _onSentUnder(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
         return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event, true);
     }
 
+    /**
+        @brief C-language shim to start the real object's task
+    */
     static void _taskShim(void *pvParameters) {
         ((ESP32I2SAudio *)pvParameters)->_backgroundTask();
     }
 
+    /**
+        @brief Background I2S DMA buffer notification task.  Tracks number of bytes available to be written.
+    */
     void _backgroundTask() {
         while (true) {
+            // Pause the task until notification comes in from the IRQ callbacks
             uint32_t ulNotifiedValue;
             xTaskNotifyWait(0, ULONG_MAX, &ulNotifiedValue, portMAX_DELAY);
+            // One DMA transfer == one frame
             _frames++;
+            // Use the notification value to transmit how much data was in the DMA block.  When negative this was an underflow notification
             int32_t size = (int32_t)ulNotifiedValue;
             if (size < 0) {
                 _underflows++;
                 size = -size;
             }
+            // Track the amount believed available, with some sanity checking
             _available += size;
             if (_available > _totalAvailable) {
                 _available = _totalAvailable;
             }
+            // Callback used from within a normal FreeRTOS task, so it can be slow and/or write I2S
             if (_cb) {
                 _cb(_cbData);
             }
@@ -174,6 +260,11 @@ public:
     uint32_t _frames = 0;
     uint32_t _underflows = 0;
 
+    /**
+        @brief Object-based callback for I2S Sent notification
+
+        @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
+    */
     bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow = false) {
         BaseType_t xHigherPriorityTaskWoken;
         xHigherPriorityTaskWoken = pdFALSE;
@@ -185,15 +276,31 @@ public:
     }
 
 
+    /**
+        @brief Stop the I2S device
+
+        @return True if success
+    */
     bool end() override {
         // TODO
         return false;
     }
 
+    /**
+        @brief Determine if there was an underflow since the last time this was called.  Cleared on read.
+
+        @return True if an underflow occurred.
+    */
     bool getUnderflow() override {
         return false; // TODO
     }
 
+    /**
+        @brief Set the callback function to be called every DMA buffer completion
+
+        @param [in] cb Callback function
+        @param [in] cbData Data to be passed to the callback function
+    */
     void onTransmit(void(*cb)(void *), void *cbData) override {
         noInterrupts();
         _cb = cb;
@@ -201,7 +308,14 @@ public:
         interrupts();
     }
 
-    // From Print
+    /**
+        @brief Write data to the I2S interface.  Not legal from IRQ context.  Will not block and may write less than requested.
+
+        @param [in] buffer Data to be written
+        @param [in] size Number of bytes to write.
+
+        @return Number of bytes actually written to the I2S DMA buffers
+    */
     size_t write(const uint8_t *buffer, size_t size) override {
         size_t written = 0;
         i2s_channel_write(_tx_handle, buffer, size, &written, 0);
@@ -217,10 +331,20 @@ public:
         return  written;
     }
 
+    /**
+        @brief Write single byte to I2S buffers.  Not supported
+
+        @return 0 always
+    */
     size_t write(uint8_t d) override {
         return 0; // No bytes!
     }
 
+    /**
+        @brief Determine the number of bytes we can write to the DMA buffers at this instant
+
+        @return Number of bytes available.  May not be completely accurate
+    */
     int availableForWrite() override {
         return _available; // It's our best guess for now
     }

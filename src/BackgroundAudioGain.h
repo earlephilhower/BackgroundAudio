@@ -22,6 +22,13 @@
 #pragma once
 #include <stdint.h>
 
+/**
+    @brief Potentially scale output signal in-situ with saturation.
+
+    @param [in, out] samples 16-bit stereo samples to be modified.  Will be overwritten by scaled output
+    @param [in] count Number of 16-bit quantities to scale (i.e. 2x number oif stereo samples)
+    @param [in] gain Fixed point 16.16 scale factor to apply to each sample
+*/
 static inline void ApplyGain(int16_t *samples, size_t count, int32_t gain) {
     // Default case, don't do anything
     if (gain == 1 << 16) {

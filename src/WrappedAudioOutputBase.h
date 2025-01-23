@@ -23,10 +23,11 @@
 
 #ifdef ESP32
 
-// Abstract class for audio output devices to allow easy swapping between output devices
-
 #include <Print.h>
 
+/**
+    @brief Abstract class for audio output devices to allow easy swapping between output devices.  Taken from Arduino-Pico
+*/
 class AudioOutputBase : public Print {
 public:
     virtual ~AudioOutputBase() { }
