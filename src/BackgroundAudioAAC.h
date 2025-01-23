@@ -91,7 +91,7 @@ public:
             return false;
         }
 
-        _hAACDecoder = AACInitDecoder();
+        _hAACDecoder = AACInitDecoderPre(_private, sizeof(_private));
         if (!_hAACDecoder) {
             return false;
         }
@@ -114,14 +114,12 @@ public:
         return true;
     }
 
-
     /**
           @brief Stops the AAC decoder process and the calls the output device's end to shut it down, too.
     */
     void end() {
         if (_playing) {
             _out->end();
-            AACFreeDecoder(_hAACDecoder);
         }
     }
     /**
@@ -341,6 +339,7 @@ private:
 private:
     AudioOutputBase *_out = nullptr;
     HAACDecoder _hAACDecoder;
+    uint8_t _private[/*sizeof(AACDecInfo)*/ 96 + /*sizeof(PSInfoBase)*/ 28752 + /*sizeof(PSInfoSBR)*/ 50788 + 16];
     bool _playing = false;
     bool _paused = false;
     static const size_t framelen = 2048;
