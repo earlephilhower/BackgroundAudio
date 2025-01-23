@@ -24,17 +24,18 @@
 #include "WrappedAudioOutputBase.h"
 #include <vector>
 
-// The mixer input will buffer output from one audio source and resample to
-// the mixer frequency so it can be summed up and output.
+/**
+    @brief Implements an emulated AudioOutputBase and feeds resampled data from it up to an input of an `AudioOutputMixer` object.
 
-// Each input will have a buffer ready to be summed with the others.  The
-// mixer will take the pointers to this and do the sum operation w/o actually
-// copying it out.  As data is read from the mixerInputBuffer, it will be
-// repopulated with (resampled) data from the source buffers.  Every time the
-// a full source buffer is read a CB will be fired, just like in the
-// AudioBufferManager.  (i.e. the mixedrinput will behave like the ABM for
-// simplicity.)
+    @details
+    The mixer input will buffer output from one audio source and resample to the mixer frequency so it can be summed up and output.
 
+    Each input will have a buffer ready to be summed with the others.  The mixer will take the pointers to this and do the sum operation w/o actually
+    copying it out.  As data is read from the mixerInputBuffer, it will be repopulated with (resampled) data from the source buffers.  Every time the
+    a full source buffer is read a CB will be fired, just like in the AudioBufferManager.  (i.e. the mixedrinput will behave like the ABM for simplicity.)
+
+    In general an end user never need use this class directly and can just treat the input leg of the mixer as an ordinary audio output.
+*/
 class BackgroundAudioMixerInput : public AudioOutputBase {
 private:
     // Forward definitions
@@ -42,6 +43,9 @@ private:
     struct AudioBuffer;
 
 public:
+    /**
+        @brief Create a mixer with a defined sample rate and buffer size
+    */
     BackgroundAudioMixerInput(int outputRate, size_t outputBufferWords) {
         _outputRate = outputRate;
         _outputBufferWords = outputBufferWords;
@@ -68,6 +72,15 @@ public:
         }
     }
 
+    /**
+        @brief Set the size and number of the resample buffers before `begin`
+
+        @param [in] buffers Number of I2S DMA buffers
+        @param [in] bufferWords Number of 32-bit words (i.e. a single stereo 16-bit sample) per each DMA buffer
+        @param [in] silenceSample Optional 32-bit value to send out in case of underflow, normally 0
+
+        @return True if parameters were successful
+    */
     virtual bool setBuffers(size_t buffers, size_t bufferWords, int32_t silenceSample = 0) override {
         _bufferCount = buffers;
         _wordsPerBuffer = bufferWords;
@@ -75,10 +88,29 @@ public:
         return true;
     }
 
+
+    /**
+        @brief Set the bits per sample for the emulated output.  Only 16-bit supported
+
+        @param [in] bps Bits per sample, only 16-bit supported
+
+        @return True if successful
+    */
     virtual bool setBitsPerSample(int bps) override {
         return bps == 16;  // Only 16b for now
     }
 
+
+    /**
+        @brief Set the sample rate (LRCLK/WS) of the emulated interface.  Can be called while running.
+
+        @details
+        This setting does *not* affect the actual resample rate of data sent up the chain to the mixer owner.  This is only to allow a decoder to indicate whatever sample rate is required for incoming data.
+
+        @param [in] freq New sampling frequency in hertz
+
+        @return True if succeeded
+    */
     virtual bool setFrequency(int freq) override {
         if ((int)_inputRate != freq) {
             _readOff = 0;
@@ -91,10 +123,27 @@ public:
         return true;
     }
 
+
+    /**
+        @brief Set mono or stereo mode.  Only stereo supported
+
+        @param [in] stereo Set to true for stereo (L/R) output
+
+        @return True if success
+    */
     virtual bool setStereo(bool stereo = true) override {
         return stereo;  // Only stereo for now
     }
 
+    /**
+        @brief Start the emulated interface
+
+        @details
+        Doesn't actually start any hardware or interfaces (the `AudioMixer` owns the hardware device and combines multiple
+        input legs.  Does set up the resampling audio buffer for use by the mixer as needed.
+
+        @return True on success
+    */
     virtual bool begin() override {
         if (_running) {
             return false;
@@ -122,10 +171,20 @@ public:
         return true;
     }
 
+    /**
+        @brief Stop the mixer input leg, not implemented
+
+        @returns False on failure
+    */
     virtual bool end() override {
         return false;
     }
 
+    /**
+        @brief Determine if there was an underflow since the last time this was called.  Cleared on read.
+
+        @return True if an underflow occurred.
+    */
     virtual bool getUnderflow() override {
         noInterrupts();
         auto ret = _underflow;
@@ -134,16 +193,35 @@ public:
         return ret;
     }
 
+    /**
+        @brief Set the callback function to be called every mixer buffer completion
+
+        @param [in] cb Callback function
+        @param [in] cbData Data to be passed to the callback function
+    */
     virtual void onTransmit(void (*cb)(void *), void *cbData) override {
         _cb = cb;
         _cbData = cbData;
     }
 
-    // From Print
+    /**
+        @brief Write single byte to I2S buffers.  Not supported
+
+        @return 0 always
+    */
+
     virtual size_t write(uint8_t) {
         return 0;  // Can't do bytes, dude!
     }
 
+    /**
+        @brief Write data to the input leg interface.  Will not block and may write less than requested.
+
+        @param [in] buffer Data to be written
+        @param [in] size Number of bytes to write.
+
+        @return Number of bytes actually written to the resample buffer
+    */
     virtual size_t write(const uint8_t *buffer, size_t size) override {
         size_t written = 0;
 
@@ -170,6 +248,12 @@ public:
         }
         return written * sizeof(uint32_t);
     }
+
+    /**
+        @brief Determine the number of bytes we can write to the resample buffers at this instant
+
+        @return Number of bytes available.  May not be completely accurate
+    */
 
     virtual int availableForWrite() override {
         if (!_empty) {
@@ -294,6 +378,22 @@ private:
 };
 
 
+/**
+    @brief Real-time, IRQ driven mixer with configurable number of inputs
+
+    @details
+    Mixing is handled by creating multiple emulated input legs of `BackgroundAudioMixerInput`.
+
+    Each input leg behaves as its own independent `AudioOutputBase` as far as an output generator is
+    concerned (i.e. a returned `BackgroundAudioMixerInput` can be passed in to the MP3 or WAV decoder
+    with no special handling needed.
+
+    All `BackgroundAudioMixerInput` objects transparently resample their reports back to the parent
+    `BackgroundAudioMixer` so all the mixer here has to do is sum up all its legs and send the result
+    out to the real hardware (I2S or PWM).
+
+    @tparam _outWords Number of 32-bit (one stereo 16-bit sample) words to use for the summing buffer
+*/
 template<size_t _outWords = 512>
 class BackgroundAudioMixer {
 public:
@@ -303,15 +403,34 @@ public:
         _outRate = outputRate;
         _running = false;
     }
+
     ~BackgroundAudioMixer() { /* Noop */
     }
 
+    /**
+        @brief Create a new input leg on the mixer, usable as an `AudioOutputBase`.  Only legal before `begin`
+
+        @returns Newly created `BackgroundAudioMixerInput`(of class `AudioOutputBase`) to be used by an audio generator, or `nullptr` in case of error
+    */
     BackgroundAudioMixerInput *add() {
+        if (_running) {
+            return nullptr;
+        }
         auto x = new BackgroundAudioMixerInput(_outRate, _outWords);
         _input.push_back(x);
         return x;
     }
 
+    /**
+          @brief Start the mixer and attached physical interface
+
+          @details
+          Starts all the emulated input legs of the mixer as well as the physical interface summed data will be
+          sent to.  The physical output sample rate is fixed at this time and all audio data is resampled
+          to this speed transparently.
+
+          @return True on success
+    */
     bool begin() {
         if (_running) {
             return false;
@@ -337,10 +456,16 @@ public:
     }
 
 private:
+    /**
+        @brief C-language shim to convert to an object-based callback
+    */
     static void _cb(void *ptr) {
         ((BackgroundAudioMixer *)ptr)->pump();
     }
 
+    /**
+        @brief Generate a single frame worth of stereo samples by combining all inputs
+    */
     void generateOneFrame() {
         // Collect all the input leg buffers
         int16_t *leg[_input.size()];
@@ -363,12 +488,16 @@ private:
         }
     }
 
+    /**
+        @brief Pumps all inputs to get their next block of data or silence and sends it to the real output device
+    */
     void pump() {
         while (_out->availableForWrite() >= (int)_outWords) {
             generateOneFrame();
             _out->write((uint8_t *)_outBuff, _outWords * 4);
         }
     }
+
     bool _running;
     AudioOutputBase *_out;
     int _outRate;
