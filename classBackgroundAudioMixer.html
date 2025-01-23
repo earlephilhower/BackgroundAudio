@@ -83,8 +83,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a33ecbbed796dcbbbb79eabeb007516d3" id="r_a33ecbbed796dcbbbb79eabeb007516d3"><td class="memItemLeft" align="right" valign="top"><a id="a33ecbbed796dcbbbb79eabeb007516d3" name="a33ecbbed796dcbbbb79eabeb007516d3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>BackgroundAudioMixer</b> (AudioOutputBase &amp;d, int outputRate)</td></tr>
+<tr class="memitem:a33ecbbed796dcbbbb79eabeb007516d3" id="r_a33ecbbed796dcbbbb79eabeb007516d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioMixer.html#a33ecbbed796dcbbbb79eabeb007516d3">BackgroundAudioMixer</a> (AudioOutputBase &amp;d, int outputRate)</td></tr>
+<tr class="memdesc:a33ecbbed796dcbbbb79eabeb007516d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a mixer with output device and constant sample rate.  <br /></td></tr>
 <tr class="separator:a33ecbbed796dcbbbb79eabeb007516d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c956bd7f3d4c9d9a7433582ebd24b97" id="r_a0c956bd7f3d4c9d9a7433582ebd24b97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classBackgroundAudioMixerInput.html">BackgroundAudioMixerInput</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioMixer.html#a0c956bd7f3d4c9d9a7433582ebd24b97">add</a> ()</td></tr>
 <tr class="memdesc:a0c956bd7f3d4c9d9a7433582ebd24b97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new input leg on the mixer, usable as an <code>AudioOutputBase</code>. Only legal before <code>begin</code>  <br /></td></tr>
@@ -105,7 +105,55 @@ class BackgroundAudioMixer&lt; _outWords &gt;</div><p>Real-time, IRQ driven mixe
   </table>
   </dd>
 </dl>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a33ecbbed796dcbbbb79eabeb007516d3" name="a33ecbbed796dcbbbb79eabeb007516d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33ecbbed796dcbbbb79eabeb007516d3">&#9670;&#160;</a></span>BackgroundAudioMixer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t _outWords = 512&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classBackgroundAudioMixer.html">BackgroundAudioMixer</a>&lt; _outWords &gt;<a class="el" href="classBackgroundAudioMixer.html">::BackgroundAudioMixer</a> </td>
+          <td>(</td>
+          <td class="paramtype">AudioOutputBase &amp;&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outputRate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a mixer with output device and constant sample rate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">d</td><td>AudioOutputBase to actually output sound to </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">outputRate</td><td>Fixed output sample rate. All input legs will be resampled to this rate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0c956bd7f3d4c9d9a7433582ebd24b97" name="a0c956bd7f3d4c9d9a7433582ebd24b97"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0c956bd7f3d4c9d9a7433582ebd24b97">&#9670;&#160;</a></span>add()</h2>
 

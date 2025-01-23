@@ -83,8 +83,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a36b57681f26747f23b26aeed38557ad7" id="r_a36b57681f26747f23b26aeed38557ad7"><td class="memItemLeft" align="right" valign="top"><a id="a36b57681f26747f23b26aeed38557ad7" name="a36b57681f26747f23b26aeed38557ad7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>BackgroundAudioMP3Class</b> (AudioOutputBase &amp;d)</td></tr>
+<tr class="memitem:a36b57681f26747f23b26aeed38557ad7" id="r_a36b57681f26747f23b26aeed38557ad7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioMP3Class.html#a36b57681f26747f23b26aeed38557ad7">BackgroundAudioMP3Class</a> (AudioOutputBase &amp;d)</td></tr>
+<tr class="memdesc:a36b57681f26747f23b26aeed38557ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an MP3 output device using the specified physical audio output.  <br /></td></tr>
 <tr class="separator:a36b57681f26747f23b26aeed38557ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d3549c9cf6a6130d8ab04826726aefa" id="r_a6d3549c9cf6a6130d8ab04826726aefa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioMP3Class.html#a6d3549c9cf6a6130d8ab04826726aefa">setDevice</a> (AudioOutputBase *d)</td></tr>
 <tr class="memdesc:a6d3549c9cf6a6130d8ab04826726aefa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set an output device before <code>begin</code>  <br /></td></tr>
@@ -153,7 +153,44 @@ class BackgroundAudioMP3Class&lt; DataBuffer &gt;</div><p>Interrupt-driven MP3 d
   </table>
   </dd>
 </dl>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a36b57681f26747f23b26aeed38557ad7" name="a36b57681f26747f23b26aeed38557ad7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36b57681f26747f23b26aeed38557ad7">&#9670;&#160;</a></span>BackgroundAudioMP3Class()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataBuffer &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classBackgroundAudioMP3Class.html">BackgroundAudioMP3Class</a>&lt; DataBuffer &gt;<a class="el" href="classBackgroundAudioMP3Class.html">::BackgroundAudioMP3Class</a> </td>
+          <td>(</td>
+          <td class="paramtype">AudioOutputBase &amp;&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct an MP3 output device using the specified physical audio output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">d</td><td>AudioOutputBase device to send data to (or AudioMixerInput) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a83d9111a763708b1085746f926114c78" name="a83d9111a763708b1085746f926114c78"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a83d9111a763708b1085746f926114c78">&#9670;&#160;</a></span>available()</h2>
 
@@ -484,7 +521,7 @@ template&lt;class DataBuffer &gt; </div>
 <p>Set an output device before <code>begin</code> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">device</td><td>Pointer to <code>AudioOutputDevice</code> to send decoded data to</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">d</td><td>Pointer to <code>AudioOutputDevice</code> to send decoded data to</td></tr>
   </table>
   </dd>
 </dl>

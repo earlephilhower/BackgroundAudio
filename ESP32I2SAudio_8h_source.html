@@ -282,9 +282,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    }</div>
 </div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    uint32_t _irqs = 0;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    uint32_t _frames = 0;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    uint32_t _underflows = 0;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    uint32_t _irqs = 0; <span class="comment">// Number of I2S IRQs received</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    uint32_t _frames = 0; <span class="comment">// Number of DMA buffers sent</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    uint32_t _underflows = 0; <span class="comment">// Number of underflowed DMA buffers</span></div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
 <div class="foldopen" id="foldopen00268" data-start="{" data-end="}">
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">  268</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">_onSentCB</a>(i2s_chan_handle_t handle, i2s_event_data_t *event, <span class="keywordtype">bool</span> underflow = <span class="keyword">false</span>) {</div>

@@ -106,6 +106,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0c86b5455f25e891ea6e3e4c60899875"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67609cdde7809d9ac7e25488e20bb405" id="r_a67609cdde7809d9ac7e25488e20bb405"><td class="memItemLeft" align="right" valign="top"><a id="a67609cdde7809d9ac7e25488e20bb405" name="a67609cdde7809d9ac7e25488e20bb405"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>flush</b> ()</td></tr>
+<tr class="memdesc:a67609cdde7809d9ac7e25488e20bb405"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw away (flush) the input buffer. <br /></td></tr>
 <tr class="separator:a67609cdde7809d9ac7e25488e20bb405"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -293,7 +294,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>flush</b> ()</td></tr
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Raw data bytes </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">cnd</td><td>Number of bytes to write</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cnt</td><td>Number of bytes to write</td></tr>
   </table>
   </dd>
 </dl>
@@ -328,7 +329,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>flush</b> ()</td></tr
 <p>0-fill a portion of the buffer, but will fail because there is no buffer here </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">cnd</td><td>Number of 0 bytes to write</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cnt</td><td>Number of 0 bytes to write</td></tr>
   </table>
   </dd>
 </dl>
