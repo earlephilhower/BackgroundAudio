@@ -257,18 +257,33 @@ public:
         }
     }
 
+
     /**
-        @brief Number of I2S interrupts that have been triggered since `begin`
+             @brief Get number of DMA frames(buffers) processed
+
+             @return Number of frames
     */
-    uint32_t _irqs = 0; // Number of I2S IRQs received
+    uint32_t frames() {
+        return _frames;
+    }
+
     /**
-        @brief Number of DMA buffers that have been transferred successfully since `begin`
+                @brief Get the number of input data shifts processed by decoder since `begin`
+
+                @return Number of times data has been shifted in the raw input buffer
     */
-    uint32_t _frames = 0; // Number of DMA buffers sent
+    uint32_t irqs() {
+        return _irqs;
+    }
+
     /**
-        @brief Number of underflowed DMA buffers since `begin`
+              @brief Get the number of times the MP3 decoder has underflowed waiting on raw data since `begin`
+
+              @return Number of frames of underflow data have occurred
     */
-    uint32_t _underflows = 0; // Number of underflowed DMA buffers
+    uint32_t underflows() {
+        return _underflows;
+    }
 
     /**
         @brief Object-based callback for I2S Sent notification
@@ -392,4 +407,7 @@ private:
     i2s_chan_handle_t _tx_handle;
     size_t _totalAvailable = 0;
     size_t _available = 0;
+    uint32_t _irqs = 0; // Number of I2S IRQs received
+    uint32_t _frames = 0; // Number of DMA buffers sent
+    uint32_t _underflows = 0; // Number of underflowed DMA buffers
 };
