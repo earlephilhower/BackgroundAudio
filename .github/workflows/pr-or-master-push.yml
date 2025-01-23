@@ -6,10 +6,12 @@ on:
     branches:
       - master
   pull_request:
+  workflow_dispatch:
 
 jobs:
 
   lint:
+    name: Arduino library linter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,9 +19,9 @@ jobs:
         with:
           library-manager: 'update'
 
-# Validate orthography
-  code-spell:
-    name: Check spelling
+# Validate orthography, formatting
+  code-spell-astyle:
+    name: Check spelling and formatting
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,3 +35,105 @@ jobs:
       with:
         skip: ./src/libmad,./src/libhelix-aac
         ignore_words_list: ESP8266,esp8266,esp,dout,DOUT,ser,ans,inout,numer,hist,aache,TYE
+    - name: Run astyle on all code/examples
+      run: |
+        echo "::group::Install"
+        sudo apt update
+        sudo apt install astyle
+        echo "::endgroup::"
+        ./tests/restyle.sh
+        # If anything changed, GIT should return an error and fail the test
+        git diff --exit-code
+
+# Build all examples
+  build-all-rp2040:
+    name: Build all examples on RP2040 Arduino-Pico latest release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Install Arduino-CLI, RP2040 core, this library
+      run: |
+        wget https://downloads.arduino.cc/arduino-cli/nightly/arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        tar xf arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        ./arduino-cli config init
+        ./arduino-cli config add board_manager.additional_urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+        ./arduino-cli config set library.enable_unsafe_install true
+        ./arduino-cli core update-index
+        ./arduino-cli core install rp2040:rp2040
+        sed -i 's/-Wextra/-Wextra -Werror/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Enable -Werror
+        sed -i 's/-std=gnu++17/-std=gnu++17 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
+        mkdir -p ~/Arduino/libraries
+        cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
+    - name: Build examples RP2040
+      run: |
+        mkdir rp2040
+        rm -f *.elf
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci.sh rp2040:rp2040:rpipico rp2040
+        size ./*.elf
+
+# Build all examples
+  build-all-rp2350:
+    name: Build all examples on RP2350 Arduino-Pico latest release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Install Arduino-CLI, RP2040 core, this library
+      run: |
+        wget https://downloads.arduino.cc/arduino-cli/nightly/arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        tar xf arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        ./arduino-cli config init
+        ./arduino-cli config add board_manager.additional_urls https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+        ./arduino-cli config set library.enable_unsafe_install true
+        ./arduino-cli core update-index
+        ./arduino-cli core install rp2040:rp2040
+        sed -i 's/-Wextra/-Wextra -Werror/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Enable -Werror
+        sed -i 's/-std=gnu++17/-std=gnu++17 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
+        mkdir -p ~/Arduino/libraries
+        cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
+    - name: Build examples RP2350
+      run: |
+        mkdir rp2350
+        rm -f *.elf
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci.sh rp2040:rp2040:rpipico2 rp2350
+        size ./*.elf
+
+
+
+# Build all ESP32
+  build-all-esp32:
+    name: Build all examples on Arduino-ESP32 latest release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Install Arduino-CLI, ESP32 core, this library
+      run: |
+        wget https://downloads.arduino.cc/arduino-cli/nightly/arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        tar xf arduino-cli_nightly-latest_Linux_64bit.tar.gz
+        ./arduino-cli config init
+        ./arduino-cli config add board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+        ./arduino-cli config set library.enable_unsafe_install true
+        ./arduino-cli core update-index
+        ./arduino-cli core install esp32:esp32
+        mkdir -p ~/Arduino/libraries
+        cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
+    - name: Build examples ESP32C6
+      run: |
+        mkdir esp32c6
+        rm -f *.elf
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci-esp32.sh esp32:esp32:esp32c6 esp32c6
+        size ./*.elf

@@ -23,8 +23,6 @@
 */
 
 #include <BackgroundAudio.h>
-#include <PWMAudio.h>
-#include <I2S.h>
 #include <SD.h>
 #include <vector>
 #include <string.h>
@@ -41,8 +39,15 @@ const int _MOSI = 7;  // AKA SPI TX
 const int _CS = 5;
 const int _SCK = 6;
 
-// I2S out(OUTPUT, 0, 2);
+#ifdef ESP32
+#include <ESP32I2SAudio.h>
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT (,MCLK)
+#else
+#include <PWMAudio.h>
+#include <I2S.h>
+// I2S audio(OUTPUT, 0, 2);
 PWMAudio audio(0);
+#endif
 // We will make a larger buffer because SD cards can sometime take a long time to read
 BackgroundAudioMP3Class<RawDataBuffer<16 * 1024>> BMP(audio);
 
@@ -88,11 +93,21 @@ void scanDirectory(const char *dirname) {
 }
 
 void setup() {
+  Serial.begin(115200);
+
   // Ensure a different random sequence every time we start up
+#ifdef ESP32
+  srand(ESP.getCycleCount());
+#else
   srand(rp2040.hwrand32());
-  
+#endif
+
   // Initialize the SD card
   bool sdInitialized = false;
+#ifdef ESP32
+  SPI.begin(_SCK, _MISO, _MOSI, _CS);
+  sdInitialized = SD.begin(_CS);
+#else
   if (_MISO == 0 || _MISO == 4 || _MISO == 16) {
     SPI.setRX(_MISO);
     SPI.setTX(_MOSI);
@@ -109,11 +124,17 @@ void setup() {
       delay(1);
     }
   }
+#endif
+
   if (!sdInitialized) {
     Serial.println("initialization failed!");
     while (1) {
       delay(1000);
+#ifdef ESP32
+      ESP.restart();
+#else
       rp2040.reboot();
+#endif
     }
   }
 
@@ -125,6 +146,14 @@ void setup() {
 
 void loop() {
   // When BOOTSEL held, skip to another song
+#ifdef ESP32
+  if (Serial.available()) {
+    f.close();  // Choose another
+    while (Serial.available()) {
+      Serial.read();
+    }
+  }
+#else
   if (BOOTSEL) {
     f.close();  // Choose another
     // wait for release
@@ -132,6 +161,7 @@ void loop() {
       delay(1);
     }
   }
+#endif
 
   // Choose a song from the list if there's no open file
   if (!f) {

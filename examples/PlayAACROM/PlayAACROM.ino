@@ -11,15 +11,21 @@
 // Intended as a simple demonstration of BackgroundAudio usage.
 
 #include <BackgroundAudioAAC.h>
-#include <I2S.h>
-#include "pianoaac.h"
+#include <__example_pianoaac.h>
 
+#ifdef ESP32
+#include <ESP32I2SAudio.h>
+ESP32I2SAudio i2s(4, 5, 6); // BCLK, LRCLK, DOUT (,MCLK)
+#else
+#include <I2S.h>
 I2S i2s(OUTPUT, 0, 2);
+#endif
 ROMBackgroundAudioAAC BMP(i2s);
 
 bool stopped = false;
 
 void setup() {
+  Serial.begin(115200);
   delay(5000);
 
   // Signal we've started
@@ -34,7 +40,7 @@ void setup() {
 
 void loop() {
   if (!BMP.done()) {
-    Serial.printf("Buffer: %d -- %d %d %d %d -- ", BMP.available(), BMP.shifts(), BMP.frames(), BMP.errors(), BMP.dumps());
+    Serial.printf("Buffer: %d -- %lu %lu %lu %lu -- ", BMP.available(), BMP.shifts(), BMP.frames(), BMP.errors(), BMP.dumps());
     Serial.printf("Waiting to finish....could be doing something useful here\r\n");
     delay(100);
   } else if (!stopped) {

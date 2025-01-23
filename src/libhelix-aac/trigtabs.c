@@ -48,7 +48,11 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnarrowing"
 
+#if defined(PICO_RP2040) || defined(PICO_RP2350)
 #define DPROGMEM __attribute__(( section(".time_critical.data") ))
+#else
+#define DPROGMEM PROGMEM
+#endif
 
 const int cos4sin4tabOffset[NUM_IMDCT_SIZES] DPROGMEM = {0, 128};
 

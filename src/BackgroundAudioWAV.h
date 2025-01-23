@@ -21,33 +21,64 @@
 
 #pragma once
 #include <Arduino.h>
-#include <AudioOutputBase.h>
+#include "WrappedAudioOutputBase.h"
 #include "BackgroundAudioBuffers.h"
 #include "BackgroundAudioGain.h"
 
-// Interrupt-driven WAV decoder.  Generates a full frame of samples each cycle
-// and uses the RawBuffer to safely hand data from the app to the decompressor.
+/**
+    @brief Interrupt-driven WAV decoder.  Generates a full frame of samples each cycle and uses the RawBuffer to safely hand data from the app to the decompressor.
+
+    @tparam DataBuffer The type of raw data buffer, either normal `RawDataBuffer` or `ROMDataBuffer` as appropriate.
+*/
 template<class DataBuffer>
 class BackgroundAudioWAVClass {
 public:
+    BackgroundAudioWAVClass() {
+        _playing = false;
+        _paused = false;
+        _out = nullptr;
+    }
+
+    /**
+        @brief Construct an AAC decoder with a given AudioOutputBase
+
+        @param [in] d AudioOutputBase device (MixerInput or I2S or PWM, etc.) to decode tp
+    */
     BackgroundAudioWAVClass(AudioOutputBase &d) {
         _playing = false;
-        setDevice(d);
+        _paused = false;
+        setDevice(&d);
     }
+
     ~BackgroundAudioWAVClass() {}
 
-    bool setDevice(AudioOutputBase &d) {
+    /**
+        @brief Configure the output device before `begin`
+
+        @return True if successful
+    */
+    bool setDevice(AudioOutputBase *d) {
         if (!_playing) {
-            _out = &d;
+            _out = d;
             return true;
         }
         return false;
     }
 
+    /**
+        @brief Set the gain multiplier (volume) for the stream.  Takes effect immediately.
+
+        @param [in] scale Floating point value from 0.0....16.0 to multiply all audio data by
+    */
     void setGain(float scale) {
         _gain = (int32_t)(scale * (1 << 16));
     }
 
+    /**
+        @brief Starts the background WAV decoder/player.  Will initialize the output device and start sending silence immediately.
+
+        @return True on success, false if already started.
+    */
     bool begin() {
         if (!_out) {
             return false;
@@ -65,7 +96,7 @@ public:
         _out->begin();
 
         // Stuff with silence to start
-        uint16_t zeros[32] = {};
+        uint32_t zeros[32] = {};
         while (_out->availableForWrite() > 32) {
             _out->write((uint8_t *)zeros, sizeof(zeros));
         }
@@ -74,50 +105,129 @@ public:
         return true;
     }
 
+    /**
+        @brief Stops the WAV decoder process and the calls the output device's end to shut it down, too.
+    */
     void end() {
         _out->end();
     }
 
+    /**
+        @brief Determines if the WAV decoder has been started
+
+        @returns True if running
+    */
     bool playing() {
         return _playing;
     }
 
+    /**
+        @brief Writes a block of raw data to the decoder's buffer
+
+        @details
+        Copies up to `len` bytes into the raw buffer for the object.  Can be called before `begin`,
+        and can write less fewer than the number of bytes requested if there is not enough space.
+        Will not block.
+
+        For ROM buffers this does not actually copy data, only the pointer.  Therefore, for ROM
+        buffers you cannot concatenate data by calling multiple writes because the second write
+        will throw out all the data from the first one.  Use `flush` and `write` when ready for
+        a completely new buffer.
+
+        @param [in] data Uncompressed input data
+        @param [in] len Number of bytes to write
+
+        @return Number of bytes written
+    */
     size_t write(const void *data, size_t len) {
         return _ib.write((const uint8_t *)data, len);
     }
 
+    /**
+        @brief Gets number of bytes available to write to raw buffer
+
+        @details
+        For ROM buffers, this is always 0 after a write has happened.  Because ROM buffers don't
+        actually allocate any RAM for buffering and simply store the pointer passed in from `write`
+        there is no real space available for an app to `write` to.  An app can simply `flush` and
+        `write` a new complete buffer if needed ignoring `availableForWrite` in the ROM case.
+
+        @return Bytes that can be written
+    */
     size_t availableForWrite() {
         return _ib.availableForWrite();
     }
 
+    /**
+        @brief Gets number of bytes already in the raw buffer
+
+        @return Bytes of raw data in the buffer
+    */
     size_t available() {
         return _ib.available() - _accumShift;
     }
 
+    /**
+        @brief Determine if no more WAV file is present in the buffer
+
+        @return True if no raw WAV data is still left to process
+    */
     bool done() {
         return !available();
     }
 
+    /**
+        @brief Get number of "frames" processed by decoder
+
+        @return Number of frames, where frames are `framelen` stereo samples in size
+    */
     uint32_t frames() {
         return _frames;
     }
 
+    /**
+        @brief Get the number of input data shifts processed by decoder since `begin`
+
+        @return Number of times data has been shifted in the raw input buffer
+    */
     uint32_t shifts() {
         return _shifts;
     }
 
+    /**
+        @brief Get the number of times the WAV decoder has underflowed waiting on raw data since `begin`
+
+        @return Number of frames of underflow data have occurred
+    */
     uint32_t underflows() {
         return _underflows;
     }
 
+    /**
+        @brief Get the number of decoder errors since `begin`
+
+        @return Number of decode errors encountered
+    */
     uint32_t errors() {
         return _errors;
     }
 
+    /**
+        @brief Get the number of full buffer dumps (catastrophic data error) since `begin`
+
+        @return Number of complete buffer throw-aways
+    */
     uint32_t dumps() {
         return _dumps;
     }
 
+    /**
+        @brief Flushes any existing WAV data, resets the processor to start a new WAV
+
+        @details
+        This is only needed if the current WAV file was corrupted or to stop playing one WAV
+        file and immediately start on a new one.
+    */
     void flush() {
         noInterrupts();
         _ib.flush();
@@ -128,6 +238,29 @@ public:
         _dataRemaining = 0;
         _accumShift = 0;
         interrupts();
+    }
+
+    /**
+        @brief Pause the decoder.  Won't process raw input data and will transmit silence
+    */
+    void pause() {
+        _paused = true;
+    }
+
+    /**
+        @brief Determine if the WAV playback is paused
+
+        @return True of WAV playback has been paused
+    */
+    bool paused() {
+        return _paused;
+    }
+
+    /**
+        @brief Unpause previously paused WAV playback.  Will start processing input data again
+    */
+    void unpause() {
+        _paused = false;
     }
 
 private:
@@ -237,10 +370,12 @@ private:
                     if ((_channels == 0) || (_channels > 2) || !((_bps == 8) || (_bps == 16)) || (_sampleRate < 4000) || (_sampleRate > 48000)) {
                         // Invalid config, we can't play
                         _errors++;
+                        _sampleRate = 0;
                         _seenRIFF = false;
                         _accumShift++;
                         continue;
                     }
+                    _accumShift += 24;
                     _seenFMT = true;
                 } else if (_seenRIFF && _seenFMT && !_seenDATA && !memcmp(b, "data", 4)) {
                     if (avail < 8) {
@@ -286,9 +421,13 @@ underflow:
 
     void pump() {
         while (_out->availableForWrite() >= (int)framelen) {
-            generateOneFrame();
-            if (_sampleRate) {
-                _out->setFrequency(_sampleRate);
+            if (_paused) {
+                bzero((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
+            } else {
+                generateOneFrame();
+                if (_sampleRate) {
+                    _out->setFrequency(_sampleRate);
+                }
             }
             _out->write((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
         }
@@ -297,6 +436,7 @@ underflow:
 private:
     AudioOutputBase *_out;
     bool _playing = false;
+    bool _paused = false;
     static const size_t framelen = 512;
     DataBuffer _ib;
     int16_t _outSample[framelen * 2] __attribute__((aligned(4)));
@@ -320,5 +460,11 @@ private:
     uint32_t _dumps = 0;
 };
 
+/**
+    @brief General purpose WAV background player with an 8KB buffer.  Needs to have `write` called repeatedly with data.
+*/
 using BackgroundAudioWAV = BackgroundAudioWAVClass<RawDataBuffer<8 * 1024>>;
+/**
+    @brief Special purpose WAV player for use with ROM or data already completely in RAM. Does not copy any data, uses single written data pointer directly.
+*/
 using ROMBackgroundAudioWAV = BackgroundAudioWAVClass<ROMDataBuffer>;

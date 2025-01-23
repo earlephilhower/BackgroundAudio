@@ -20,6 +20,22 @@
 */
 
 #pragma once
-#include <BackgroundAudioAAC.h>
-#include <BackgroundAudioMP3.h>
-#include <BackgroundAudioWAV.h>
+#include "BackgroundAudioAAC.h"
+#include "BackgroundAudioMP3.h"
+#include "BackgroundAudioWAV.h"
+#include "BackgroundAudioMixer.h"
+
+/**
+    @mainpage
+    Main Project Page
+    =================
+    https://github.com/earlephilhower/BackgroundAudio
+
+    README
+    ------
+    https://earlephilhower.github.io/BackgroundAudio/md_README.html
+
+    Class Listing
+    -------------
+    https://earlephilhower.github.io/BackgroundAudio/annotated.html
+*/

@@ -1,7 +1,7 @@
-# BackgroundAudio - Play MP3, AAC, and WAV on the Raspberry Pi Pico (RP2040) and Pico 2 (RP2350)
+# BackgroundAudio - Play MP3, AAC, and WAV on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32
 
-BackgroundAudio is an Arduino library that lets sketches play MP3s, AACs, and WAVs on the Raspberry Pi Pico
-and Pico 2 with a very simple application level interface.  Data is written to the playback object when
+BackgroundAudio is an Arduino library that lets sketches play MP3s, AACs, and WAVs on the Raspberry Pi Pico,
+Pico 2, and ESP32 with a very simple application level interface.  Data is written to the playback object when
 available from the main application, and interrupts (IRQs) are used to generate data for I2S, PWMAudio,
 or Bluetooth A2DP in the background.  The application only needs to provide data faster than it is
 decompressed.  There is a source buffer that's managed by the playback routine, letting apps "fire and forget"
@@ -25,10 +25,14 @@ but because of the interrupt-driver, buffer-based architecture playback is very 
 Pico and even with HTTPS decryption in software.  The MP3 decoder and HTTPs encryption stack are the same
 in both libraries, they're just used more efficiently here.)
 
+## Online Documentation
+See https://earlephilhower.github.io/BackgroundAudio/ for more class information, along with all the included examples.
+
 ## Compatibility
 
 BackgroundAudio today builds and runs under [Arduino-Pico](https://github.com/earlephilhower/arduino-pico),
-but ports to the ESP32 family would be welcomed.
+and [Arduino-ESP32](https://github.com/espressif/arduino-esp32).  It should be possible to port to any
+Arduino core which has I2S/audio packet callbacks to drive the processing.
 
 ## Adding BackgroundAudio to an Application
 
@@ -81,6 +85,21 @@ void loop() {
 
 }
 ````
+
+## ESP32 Implementation
+
+The ESP32 support requires the use of the built-in I2S wrapper library and does not use (and is not
+compatible) with the `I2S` library distributed with `Arduino-ESP32`.  Several additional features
+were required to port the background processing, and those are not available in the Arduino library.
+To instantiate the ESP32 I2S wrapper, copy the examples and use the following:
+
+````
+#include <ESP32I2SAudio.h>
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
+````
+
+The `ESP32I2SAudio` object can be passed in to any of the BackgroundAudio constructors as it implements
+the `AudioOutputBase` class.
 
 ## Performance
 

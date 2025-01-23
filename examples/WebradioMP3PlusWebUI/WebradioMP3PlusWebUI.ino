@@ -8,25 +8,46 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <BackgroundAudio.h>
-#include <I2S.h>
-#include <PWMAudio.h>
 #include <WebServer.h>
 
 #ifndef STASSID
-#define STASSID "your-ssid"
-#define STAPSK "your-password"
+#define STASSID "NOBABIES"
+#define STAPSK "ElephantsAreGreat"
 #endif
 
 const char *ssid = STASSID;
 const char *pass = STAPSK;
 
+#ifdef ESP32
+#include <ESP32I2SAudio.h>
+ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT (, MCLK)
+#else
+#include <I2S.h>
+#include <PWMAudio.h>
 // Uncomment either the PWM or I2S version, being sure to adjust the PWM pin or (BCLK,DATA) pins.
 I2S audio(OUTPUT, 0, 2);
 //PWMAudio audio(0);
-BackgroundAudioMP3 mp3(audio);
+#endif
+
+#ifdef ESP32
+// The ESP32 devices seem to have very variable HTTP performance.  Increase the buffer here to sort-of compensate
+#define STREAMBUFF (32 * 1024)
+#else
+// Pico and PicoW work well with much smaller compressed/raw buffer...
+#define STREAMBUFF (16 * 1024)
+#endif
+
+// Instantiate a MP3 player with the specified raw (compressed) data buffer
+BackgroundAudioMP3Class<RawDataBuffer<STREAMBUFF>> mp3(audio);
+
+#ifdef ESP32
+NetworkClientSecure client;
+#else
 WiFiClientSecure client;  // Because URL is HTTPS, need a WiFiSecureClient.  Plain HTTP can use WiFiClient
-HTTPClient http;
+#endif
+
 String url = "https://cromwell-ice.streamguys1.com/WCJZFM"; // "https://ice.audionow.com/485BBCWorld.mp3"; // Check out https://fmstream.org/index.php?c=FT for others
+HTTPClient http;
 uint8_t buff[512]; // HTTP reads into this before sending to MP3
 WebServer web(80); // The HTTP interface for remote control
 
@@ -90,10 +111,12 @@ Change URL: <input type="text" name="url">
 
 
 void ConnectWiFi() {
+#ifndef ESP32
   WiFi.end();
+#endif
   Serial.print("Connecting to WiFi...");
   WiFi.begin(ssid, pass);
-  while (!WiFi.connected()) {
+  while (!WiFi.isConnected()) {
     Serial.print("..");
     delay(100);
   }
@@ -131,6 +154,7 @@ void handleURL() {
 }
 
 void setup() {
+  Serial.begin(115200);
   delay(5000);
   printHelp();
   client.setInsecure(); // Don't worry about certs, just use encryption
@@ -148,7 +172,7 @@ void loop() {
   static uint32_t last = 0;
 
   // Ensure WiFi is up.  If not, retry
-  if (!WiFi.connected()) {
+  if (!WiFi.isConnected()) {
     ConnectWiFi();
     return;
   }
@@ -199,6 +223,14 @@ void loop() {
       return; // Error in the read
     }
     mp3.write(buff, read);
+
+    // If we drop too low, pause playback to let us catch up
+    if (mp3.available() < 1024) {
+      mp3.pause();
+    } else if (mp3.paused() && mp3.available() > (STREAMBUFF / 2)) { // When paused wait until kind-of full before restarting
+      mp3.unpause();
+    }
+
     icyDataLeft -= read;
     if (icyMetaInt && !icyDataLeft) {
       while (!stream->available() && stream->connected()) {
@@ -246,7 +278,7 @@ void loop() {
   // Can do UI processing, etc. at this point  Just be sure to run loop() often enough to get the 20-30KB/s of transfers needed for MP3 streaming
   if ((millis() - last) > 1000) {
     last = millis();
-    sprintf((char *)buff, "buffer: %d, frames %d, shifts %d, underflows %d, errors %d, dumps %d, uptime %d", mp3.available(), mp3.frames(), mp3.shifts(), mp3.underflows(), mp3.errors(), mp3.dumps(), last);
+    sprintf((char *)buff, "buffer: %d, frames %lu, shifts %lu, underflows %lu, errors %lu, dumps %lu, uptime %lu", mp3.available(), mp3.frames(), mp3.shifts(), mp3.underflows(), mp3.errors(), mp3.dumps(), last);
     Serial.println((char*)buff);
     status = (char*)buff;
   }
