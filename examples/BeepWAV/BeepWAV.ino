@@ -38,7 +38,7 @@ uint32_t last = 0;
 void loop() {
 #ifdef ESP32
   if (millis() - last > 3500) {
-    Serial.printf("Runtime: %lu, %d\r\n", millis(), audio._frames);
+    Serial.printf("Runtime: %lu, %d\r\n", millis(), audio.frames());
     last = millis();
     BMP.flush(); // Stop any existing output, reset for new file
     BMP.write(beepwav, sizeof(beepwav));
