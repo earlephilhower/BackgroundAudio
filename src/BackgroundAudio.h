@@ -27,6 +27,15 @@
 
 /**
     @mainpage
-    See https://earlephilhower.github.io/BackgroundAudio/md_README.html and https://earlephilhower.github.io/BackgroundAudio/annotated.html for more details
+    Main Project Page
+    =================
+    https://github.com/earlephilhower/BackgroundAudio
 
+    README
+    ------
+    https://earlephilhower.github.io/BackgroundAudio/md_README.html
+
+    Class Listing
+    -------------
+    https://earlephilhower.github.io/BackgroundAudio/annotated.html
 */

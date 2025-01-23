@@ -256,8 +256,17 @@ public:
         }
     }
 
+    /**
+        @brief Number of I2S interrupts that have been triggered since `begin`
+    */
     uint32_t _irqs = 0; // Number of I2S IRQs received
+    /**
+        @brief Number of DMA buffers that have been transferred successfully since `begin`
+    */
     uint32_t _frames = 0; // Number of DMA buffers sent
+    /**
+        @brief Number of underflowed DMA buffers since `begin`
+    */
     uint32_t _underflows = 0; // Number of underflowed DMA buffers
 
     /**

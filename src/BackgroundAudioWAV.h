@@ -39,6 +39,11 @@ public:
         _out = nullptr;
     }
 
+    /**
+        @brief Construct an AAC decoder with a given AudioOutputBase
+
+        @param [in] d AudioOutputBase device (MixerInput or I2S or PWM, etc.) to decode tp
+    */
     BackgroundAudioWAVClass(AudioOutputBase &d) {
         _playing = false;
         _paused = false;
