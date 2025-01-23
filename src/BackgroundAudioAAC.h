@@ -211,7 +211,7 @@ public:
     }
 
     /**
-              @brief Get tne number of decoder errors since `begin`
+              @brief Get the number of decoder errors since `begin`
 
               @return Number of decode errors encountered
     */

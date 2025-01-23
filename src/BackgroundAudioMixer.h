@@ -384,7 +384,7 @@ private:
     @details
     Mixing is handled by creating multiple emulated input legs of `BackgroundAudioMixerInput`.
 
-    Each input leg behaves as its own independent `AudioOutputBase` as far as an outut generator is
+    Each input leg behaves as its own independent `AudioOutputBase` as far as an output generator is
     concerned (i.e. a returned `BackgroundAudioMixerInput` can be passed in to the MP3 or WAV decoder
     with no special handling needed.
 
