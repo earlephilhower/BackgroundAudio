@@ -114,14 +114,12 @@ public:
         return true;
     }
 
-
     /**
           @brief Stops the AAC decoder process and the calls the output device's end to shut it down, too.
     */
     void end() {
         if (_playing) {
             _out->end();
-            //AACFreeDecoder(_hAACDecoder);
         }
     }
     /**
