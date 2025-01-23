@@ -25,6 +25,9 @@ but because of the interrupt-driver, buffer-based architecture playback is very 
 Pico and even with HTTPS decryption in software.  The MP3 decoder and HTTPs encryption stack are the same
 in both libraries, they're just used more efficiently here.)
 
+## Online Documentation
+See https://earlephilhower.github.io/BackgroundAudio/ for more class information, along with all the included examples.
+
 ## Compatibility
 
 BackgroundAudio today builds and runs under [Arduino-Pico](https://github.com/earlephilhower/arduino-pico),
