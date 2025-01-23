@@ -48,6 +48,7 @@ public:
         _bufferWords = 512;
         _silenceSample = 0;
         _cb = nullptr;
+        _underflowed = false;
     }
 
     virtual ~ESP32I2SAudio() {
@@ -279,6 +280,9 @@ public:
         xHigherPriorityTaskWoken = pdFALSE;
         if (_taskHandle) {
             _irqs++;
+            if (underflow) {
+                _underflowed = true;
+            }
             xTaskNotifyFromISR(_taskHandle, event->size * (underflow ? -1 : 1), eSetValueWithOverwrite, &xHigherPriorityTaskWoken);
         }
         return (bool)xHigherPriorityTaskWoken;
@@ -291,8 +295,13 @@ public:
         @return True if success
     */
     bool end() override {
-        // TODO
-        return false;
+        if (_running) {
+            i2s_channel_disable(_tx_handle);
+            i2s_del_channel(_tx_handle);
+            vTaskDelete(_taskHandle);
+            _running = false;
+        }
+        return true;
     }
 
     /**
@@ -301,7 +310,11 @@ public:
         @return True if an underflow occurred.
     */
     bool getUnderflow() override {
-        return false; // TODO
+        noInterrupts();
+        auto ret = _underflowed;
+        _underflowed = false;
+        interrupts();
+        return ret;
     }
 
     /**
@@ -367,6 +380,7 @@ private:
     bool _bclkInv = false;
     bool _wsInv = false;
     bool _mclkInv = false;
+    bool _underflowed = false;
     size_t _sampleRate;
     size_t _buffers;
     size_t _bufferWords;
