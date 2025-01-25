@@ -1,4 +1,4 @@
-# BackgroundAudio - Play MP3, AAC, and WAV on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32
+# BackgroundAudio - Play MP3, AAC, WAV, and Speech on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32
 
 BackgroundAudio is an Arduino library that lets sketches play MP3s, AACs, and WAVs on the Raspberry Pi Pico,
 Pico 2, and ESP32 with a very simple application level interface.  Data is written to the playback object when
@@ -127,6 +127,7 @@ MP3 decode cycles: 201450592, frames 183, cycles/sample 955.58
 
 * BeepWAV : Plays "beep" using PWM to a phono jack every time the BOOTSEL button is pressed.  Shows how the main app can continue doing work while playback is ongoing and how to start a new WAV file without needing to finish a currently playing one.
 * PlayAACROM : Plays an AAC piano sample over PWM every time a character comes in over Serial.  Demonstrates the ROM playback objects and how they don't need any application interaction after they're fired off.
+* SerialSpeak : You type, it talks!  Allows changing between voices on-the-fly.  Demonstrates the simple speech API and accessing the multiple predefined speech dictionaries and voices.
 * SimpleMP3Shuffle : Convert your Pico into an SD-card MP3 player.  Continuously plays randomly selected MP3 files from the root folder of an attached SD card.  Demonstrates how an application can send raw data to the decoder while still doing other processing.
 * SpeedTest : Calculates the number of CPU cycles per output sample for MP3, AAC, and HE-AAC using the current CPU and optimization settings.  Useful to see how different `-Ox` settings change performance,
 * WebradioMP3PlusWebUI : Shows a more complete application that can play an MP3 web radio using HTTPS connectivity.  Includes a serial and HTTP WebServer interface to allow the user to change URLs, volumes, and see the ICY metadata.
@@ -135,3 +136,4 @@ MP3 decode cycles: 201450592, frames 183, cycles/sample 955.58
 
 * AAC decode source is from the Helix project and licensed under RealNetwork's RSPL license.  For commercial use you're still going to need the usual AAC licensing from [Via Licensing](http://www.via-corp.com/us/en/licensing/aac/overview.html).
 * MP3 decode source is from libMAD by Underbit Technologies, Inc., and licensed under the GPL.
+* ESpeak-NG is GPL3 licensed and available from the maintainers at https://github.com/espeak-ng/espeak-ng
