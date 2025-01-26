@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.2.0</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.0</span>
    </div>
   </td>
  </tr>
@@ -72,7 +72,6 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classESP32I2SAudio-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">ESP32I2SAudio Class Reference</div></div>
 </div><!--header-->
@@ -133,6 +132,15 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>_backgroundTask</b> ()</td></tr>
 <tr class="memdesc:a0d338d0dfcf436bf5b1c8265c926409a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background I2S DMA buffer notification task. Tracks number of bytes available to be written. <br /></td></tr>
 <tr class="separator:a0d338d0dfcf436bf5b1c8265c926409a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a76caff343cea29ae05b25ea51edd05" id="r_a3a76caff343cea29ae05b25ea51edd05"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a3a76caff343cea29ae05b25ea51edd05">frames</a> ()</td></tr>
+<tr class="memdesc:a3a76caff343cea29ae05b25ea51edd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of DMA frames(buffers) processed.  <br /></td></tr>
+<tr class="separator:a3a76caff343cea29ae05b25ea51edd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17fcb18b1b6372976b6ed063415bb91b" id="r_a17fcb18b1b6372976b6ed063415bb91b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a17fcb18b1b6372976b6ed063415bb91b">irqs</a> ()</td></tr>
+<tr class="memdesc:a17fcb18b1b6372976b6ed063415bb91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of input data shifts processed by decoder since <code>begin</code>  <br /></td></tr>
+<tr class="separator:a17fcb18b1b6372976b6ed063415bb91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a703c3a005ca5edb460e7a96c5001a618" id="r_a703c3a005ca5edb460e7a96c5001a618"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a703c3a005ca5edb460e7a96c5001a618">underflows</a> ()</td></tr>
+<tr class="memdesc:a703c3a005ca5edb460e7a96c5001a618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of times the MP3 decoder has underflowed waiting on raw data since <code>begin</code>  <br /></td></tr>
+<tr class="separator:a703c3a005ca5edb460e7a96c5001a618"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a2e5ef52b6b1ee7fffb843df23970ed" id="r_a3a2e5ef52b6b1ee7fffb843df23970ed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">_onSentCB</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow=false)</td></tr>
 <tr class="memdesc:a3a2e5ef52b6b1ee7fffb843df23970ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object-based callback for I2S Sent notification.  <br /></td></tr>
 <tr class="separator:a3a2e5ef52b6b1ee7fffb843df23970ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,21 +175,6 @@ Static Public Member Functions</h2></td></tr>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> (void *pvParameters)</td></tr>
 <tr class="memdesc:a0a1a623a62e49d740e0dd579a3d6624a"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language shim to start the real object's task. <br /></td></tr>
 <tr class="separator:a0a1a623a62e49d740e0dd579a3d6624a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a7802da4433e6e81485e0eaf4db9b9fe6" id="r_a7802da4433e6e81485e0eaf4db9b9fe6"><td class="memItemLeft" align="right" valign="top"><a id="a7802da4433e6e81485e0eaf4db9b9fe6" name="a7802da4433e6e81485e0eaf4db9b9fe6"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_irqs</b> = 0</td></tr>
-<tr class="memdesc:a7802da4433e6e81485e0eaf4db9b9fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of I2S interrupts that have been triggered since <code>begin</code> <br /></td></tr>
-<tr class="separator:a7802da4433e6e81485e0eaf4db9b9fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94a92b72c96346eed0eca033fcf43494" id="r_a94a92b72c96346eed0eca033fcf43494"><td class="memItemLeft" align="right" valign="top"><a id="a94a92b72c96346eed0eca033fcf43494" name="a94a92b72c96346eed0eca033fcf43494"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_frames</b> = 0</td></tr>
-<tr class="memdesc:a94a92b72c96346eed0eca033fcf43494"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of DMA buffers that have been transferred successfully since <code>begin</code> <br /></td></tr>
-<tr class="separator:a94a92b72c96346eed0eca033fcf43494"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a274d216f7f1b29a5a0797ed004dd6d74" id="r_a274d216f7f1b29a5a0797ed004dd6d74"><td class="memItemLeft" align="right" valign="top"><a id="a274d216f7f1b29a5a0797ed004dd6d74" name="a274d216f7f1b29a5a0797ed004dd6d74"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_underflows</b> = 0</td></tr>
-<tr class="memdesc:a274d216f7f1b29a5a0797ed004dd6d74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of underflowed DMA buffers since <code>begin</code> <br /></td></tr>
-<tr class="separator:a274d216f7f1b29a5a0797ed004dd6d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio. </p>
@@ -466,6 +459,34 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_underflows</b> =
 
 </div>
 </div>
+<a id="a3a76caff343cea29ae05b25ea51edd05" name="a3a76caff343cea29ae05b25ea51edd05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a76caff343cea29ae05b25ea51edd05">&#9670;&#160;</a></span>frames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t ESP32I2SAudio::frames </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get number of DMA frames(buffers) processed. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of frames </dd></dl>
+
+</div>
+</div>
 <a id="a9e69f88f55b6d98fba857d966bddcdef" name="a9e69f88f55b6d98fba857d966bddcdef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9e69f88f55b6d98fba857d966bddcdef">&#9670;&#160;</a></span>getUnderflow()</h2>
 
@@ -491,6 +512,34 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_underflows</b> =
 
 <p>Determine if there was an underflow since the last time this was called. Cleared on read. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if an underflow occurred. </dd></dl>
+
+</div>
+</div>
+<a id="a17fcb18b1b6372976b6ed063415bb91b" name="a17fcb18b1b6372976b6ed063415bb91b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17fcb18b1b6372976b6ed063415bb91b">&#9670;&#160;</a></span>irqs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t ESP32I2SAudio::irqs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the number of input data shifts processed by decoder since <code>begin</code> </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of times data has been shifted in the raw input buffer </dd></dl>
 
 </div>
 </div>
@@ -805,6 +854,34 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_underflows</b> =
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if success </dd></dl>
+
+</div>
+</div>
+<a id="a703c3a005ca5edb460e7a96c5001a618" name="a703c3a005ca5edb460e7a96c5001a618"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a703c3a005ca5edb460e7a96c5001a618">&#9670;&#160;</a></span>underflows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t ESP32I2SAudio::underflows </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the number of times the MP3 decoder has underflowed waiting on raw data since <code>begin</code> </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of frames of underflow data have occurred </dd></dl>
 
 </div>
 </div>

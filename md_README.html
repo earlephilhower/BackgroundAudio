@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BackgroundAudio: BackgroundAudio - Play MP3, AAC, and WAV on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32</title>
+<title>BackgroundAudio: BackgroundAudio - Play MP3, AAC, WAV, and Speech on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.2.0</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.0</span>
    </div>
   </td>
  </tr>
@@ -69,7 +69,7 @@ $(function() {
 
 </div><!-- top -->
 <div><div class="header">
-  <div class="headertitle"><div class="title">BackgroundAudio - Play MP3, AAC, and WAV on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32</div></div>
+  <div class="headertitle"><div class="title">BackgroundAudio - Play MP3, AAC, WAV, and Speech on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md0"></a> BackgroundAudio is an Arduino library that lets sketches play MP3s, AACs, and WAVs on the Raspberry Pi Pico, Pico 2, and ESP32 with a very simple application level interface. Data is written to the playback object when available from the main application, and interrupts (IRQs) are used to generate data for I2S, PWMAudio, or Bluetooth A2DP in the background. The application only needs to provide data faster than it is decompressed. There is a source buffer that's managed by the playback routine, letting apps "fire and forget" for playback.</p>
@@ -77,9 +77,12 @@ $(function() {
 <p>Because this library is much more optimized and efficient than ESP8266Audio, a standard Pico W can actually easily stream an MP3 web radio station using HTTPS encryption (the standard). A Pico 2 W can easily handle a HE-AAC web station under the same conditions, too, because of it's much higher IPC core and higher clock rate.</p>
 <p>(As a point of comparison, the WebRadio example in the ESP8266Audio library is not very stable because the audio processing is happening in the same context as the web interface and net streaming code leading to dropouts and hangs in extended use. The WebRadioMP3PlusWebUI sketch here is basically the same user application but because of the interrupt-driver, buffer-based architecture playback is very smooth even on an original Pico and even with HTTPS decryption in software. The MP3 decoder and HTTPs encryption stack are the same in both libraries, they're just used more efficiently here.)</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
+Online Documentation</h1>
+<p>See <a href="https://earlephilhower.github.io/BackgroundAudio/">https://earlephilhower.github.io/BackgroundAudio/</a> for more class information, along with all the included examples.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Compatibility</h1>
 <p>BackgroundAudio today builds and runs under <a href="https://github.com/earlephilhower/arduino-pico">Arduino-Pico</a>, and <a href="https://github.com/espressif/arduino-esp32">Arduino-ESP32</a>. It should be possible to port to any Arduino core which has I2S/audio packet callbacks to drive the processing.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Adding BackgroundAudio to an Application</h1>
 <p>Simply include the appropriate header, or <code><a class="el" href="BackgroundAudio_8h_source.html">BackgroundAudio.h</a></code> for all codecs. Instantiate a global object of the appropriate type, passing in an output device (<code>I2S</code>, <code>PWMAudio</code>, or even <code>A2DPSink</code>) to the constructor. When the app is initialized, simply call <code>begin()</code> and start <code>write</code>ing in data as it is available.</p>
 <p>Note that the app is responsible for feeding in data from whatever source to the decoder. The decoder itself, because it runs at interrupt level, cannot read the filesystem or network to collect samples (either operation could block which is not allowed at interrupt time). If all data can live in flash, there is a ROM-based playback object which <em>can</em> feed itself, but only from arrays in flash and not files in <code>LittleFS</code> or `SD. See the examples for more details on this mode.</p>
@@ -118,39 +121,41 @@ Adding BackgroundAudio to an Application</h1>
 <div class="line">    } else ...</div>
 <div class="line"> </div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 ESP32 Implementation</h1>
 <p>The ESP32 support requires the use of the built-in I2S wrapper library and does not use (and is not compatible) with the <code>I2S</code> library distributed with <code>Arduino-ESP32</code>. Several additional features were required to port the background processing, and those are not available in the Arduino library. To instantiate the ESP32 I2S wrapper, copy the examples and use the following:</p>
 <div class="fragment"><div class="line">#include &lt;ESP32I2SAudio.h&gt;</div>
 <div class="line">ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT</div>
 </div><!-- fragment --><p>The <code><a class="el" href="classESP32I2SAudio.html" title="I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio.">ESP32I2SAudio</a></code> object can be passed in to any of the BackgroundAudio constructors as it implements the <code>AudioOutputBase</code> class.</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 Performance</h1>
 <p>The SpeedTest example included provided allows for different optimization and CPUs to be tested. I recommend using <code>-O3</code> optimization mode, available in the IDE menus, as it can reduce CPU usage by a very large amount on the Pico. As is obvious from the numbers below, HE-AAC decoding is much more computationally intensive than simple AAC. (The original Pico can playback most normal AAC files without issue, but many web radio streamers use HE-AAC to minimize bandwidth.)</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 PICO 2, -O3  (ARM mode)</h2>
 <div class="fragment"><div class="line">HE-AAC decode cycles: 112322331, frames 103, cycles/sample 1486.00</div>
 <div class="line">AAC decode cycles: 112322331, frames 206, cycles/sample 532.47</div>
 <div class="line">MP3 decode cycles: 111250252, frames 183, cycles/sample 527.71</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
 PICO, -O3</h2>
 <div class="fragment"><div class="line">HE-AAC decode cycles: 310594598, frames 103, cycles/sample 6390.67</div>
 <div class="line">AAC decode cycles: 310594598, frames 206, cycles/sample 1472.40</div>
 <div class="line">MP3 decode cycles: 201450592, frames 183, cycles/sample 955.58</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 Examples</h1>
 <ul>
 <li>BeepWAV : Plays "beep" using PWM to a phono jack every time the BOOTSEL button is pressed. Shows how the main app can continue doing work while playback is ongoing and how to start a new WAV file without needing to finish a currently playing one.</li>
 <li>PlayAACROM : Plays an AAC piano sample over PWM every time a character comes in over Serial. Demonstrates the ROM playback objects and how they don't need any application interaction after they're fired off.</li>
+<li>SerialSpeak : You type, it talks! Allows changing between voices on-the-fly. Demonstrates the simple speech API and accessing the multiple predefined speech dictionaries and voices.</li>
 <li>SimpleMP3Shuffle : Convert your Pico into an SD-card MP3 player. Continuously plays randomly selected MP3 files from the root folder of an attached SD card. Demonstrates how an application can send raw data to the decoder while still doing other processing.</li>
 <li>SpeedTest : Calculates the number of CPU cycles per output sample for MP3, AAC, and HE-AAC using the current CPU and optimization settings. Useful to see how different <code>-Ox</code> settings change performance,</li>
 <li>WebradioMP3PlusWebUI : Shows a more complete application that can play an MP3 web radio using HTTPS connectivity. Includes a serial and HTTP WebServer interface to allow the user to change URLs, volumes, and see the ICY metadata.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Codec Licensing</h1>
 <ul>
 <li>AAC decode source is from the Helix project and licensed under RealNetwork's RSPL license. For commercial use you're still going to need the usual AAC licensing from <a href="http://www.via-corp.com/us/en/licensing/aac/overview.html">Via Licensing</a>.</li>
-<li>MP3 decode source is from libMAD by Underbit Technologies, Inc., and licensed under the GPL. </li>
+<li>MP3 decode source is from libMAD by Underbit Technologies, Inc., and licensed under the GPL.</li>
+<li>ESpeak-NG is GPL3 licensed and available from the maintainers at <a href="https://github.com/espeak-ng/espeak-ng">https://github.com/espeak-ng/espeak-ng</a> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
