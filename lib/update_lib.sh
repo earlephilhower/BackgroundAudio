@@ -37,12 +37,12 @@ cp ../../lib/espeak-ng-arduino/src/ucd-tools/src/include/ucd/ucd.h ucd/.
 
 # espeak-ng files
 for i in common.c common.h compiledict.h config.h dictionary.c dictionary.h \
-  encoding.c error.c error.h espeak_api.c espeak_command.h \
-  event.h fifo.c fifo.h ieee80.c ieee80.h intonation.c intonation.h klatt.c \
+  encoding.c error.h espeak_api.c espeak_command.h \
+  event.h fifo.c fifo.h ieee80.c ieee80.h intonation.c intonation.h \
   klatt.h langopts.c langopts.h local_endian.h mbrola.h mnemonics.c \
   mnemonics.h numbers.c numbers.h phoneme.c phoneme.h phonemelist.c \
   phonemelist.h readclause.c readclause.h setlengths.c setlengths.h sintab.h \
-  soundicon.c soundicon.h spect.c spect.h speech.c speech.h ssml.c \
+  soundicon.h spect.c spect.h speech.c speech.h ssml.c \
   ssml.h synthdata.c synthdata.h synthesize.c synthesize.h \
   translate.c translate.h translateword.c translateword.h tr_languages.c \
   voice.h voices.c wavegen.c wavegen.h; do
