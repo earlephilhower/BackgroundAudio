@@ -33,7 +33,7 @@ jobs:
     - name: Run codespell
       uses: codespell-project/actions-codespell@master
       with:
-        skip: ./src/libmad,./src/libhelix-aac
+        skip: ./src/libmad,./src/libhelix-aac,./lib/espeak-ng-arduino,./src/libespeak-ng
         ignore_words_list: ESP8266,esp8266,esp,dout,DOUT,ser,ans,inout,numer,hist,aache,TYE
     - name: Run astyle on all code/examples
       run: |

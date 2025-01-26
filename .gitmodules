@@ -1,0 +1,3 @@
+[submodule "lib/espeak-ng-arduino"]
+	path = lib/espeak-ng-arduino
+	url = https://github.com/earlephilhower/espeak-ng-arduino.git
