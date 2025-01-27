@@ -120,6 +120,32 @@ public:
         _voiceLen = len;
     }
 
+    /**
+        @brief Set the speaking rate in ~wpm, after calling begin()
+
+        @param [in] rate WPM rate
+    */
+    void setRate(int rate) {
+        espeak_SetParameter(espeakRATE, rate, 0);
+    }
+
+    /**
+        @brief Adjust the pitch, 0...99, with 50 default.  After begin()
+
+        @param [in] pitch Pitch setting
+    */
+    void setPitch(int pitch) {
+        espeak_SetParameter(espeakPITCH, pitch, 0);
+    }
+
+    /**
+        @brief Adjust the interword gap after begin()
+
+        @param [in] gap Gap in ~10ms units at normal rate
+    */
+    void setWordGap(int gap) {
+        espeak_SetParameter(espeakWORDGAP, gap, 0);
+    }
 
     /**
         @brief Starts the background speaker.  Will initialize the output device and start sending silence immediately.

@@ -7,7 +7,7 @@
 
 #include <BackgroundAudioSpeech.h>
 
-#define ENGLISH 0
+#define ENGLISH 1
 #define FRENCH !ENGLISH // Many wars have been fought over this...
 
 #if ENGLISH
@@ -62,6 +62,9 @@ void usage() {
   for (int i = 0; i < (int)sizeof(v) / (int)sizeof(v[0]); i++) {
     Serial.printf("*%d: %s\r\n", i, v[i].name);
   }
+  Serial.printf("!rate <rate in wpm , 175 default>\r\n");
+  Serial.printf("!pitch <pitch adjustment 0-99, 50 default>\r\n");
+  Serial.printf("!gap <word gap in 10-ms>\r\n");
   Serial.printf("Otherwise, any typed words will be read aloud.\r\n\r\n");
 }
 
@@ -100,6 +103,23 @@ void loop() {
       } else {
         Serial.printf("Error: Voice number %d out of bounds\r\n", voice);
       }
+    } else if (s[0] == '!') {
+      if (s.substring(1, 5) == "rate") {
+        int rate = s.substring(6).toInt();
+        BMP.setRate(rate);
+        Serial.printf("Set rate to %d\r\n", rate);
+      } else if (s.substring(1, 6) == "pitch") {
+        int pitch = s.substring(7).toInt();
+        BMP.setPitch(pitch);
+        Serial.printf("Set pitch to %d\r\n", pitch);
+      } else if (s.substring(1, 4) == "gap") {
+        int gap = s.substring(5).toInt();
+        BMP.setWordGap(gap);
+        Serial.printf("Set word gap to %d\r\n", gap);
+      } else {
+        Serial.printf("Unable to parse command %s\r\n", s.c_str());
+      }
+
     } else {
       Serial.printf("Speaking '%s'\r\n", s.c_str());
       BMP.write(s.c_str(), strlen(s.c_str()) + 1 /* Need to include \0 */);
