@@ -135,5 +135,5 @@ jobs:
       run: |
         mkdir esp32c6
         rm -f *.elf
-        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci-esp32.sh esp32:esp32:esp32c6 esp32c6
+        find ~/Arduino/libraries/BackgroundAudio/examples -name \*.ino -print0 | xargs -0 -L1 bash ./tests/build-ci-esp32.sh esp32:esp32:esp32c6:PartitionScheme=huge_app esp32c6
         size ./*.elf
