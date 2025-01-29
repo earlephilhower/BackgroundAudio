@@ -7,11 +7,11 @@
 # matching /usr/share files espeak-ng needs.
 
 # Rebuild the espeak-ng into a /tmp installation with all options predefined for clean ops
-#cd espeak-ng-arduino
-#./autogen.sh
-#./configure --prefix=/tmp/espeak CFLAGS=-m32 CXXFLAGS=-m32 --without-extdict-ru --without-extdict-cmn --without-extdict-yue --without-async --without-mbrola --without-speechplayer --without-klatt
-#make clean && make && make install
-#cd ..
+cd espeak-ng-arduino
+./autogen.sh
+./configure --prefix=/tmp/espeak CFLAGS=-m32 CXXFLAGS=-m32 --without-extdict-ru --without-extdict-cmn --without-extdict-yue --without-async --without-mbrola --without-speechplayer --without-klatt
+make clean && make && make install
+cd ..
 
 # Start with completely clean subdir
 rm -rf ../src/libespeak-ng

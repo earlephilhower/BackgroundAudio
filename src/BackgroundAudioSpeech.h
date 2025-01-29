@@ -232,6 +232,17 @@ public:
     }
 
     /**
+        @brief Speaks an Arduino String
+
+        @param [in] string The string to speak.  Data is copied so this string can disappear afterwards
+        @returns Number of bytes actually written to the buffer, or 0 on error (out of space)
+    */
+    size_t speak(const String &string) {
+        return speak(string.c_str());
+    }
+
+
+    /**
            @brief Gets number of bytes available to write to raw buffer
 
            @details
