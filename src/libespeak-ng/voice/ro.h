@@ -1,6 +1,15 @@
-const unsigned char _ro[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_ro[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x52, 0x6f, 0x6d, 0x61, 0x6e, 0x69, 0x61,
   0x6e, 0x0a, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x72,
   0x6f, 0x0a
 };
-const char _name_ro[] = "Romanian";
+
+BackgroundAudioVoice voice_ro = {
+    "Romanian",
+    26,
+    __rawdata_ro
+};
+#include <libespeak-ng/dict/ro_dict.h>

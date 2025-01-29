@@ -1,6 +1,15 @@
-const unsigned char _pa[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_pa[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x50, 0x75, 0x6e, 0x6a, 0x61, 0x62, 0x69,
   0x0a, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x70, 0x61,
   0x0a
 };
-const char _name_pa[] = "Punjabi";
+
+BackgroundAudioVoice voice_pa = {
+    "Punjabi",
+    25,
+    __rawdata_pa
+};
+#include <libespeak-ng/dict/pa_dict.h>

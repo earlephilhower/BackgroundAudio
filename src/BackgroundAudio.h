@@ -38,4 +38,8 @@
     Class Listing
     -------------
     https://earlephilhower.github.io/BackgroundAudio/annotated.html
+
+    ESpeak-NG Language Reference
+    ----------------------------
+    https://earlephilhower.github.io/BackgroundAudio/md_LANGUAGES.html
 */

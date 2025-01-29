@@ -1,6 +1,15 @@
-const unsigned char _tk[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_tk[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x54, 0x75, 0x72, 0x6b, 0x6d, 0x65, 0x6e,
   0x0a, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x74, 0x6b,
   0x0a
 };
-const char _name_tk[] = "Turkmen";
+
+BackgroundAudioVoice voice_tk = {
+    "Turkmen",
+    25,
+    __rawdata_tk
+};
+#include <libespeak-ng/dict/tk_dict.h>

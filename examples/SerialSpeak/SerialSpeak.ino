@@ -11,8 +11,6 @@
 #define FRENCH !ENGLISH // Many wars have been fought over this...
 
 #if ENGLISH
-#include <libespeak-ng/dict/en_dict.h>
-#define DICT _en_dict
 #include <libespeak-ng/voice/en_029.h>
 #include <libespeak-ng/voice/en_gb_scotland.h>
 #include <libespeak-ng/voice/en_gb_x_gbclan.h>
@@ -23,25 +21,23 @@
 #include <libespeak-ng/voice/en_us.h>
 #include <libespeak-ng/voice/en_us_nyc.h>
 BackgroundAudioVoice v[] = {
-  ADDVOICETOARRAY(en_029),
-  ADDVOICETOARRAY(en_gb_scotland),
-  ADDVOICETOARRAY(en_gb_x_gbclan),
-  ADDVOICETOARRAY(en_gb_x_gbcwmd),
-  ADDVOICETOARRAY(en),
-  ADDVOICETOARRAY(en_shaw),
-  ADDVOICETOARRAY(en_us),
-  ADDVOICETOARRAY(en_us_nyc)
+  voice_en_029,
+  voice_en_gb_scotland,
+  voice_en_gb_x_gbclan,
+  voice_en_gb_x_gbcwmd,
+  voice_en,
+  voice_en_shaw,
+  voice_en_us,
+  voice_en_us_nyc
 };
 #else // If you're not English, you're French
-#include <libespeak-ng/dict/fr_dict.h>
-#define DICT _fr_dict
 #include <libespeak-ng/voice/fr_be.h>
 #include <libespeak-ng/voice/fr_ch.h>
 #include <libespeak-ng/voice/fr.h>
 BackgroundAudioVoice v[] = {
-  ADDVOICETOARRAY(fr_be),
-  ADDVOICETOARRAY(fr_ch),
-  ADDVOICETOARRAY(fr)
+  voice_fr_be,
+  voice_fr_ch,
+  voice_fr
 };
 #endif
 
@@ -71,9 +67,8 @@ void usage() {
 void setup() {
   Serial.begin(115200);
 
-  // We need to set up the dictionary and voice before any output
-  BMP.setDict(DICT, sizeof(DICT));
-  BMP.setVoice(v[0].data, v[0].len);
+  // We need to set up a voice before any output
+  BMP.setVoice(v[0]);
 
   delay(3000);
   Serial.printf("Ready!\r\n");
@@ -98,7 +93,7 @@ void loop() {
         while (!BMP.done()) {
           delay(1); // Busy-wait because it's not safe to change voices while producing samples...
         }
-        BMP.setVoice(v[voice].data, v[voice].len);
+       BMP.setVoice(v[voice]);
         Serial.printf("Changed voice to '%s'\r\n", v[voice].name);
       } else {
         Serial.printf("Error: Voice number %d out of bounds\r\n", voice);
