@@ -93,7 +93,7 @@ void loop() {
         while (!BMP.done()) {
           delay(1); // Busy-wait because it's not safe to change voices while producing samples...
         }
-       BMP.setVoice(v[voice]);
+        BMP.setVoice(v[voice]);
         Serial.printf("Changed voice to '%s'\r\n", v[voice].name);
       } else {
         Serial.printf("Error: Voice number %d out of bounds\r\n", voice);
