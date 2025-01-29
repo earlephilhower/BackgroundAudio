@@ -35,6 +35,9 @@ done
 mkdir -p ucd
 cp ../../lib/espeak-ng-arduino/src/ucd-tools/src/include/ucd/ucd.h ucd/.
 
+# Licenses
+cp ../../lib/espeak-ng-arduino/COPYING* .
+
 # espeak-ng files
 for i in common.c common.h compiledict.h config.h dictionary.c dictionary.h \
   encoding.c error.c error.h espeak_api.c espeak_command.h \
