@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['main_20project_20page_0',['Main Project Page',['../index.html#autotoc_md10',1,'']]],
-  ['mode_1',['PICO 2, -O3  (ARM mode)',['../md_README.html#autotoc_md6',1,'']]],
-  ['mp3_20aac_20wav_20and_20speech_20on_20the_20raspberry_20pi_20pico_20rp2040_20pico_202_20rp2350_20and_20esp32_2',['BackgroundAudio - Play MP3, AAC, WAV, and Speech on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32',['../md_README.html',1,'']]]
+  ['language_20headers_0',['ESpeak-NG Language Headers',['../md_LANGUAGES.html',1,'']]],
+  ['language_20reference_1',['ESpeak-NG Language Reference',['../index.html#autotoc_md14',1,'']]],
+  ['len_2',['len',['../structBackgroundAudioVoice.html#a898c5c8e97cd216b36d23cbff695efdc',1,'BackgroundAudioVoice']]],
+  ['licensing_3',['Codec Licensing',['../md_README.html#autotoc_md9',1,'']]],
+  ['listing_4',['Class Listing',['../index.html#autotoc_md13',1,'']]]
 ];

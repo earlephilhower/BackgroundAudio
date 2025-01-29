@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.0</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.1</span>
    </div>
   </td>
  </tr>
@@ -92,12 +92,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af4022aeddd0e93e0c6dae15fa596700d" id="r_af4022aeddd0e93e0c6dae15fa596700d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#af4022aeddd0e93e0c6dae15fa596700d">setGain</a> (float scale)</td></tr>
 <tr class="memdesc:af4022aeddd0e93e0c6dae15fa596700d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the gain multiplier (volume) for the stream. Takes effect immediately.  <br /></td></tr>
 <tr class="separator:af4022aeddd0e93e0c6dae15fa596700d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2a895666df7f80deadd726d3af3ee11" id="r_aa2a895666df7f80deadd726d3af3ee11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#aa2a895666df7f80deadd726d3af3ee11">setDict</a> (const unsigned char *data, size_t len)</td></tr>
-<tr class="memdesc:aa2a895666df7f80deadd726d3af3ee11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the dictionary data (language to phoneme)  <br /></td></tr>
-<tr class="separator:aa2a895666df7f80deadd726d3af3ee11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb2726914a9c2b80c33f16a68c0adccd" id="r_adb2726914a9c2b80c33f16a68c0adccd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#adb2726914a9c2b80c33f16a68c0adccd">setVoice</a> (const unsigned char *data, size_t len)</td></tr>
-<tr class="memdesc:adb2726914a9c2b80c33f16a68c0adccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the voice parameters (language customization)  <br /></td></tr>
-<tr class="separator:adb2726914a9c2b80c33f16a68c0adccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb38893801f2ecd49f2f4e7d2b11b6c3" id="r_adb38893801f2ecd49f2f4e7d2b11b6c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#adb38893801f2ecd49f2f4e7d2b11b6c3">setVoice</a> (<a class="el" href="structBackgroundAudioVoice.html">BackgroundAudioVoice</a> &amp;v)</td></tr>
+<tr class="memdesc:adb38893801f2ecd49f2f4e7d2b11b6c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the voice parameters (language customization)  <br /></td></tr>
+<tr class="separator:adb38893801f2ecd49f2f4e7d2b11b6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7b96ef225e158f7e41d8d28ea72dd87" id="r_ac7b96ef225e158f7e41d8d28ea72dd87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#ac7b96ef225e158f7e41d8d28ea72dd87">setRate</a> (int rate)</td></tr>
+<tr class="memdesc:ac7b96ef225e158f7e41d8d28ea72dd87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the speaking rate in ~wpm, after calling <a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1" title="Starts the background speaker. Will initialize the output device and start sending silence immediatel...">begin()</a>  <br /></td></tr>
+<tr class="separator:ac7b96ef225e158f7e41d8d28ea72dd87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57cee8939200a5fe225d34dca3153ff0" id="r_a57cee8939200a5fe225d34dca3153ff0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#a57cee8939200a5fe225d34dca3153ff0">setPitch</a> (int pitch)</td></tr>
+<tr class="memdesc:a57cee8939200a5fe225d34dca3153ff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adjust the pitch, 0...99, with 50 default. After <a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1" title="Starts the background speaker. Will initialize the output device and start sending silence immediatel...">begin()</a>  <br /></td></tr>
+<tr class="separator:a57cee8939200a5fe225d34dca3153ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc3f51532d80a5c2e4e865f5f2b6ee3" id="r_a0cc3f51532d80a5c2e4e865f5f2b6ee3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#a0cc3f51532d80a5c2e4e865f5f2b6ee3">setWordGap</a> (int gap)</td></tr>
+<tr class="memdesc:a0cc3f51532d80a5c2e4e865f5f2b6ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adjust the interword gap after <a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1" title="Starts the background speaker. Will initialize the output device and start sending silence immediatel...">begin()</a>  <br /></td></tr>
+<tr class="separator:a0cc3f51532d80a5c2e4e865f5f2b6ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84ce0e18bad2e14e9b8f49e2e36d37c1" id="r_a84ce0e18bad2e14e9b8f49e2e36d37c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1">begin</a> ()</td></tr>
 <tr class="memdesc:a84ce0e18bad2e14e9b8f49e2e36d37c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the background speaker. Will initialize the output device and start sending silence immediately.  <br /></td></tr>
 <tr class="separator:a84ce0e18bad2e14e9b8f49e2e36d37c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,6 +120,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
 <tr class="memitem:a187cde5ccec2a2243fe0cb4b32fade26" id="r_a187cde5ccec2a2243fe0cb4b32fade26"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#a187cde5ccec2a2243fe0cb4b32fade26">speak</a> (const char *string)</td></tr>
 <tr class="memdesc:a187cde5ccec2a2243fe0cb4b32fade26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Speaks a C-String.  <br /></td></tr>
 <tr class="separator:a187cde5ccec2a2243fe0cb4b32fade26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab81b565422f09d5140fe8df29d62c933" id="r_ab81b565422f09d5140fe8df29d62c933"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#ab81b565422f09d5140fe8df29d62c933">speak</a> (const String &amp;string)</td></tr>
+<tr class="memdesc:ab81b565422f09d5140fe8df29d62c933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Speaks an Arduino String.  <br /></td></tr>
+<tr class="separator:ab81b565422f09d5140fe8df29d62c933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7013bac1445d713021bd259a44a227cb" id="r_a7013bac1445d713021bd259a44a227cb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioSpeechClass.html#a7013bac1445d713021bd259a44a227cb">availableForWrite</a> ()</td></tr>
 <tr class="memdesc:a7013bac1445d713021bd259a44a227cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets number of bytes available to write to raw buffer.  <br /></td></tr>
 <tr class="separator:a7013bac1445d713021bd259a44a227cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -538,53 +547,6 @@ template&lt;class DataBuffer &gt; </div>
 
 </div>
 </div>
-<a id="aa2a895666df7f80deadd726d3af3ee11" name="aa2a895666df7f80deadd726d3af3ee11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2a895666df7f80deadd726d3af3ee11">&#9670;&#160;</a></span>setDict()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class DataBuffer &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classBackgroundAudioSpeechClass.html">BackgroundAudioSpeechClass</a>&lt; DataBuffer &gt;::setDict </td>
-          <td>(</td>
-          <td class="paramtype">const unsigned char *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the dictionary data (language to phoneme) </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Data from a libespeak-ng/dict header file </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>sizeof(data) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="af4022aeddd0e93e0c6dae15fa596700d" name="af4022aeddd0e93e0c6dae15fa596700d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4022aeddd0e93e0c6dae15fa596700d">&#9670;&#160;</a></span>setGain()</h2>
 
@@ -621,8 +583,80 @@ template&lt;class DataBuffer &gt; </div>
 
 </div>
 </div>
-<a id="adb2726914a9c2b80c33f16a68c0adccd" name="adb2726914a9c2b80c33f16a68c0adccd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb2726914a9c2b80c33f16a68c0adccd">&#9670;&#160;</a></span>setVoice()</h2>
+<a id="a57cee8939200a5fe225d34dca3153ff0" name="a57cee8939200a5fe225d34dca3153ff0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57cee8939200a5fe225d34dca3153ff0">&#9670;&#160;</a></span>setPitch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataBuffer &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBackgroundAudioSpeechClass.html">BackgroundAudioSpeechClass</a>&lt; DataBuffer &gt;::setPitch </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pitch</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adjust the pitch, 0...99, with 50 default. After <a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1" title="Starts the background speaker. Will initialize the output device and start sending silence immediatel...">begin()</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pitch</td><td>Pitch setting </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac7b96ef225e158f7e41d8d28ea72dd87" name="ac7b96ef225e158f7e41d8d28ea72dd87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7b96ef225e158f7e41d8d28ea72dd87">&#9670;&#160;</a></span>setRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataBuffer &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBackgroundAudioSpeechClass.html">BackgroundAudioSpeechClass</a>&lt; DataBuffer &gt;::setRate </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>rate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the speaking rate in ~wpm, after calling <a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1" title="Starts the background speaker. Will initialize the output device and start sending silence immediatel...">begin()</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">rate</td><td>WPM rate </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adb38893801f2ecd49f2f4e7d2b11b6c3" name="adb38893801f2ecd49f2f4e7d2b11b6c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb38893801f2ecd49f2f4e7d2b11b6c3">&#9670;&#160;</a></span>setVoice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -635,19 +669,9 @@ template&lt;class DataBuffer &gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classBackgroundAudioSpeechClass.html">BackgroundAudioSpeechClass</a>&lt; DataBuffer &gt;::setVoice </td>
           <td>(</td>
-          <td class="paramtype">const unsigned char *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="structBackgroundAudioVoice.html">BackgroundAudioVoice</a> &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -660,8 +684,43 @@ template&lt;class DataBuffer &gt; </div>
 <p>Sets the voice parameters (language customization) </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Data from a libespeak-ng/voice header file </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>sizeof(data) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v</td><td>Voice (voice_xxx) included from in libespeak-ng/dict folder </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0cc3f51532d80a5c2e4e865f5f2b6ee3" name="a0cc3f51532d80a5c2e4e865f5f2b6ee3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cc3f51532d80a5c2e4e865f5f2b6ee3">&#9670;&#160;</a></span>setWordGap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataBuffer &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBackgroundAudioSpeechClass.html">BackgroundAudioSpeechClass</a>&lt; DataBuffer &gt;::setWordGap </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>gap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adjust the interword gap after <a class="el" href="classBackgroundAudioSpeechClass.html#a84ce0e18bad2e14e9b8f49e2e36d37c1" title="Starts the background speaker. Will initialize the output device and start sending silence immediatel...">begin()</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">gap</td><td>Gap in ~10ms units at normal rate </td></tr>
   </table>
   </dd>
 </dl>
@@ -699,7 +758,7 @@ template&lt;class DataBuffer &gt; </div>
 </div>
 </div>
 <a id="a187cde5ccec2a2243fe0cb4b32fade26" name="a187cde5ccec2a2243fe0cb4b32fade26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a187cde5ccec2a2243fe0cb4b32fade26">&#9670;&#160;</a></span>speak()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a187cde5ccec2a2243fe0cb4b32fade26">&#9670;&#160;</a></span>speak() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -725,6 +784,43 @@ template&lt;class DataBuffer &gt; </div>
 </div><div class="memdoc">
 
 <p>Speaks a C-String. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>The string to speak. Data is copied so this string can disappear afterwards </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of bytes actually written to the buffer, or 0 on error (out of space) </dd></dl>
+
+</div>
+</div>
+<a id="ab81b565422f09d5140fe8df29d62c933" name="ab81b565422f09d5140fe8df29d62c933"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab81b565422f09d5140fe8df29d62c933">&#9670;&#160;</a></span>speak() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class DataBuffer &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classBackgroundAudioSpeechClass.html">BackgroundAudioSpeechClass</a>&lt; DataBuffer &gt;::speak </td>
+          <td>(</td>
+          <td class="paramtype">const String &amp;&#160;</td>
+          <td class="paramname"><em>string</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Speaks an Arduino String. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>The string to speak. Data is copied so this string can disappear afterwards </td></tr>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['underflows_0',['underflows',['../classBackgroundAudioAACClass.html#a0095a3326cefefd3db66e463701d9b93',1,'BackgroundAudioAACClass::underflows()'],['../classBackgroundAudioMP3Class.html#a183a9b56c823f99b6f03c503c8894d21',1,'BackgroundAudioMP3Class::underflows()'],['../classBackgroundAudioSpeechClass.html#a0d09f6aa7d9e4af6fb7a9c307bb9d406',1,'BackgroundAudioSpeechClass::underflows()'],['../classBackgroundAudioWAVClass.html#a0414cb602e5cad2656b2ae44f5a4e441',1,'BackgroundAudioWAVClass::underflows()'],['../classESP32I2SAudio.html#a703c3a005ca5edb460e7a96c5001a618',1,'ESP32I2SAudio::underflows()']]],
-  ['unpause_1',['unpause',['../classBackgroundAudioAACClass.html#a0be6abb76484e4a3faf0e33e468425ad',1,'BackgroundAudioAACClass::unpause()'],['../classBackgroundAudioMP3Class.html#a5df03b842ccdc49d51dc470bcc621423',1,'BackgroundAudioMP3Class::unpause()'],['../classBackgroundAudioSpeechClass.html#a7c770bad85d5a4e01f2881aa10145949',1,'BackgroundAudioSpeechClass::unpause()'],['../classBackgroundAudioWAVClass.html#a9119081c711fc5df37ca24bae66f1a11',1,'BackgroundAudioWAVClass::unpause()']]]
+  ['the_20raspberry_20pi_20pico_20rp2040_20pico_202_20rp2350_20and_20esp32_0',['BackgroundAudio - Play MP3, AAC, WAV, and Speech on the Raspberry Pi Pico (RP2040), Pico 2 (RP2350), and ESP32',['../md_README.html',1,'']]],
+  ['to_20an_20application_1',['Adding BackgroundAudio to an Application',['../md_README.html#autotoc_md3',1,'']]]
 ];
