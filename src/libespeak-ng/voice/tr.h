@@ -1,6 +1,15 @@
-const unsigned char _tr[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_tr[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x54, 0x75, 0x72, 0x6b, 0x69, 0x73, 0x68,
   0x0a, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x74, 0x72,
   0x0a
 };
-const char _name_tr[] = "Turkish";
+
+BackgroundAudioVoice voice_tr = {
+    "Turkish",
+    25,
+    __rawdata_tr
+};
+#include <libespeak-ng/dict/tr_dict.h>

@@ -1,5 +1,14 @@
-const unsigned char _el[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_el[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x47, 0x72, 0x65, 0x65, 0x6b, 0x0a, 0x6c,
   0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x65, 0x6c, 0x0a
 };
-const char _name_el[] = "Greek";
+
+BackgroundAudioVoice voice_el = {
+    "Greek",
+    23,
+    __rawdata_el
+};
+#include <libespeak-ng/dict/el_dict.h>

@@ -1,5 +1,14 @@
-const unsigned char _cs[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_cs[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x43, 0x7a, 0x65, 0x63, 0x68, 0x0a, 0x6c,
   0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x63, 0x73, 0x0a
 };
-const char _name_cs[] = "Czech";
+
+BackgroundAudioVoice voice_cs = {
+    "Czech",
+    23,
+    __rawdata_cs
+};
+#include <libespeak-ng/dict/cs_dict.h>

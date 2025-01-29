@@ -1,6 +1,15 @@
-const unsigned char _sv[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_sv[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x53, 0x77, 0x65, 0x64, 0x69, 0x73, 0x68,
   0x0a, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x73, 0x76,
   0x0a
 };
-const char _name_sv[] = "Swedish";
+
+BackgroundAudioVoice voice_sv = {
+    "Swedish",
+    25,
+    __rawdata_sv
+};
+#include <libespeak-ng/dict/sv_dict.h>

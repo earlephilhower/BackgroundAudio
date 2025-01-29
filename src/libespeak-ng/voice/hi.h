@@ -1,5 +1,14 @@
-const unsigned char _hi[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_hi[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x48, 0x69, 0x6e, 0x64, 0x69, 0x0a, 0x6c,
   0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x68, 0x69, 0x0a
 };
-const char _name_hi[] = "Hindi";
+
+BackgroundAudioVoice voice_hi = {
+    "Hindi",
+    23,
+    __rawdata_hi
+};
+#include <libespeak-ng/dict/hi_dict.h>

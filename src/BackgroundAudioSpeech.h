@@ -30,6 +30,9 @@
 #include "libespeak-ng/phoneme/phondata.h"
 #include "libespeak-ng/phoneme/intonations.h"
 
+// These will be defined by including a language
+extern const unsigned char __espeakng_dict[];
+extern size_t __espeakng_dictlen;
 
 /**
     @brief Structure to collect a ESpeak-NG voice with its human-readable name
@@ -37,13 +40,12 @@
 typedef struct {
     /** Human-readable name */
     const char *name;
-    /** Binary data pointer in ROM/flash */
-    const unsigned char *data;
     /** Size of binary data */
     size_t len; // Size of binary data
+    /** Binary data pointer in ROM/flash */
+    const unsigned char *data;
 } BackgroundAudioVoice;
 
-#define ADDVOICETOARRAY(V) { _name_##V, _##V, sizeof(_##V) }
 
 /**
     @brief Interrupt-driven ESpeak-NG instance.  Generates a full frame of samples each cycle and uses the RawBuffer to safely hand data from the app to the decompressor.
@@ -58,7 +60,6 @@ public:
         _out = nullptr;
         _paused = false;
         _voice = nullptr;
-        _dict = nullptr;
     }
 
     /**
@@ -99,25 +100,13 @@ public:
     }
 
     /**
-        @brief Set the dictionary data (language to phoneme)
-
-        @param [in] data Data from a libespeak-ng/dict header file
-        @param [in] len sizeof(data)
-    */
-    void setDict(const unsigned char *data, size_t len) {
-        _dict = data;
-        _dictLen = len;
-    }
-
-    /**
         @brief Sets the voice parameters (language customization)
 
-        @param [in] data Data from a libespeak-ng/voice header file
-        @param [in] len sizeof(data)
+        @param [in] v Voice (voice_xxx) included from in libespeak-ng/dict folder
     */
-    void setVoice(const unsigned char *data, size_t len) {
-        _voice = data;
-        _voiceLen = len;
+    void setVoice(BackgroundAudioVoice &v) {
+        _voice = v.data;
+        _voiceLen = v.len;
     }
 
     /**
@@ -153,12 +142,12 @@ public:
         @return True on success, false if already started.
     */
     bool begin() {
-        if (_playing || !_dict || !_dictLen || !_voice || !_voiceLen) {
+        if (_playing || !_voice || !_voiceLen) {
             return false;
         }
 
         espeak_EnableSingleStep();
-        espeak_InstallDict(_dict, _dictLen);
+        espeak_InstallDict(__espeakng_dict, __espeakng_dictlen);
         espeak_InstallPhonIndex(_phonindex, sizeof(_phonindex));
         espeak_InstallPhonTab(_phontab, sizeof(_phontab));
         espeak_InstallPhonData(_phondata, sizeof(_phondata));
@@ -241,6 +230,17 @@ public:
         }
         return write((const void *)string, strlen(string) + 1);
     }
+
+    /**
+        @brief Speaks an Arduino String
+
+        @param [in] string The string to speak.  Data is copied so this string can disappear afterwards
+        @returns Number of bytes actually written to the buffer, or 0 on error (out of space)
+    */
+    size_t speak(const String &string) {
+        return speak(string.c_str());
+    }
+
 
     /**
            @brief Gets number of bytes available to write to raw buffer

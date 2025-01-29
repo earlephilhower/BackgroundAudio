@@ -1,5 +1,14 @@
-const unsigned char _ug[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_ug[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x55, 0x79, 0x67, 0x68, 0x75, 0x72, 0x0a,
   0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x75, 0x67, 0x0a
 };
-const char _name_ug[] = "Uyghur";
+
+BackgroundAudioVoice voice_ug = {
+    "Uyghur",
+    24,
+    __rawdata_ug
+};
+#include <libespeak-ng/dict/ug_dict.h>

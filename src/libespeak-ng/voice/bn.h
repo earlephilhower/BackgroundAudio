@@ -1,6 +1,15 @@
-const unsigned char _bn[] = {
+// Auto-generated, do not edit!  See lib/update_lib.sh
+#pragma once
+#include <BackgroundAudioSpeech.h>
+const unsigned char __rawdata_bn[] = {
   0x6e, 0x61, 0x6d, 0x65, 0x20, 0x42, 0x65, 0x6e, 0x67, 0x61, 0x6c, 0x69,
   0x0a, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x62, 0x6e,
   0x0a
 };
-const char _name_bn[] = "Bengali";
+
+BackgroundAudioVoice voice_bn = {
+    "Bengali",
+    25,
+    __rawdata_bn
+};
+#include <libespeak-ng/dict/bn_dict.h>
