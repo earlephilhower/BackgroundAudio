@@ -125,8 +125,10 @@ MP3 decode cycles: 201450592, frames 183, cycles/sample 955.58
 
 ## Examples
 
+* BeepSpeech : Says "Beep Boop" every time the BOOTSEL is pressed.  Demonstrates how the main app continues while speech is being generated, and how to stop a dictation in mid-stream.
 * BeepWAV : Plays "beep" using PWM to a phono jack every time the BOOTSEL button is pressed.  Shows how the main app can continue doing work while playback is ongoing and how to start a new WAV file without needing to finish a currently playing one.
 * PlayAACROM : Plays an AAC piano sample over PWM every time a character comes in over Serial.  Demonstrates the ROM playback objects and how they don't need any application interaction after they're fired off.
+* ReactionTimer : Simple game that measures how long it takes the user to respond to the LED lighting up, calculating and speaking the time on-the-fly.
 * SerialSpeak : You type, it talks!  Allows changing between voices on-the-fly.  Demonstrates the simple speech API and accessing the multiple predefined speech dictionaries and voices.
 * SimpleMP3Shuffle : Convert your Pico into an SD-card MP3 player.  Continuously plays randomly selected MP3 files from the root folder of an attached SD card.  Demonstrates how an application can send raw data to the decoder while still doing other processing.
 * SpeedTest : Calculates the number of CPU cycles per output sample for MP3, AAC, and HE-AAC using the current CPU and optimization settings.  Useful to see how different `-Ox` settings change performance,
