@@ -355,6 +355,9 @@ public:
         noInterrupts();
         _ib.flush();
         _generatingSpeech = false;
+        short *mono;
+        espeak_SynthesizeOneStep(&mono); // Thrown out
+        espeak_AbortSynthesis();
         interrupts();
     }
 
@@ -364,20 +367,12 @@ private:
     }
 
     static int _speechCB(short *data, int count, espeak_EVENT *events) {
-        return ((BackgroundAudioSpeechClass*)events[0].user_data)->speechPump(data, count);
-    }
-
-    int speechPump(short *data, int count) {
-        int16_t *p = _frame;
-        _frameLen = std::min(count, framelen);
-        for (int i = 0; i < count; i++) {
-            *p++ = *data;
-            *p++ = *data++; // Convert to stereo by duplication
-        }
-        return 0;
+        return 0; // Should never really be called by ESpeak internals
     }
 
     void generateOneFrame() {
+        _frameLen = 0;
+
         // If we're not currently synthesizng speech, is there another string we can say?
         if (!_generatingSpeech) {
             if (_ib.available()) {
@@ -392,26 +387,37 @@ private:
             }
         }
 
-        if (_generatingSpeech) {
-            auto ret = SynthesizeOneStep(0, 0, 0);
-            if (ret != 0) {
+        if (_generatingSpeech && !_frameLen) {
+            // Generate the raw samples
+            short *mono;
+            _frameLen = std::min(espeak_SynthesizeOneStep(&mono), framelen);
+            // Now convert to stereo by duplicating channels, store in frame buffer
+            int16_t *ptr = _frame;
+            for (int i = 0; i < _frameLen; i++) {
+                *ptr++ = *mono;
+                *ptr++ = *mono++;
+            }
+            // Amplify if requested
+            ApplyGain(_frame, _frameLen * 2, _gain);
+            // Advance synthesis state and check if done
+            if (!espeak_SynthesisGenerateNext()) {
                 _generatingSpeech = false;
                 _ib.shiftUp(strlen((const char *)_ib.buffer()) + 1); // Only shift out the speech once it's done speaking, easier to track
                 _shifts++;
-            } else {
-                ApplyGain(_frame, _frameLen * 2, _gain);
             }
         }
     }
 
     void pump() {
         while (_out->availableForWrite() >= (int)framelen) {
-            generateOneFrame();
-            if (_paused || !_generatingSpeech) {
+            if (!_frameLen && !_paused) {
+                generateOneFrame();
+            }
+            if (_paused || !_frameLen) {
                 bzero(_frame, sizeof(_frame));
                 _out->write((uint8_t *)_frame, sizeof(_frame));
             } else {
-                _out->write((uint8_t *)_frame, _frameLen * 4);
+                _frameLen -= _out->write((uint8_t *)_frame, _frameLen * 4) / 4;
             }
         }
     }

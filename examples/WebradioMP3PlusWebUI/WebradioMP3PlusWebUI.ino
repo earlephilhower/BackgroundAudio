@@ -11,8 +11,8 @@
 #include <WebServer.h>
 
 #ifndef STASSID
-#define STASSID "NOBABIES"
-#define STAPSK "ElephantsAreGreat"
+#define STASSID "ssid"
+#define STAPSK "password"
 #endif
 
 const char *ssid = STASSID;
