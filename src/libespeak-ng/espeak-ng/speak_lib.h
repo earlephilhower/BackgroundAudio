@@ -710,8 +710,17 @@ ESPEAK_API const char *espeak_Info(const char **path_data);
 #ifdef __cplusplus
 extern "C"
 #endif
-ESPEAK_API int SynthesizeOneStep(unsigned int unique_identifier, const void *text, int flags);
-/* Generates up to one period worth of samples, returns 0 on success or !0 on end of speech or error */
+ESPEAK_API int espeak_SynthesizeOneStep(short **out);
+
+#ifdef __cplusplus
+extern "C"
+#endif
+ESPEAK_API void espeak_AbortSynthesis();
+
+#ifdef __cplusplus
+extern "C"
+#endif
+ESPEAK_API int espeak_SynthesisGenerateNext();
 
 #ifdef __cplusplus
 extern "C"

@@ -520,52 +520,37 @@ ESPEAK_NG_API void espeak_EnableSingleStep() {
         _singlestep = true;
 }
 
-ESPEAK_NG_API int SynthesizeOneStep(unsigned int unique_identifier, const void *text, int flags) {
+ESPEAK_NG_API int espeak_SynthesizeOneStep(short **out) {
         // Fill the buffer with output sound
-        static int length;
-        static int finished = 0;
+        int length;
 
-	out_ptr = outbuf;
-	out_end = &outbuf[outbuf_size];
-	event_list_ix = 0;
-	WavegenFill();
+        out_ptr = outbuf;
+        out_end = &outbuf[outbuf_size];
+        event_list_ix = 0;
+        WavegenFill();
 
-	length = (out_ptr - outbuf)/2;
-	count_samples += length;
-	event_list[event_list_ix].type = espeakEVENT_LIST_TERMINATED; // indicates end of event list
-	event_list[event_list_ix].unique_identifier = unique_identifier;
-	event_list[event_list_ix].user_data = my_user_data;
+        length = (out_ptr - outbuf)/2;
+        count_samples += length;
 
-	if (synth_callback)
-		finished = synth_callback((short *)outbuf, length, event_list);
-	if (finished) {
-		SpeakNextClause(2); // stop
-		return ENS_SPEECH_STOPPED;
-	}
-
-	if (Generate(phoneme_list, &n_phoneme_list, 1) == 0) {
-		if (WcmdqUsed() == 0) {
-			// don't process the next clause until the previous clause has finished generating speech.
-			// This ensures that <audio> tag (which causes end-of-clause) is at a sound buffer boundary
-
-			event_list[0].type = espeakEVENT_LIST_TERMINATED;
-			event_list[0].unique_identifier = my_unique_identifier;
-			event_list[0].user_data = my_user_data;
-
-			if (SpeakNextClause(1) == 0) {
-				finished = 0;
-				if (synth_callback)
-					finished = synth_callback(NULL, 0, event_list); // NULL buffer ptr indicates end of data
-				if (finished) {
-					SpeakNextClause(2); // stop
-					return ENS_SPEECH_STOPPED;
-				}
-                                return 999;
-				}
-			}
-		}
-        return 0;
+        *out = (short *)outbuf;
+        return length;
 }
+
+ESPEAK_NG_API void espeak_AbortSynthesis() {
+        SpeakNextClause(2); // stop
+}
+
+ESPEAK_NG_API int espeak_SynthesisGenerateNext() {
+        if (Generate(phoneme_list, &n_phoneme_list, 1) == 0) {
+                if (WcmdqUsed() == 0) {
+                        if (SpeakNextClause(1) == 0) {
+                                return 0;
+                        }
+                }
+        }
+        return 1;
+}
+
 #pragma GCC visibility pop
 
 void MarkerEvent(int type, unsigned int char_position, int value, int value2, unsigned char *out_ptr)
