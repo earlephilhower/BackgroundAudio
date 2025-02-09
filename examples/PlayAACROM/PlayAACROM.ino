@@ -4,7 +4,7 @@
 // Plays a small AAC file from ROM asynchronously with a single call.
 // Hook up an I2S DAC bclk=0; lrclk=1, data=2
 //
-// Generate the ROM file by using "xxd -i file.mp3 file.h" and then
+// Generate the ROM file by using "xxd -i file.aac file.h" and then
 // editing the output header to make the array "const" so it stays
 // only in flash.
 //
