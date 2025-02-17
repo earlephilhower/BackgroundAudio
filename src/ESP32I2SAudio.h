@@ -25,6 +25,19 @@
 #include "WrappedAudioOutputBase.h"
 
 /**
+    ESP-IDF has an error in initializer order for the I2S clock default macros.
+    Redefine it in the proper order until this is fixed.
+    See https://github.com/espressif/arduino-esp32/issues/10975
+    and https://github.com/espressif/esp-idf/issues/15405
+*/
+
+#if SOC_I2S_HW_VERSION_2
+#undef I2S_STD_CLK_DEFAULT_CONFIG
+#define I2S_STD_CLK_DEFAULT_CONFIG(rate) \
+  { .sample_rate_hz = rate, .clk_src = I2S_CLK_SRC_DEFAULT, .ext_clk_freq_hz = 0, .mclk_multiple = I2S_MCLK_MULTIPLE_256, }
+#endif
+
+/**
      @brief I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio
 */
 class ESP32I2SAudio : public AudioOutputBase {
