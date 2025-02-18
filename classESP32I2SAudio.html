@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.1</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.2</span>
    </div>
   </td>
  </tr>
@@ -178,6 +178,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio. </p>
+<p>ESP-IDF has an error in initializer order for the I2S clock default macros. Redefine it in the proper order until this is fixed. See <a href="https://github.com/espressif/arduino-esp32/issues/10975">https://github.com/espressif/arduino-esp32/issues/10975</a> and <a href="https://github.com/espressif/esp-idf/issues/15405">https://github.com/espressif/esp-idf/issues/15405</a> </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a097dee2102c8527672fcd5eb7227f75a" name="a097dee2102c8527672fcd5eb7227f75a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a097dee2102c8527672fcd5eb7227f75a">&#9670;&#160;</a></span>ESP32I2SAudio()</h2>
