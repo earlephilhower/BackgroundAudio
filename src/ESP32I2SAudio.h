@@ -222,7 +222,7 @@ public:
 
         @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
     */
-    static bool _onSent(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
+    static IRAM_ATTR bool _onSent(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
         return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event);
     }
 
@@ -231,7 +231,7 @@ public:
 
         @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
     */
-    static bool _onSentUnder(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
+    static IRAM_ATTR bool _onSentUnder(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
         return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event, true);
     }
 
@@ -303,7 +303,7 @@ public:
 
         @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
     */
-    bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow = false) {
+    IRAM_ATTR bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow = false) {
         BaseType_t xHigherPriorityTaskWoken;
         xHigherPriorityTaskWoken = pdFALSE;
         if (_taskHandle) {
