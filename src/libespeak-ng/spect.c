@@ -222,7 +222,8 @@ double GetFrameRms(SpectFrame *frame, int seq_amplitude)
 	float total = 0;
 	int maxh;
 	int height;
-	int htab[400];
+	int *htab; // [400];  EFP3
+        htab = (int*)malloc(400 * sizeof(int));
 	wavegen_peaks_t wpeaks[9];
 
 	for (h = 0; h < 9; h++) {
@@ -238,6 +239,7 @@ double GetFrameRms(SpectFrame *frame, int seq_amplitude)
 	for (h = 1; h < maxh; h++)
 		total += ((htab[h] * htab[h]) >> 10);
 	frame->rms = sqrt(total) / 7.25;
+        free(htab);
 	return frame->rms;
 }
 

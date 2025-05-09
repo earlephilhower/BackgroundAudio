@@ -212,7 +212,7 @@ public:
             .on_send_q_ovf = _onSentUnder
         };
         i2s_channel_register_event_callback(_tx_handle, &_cbs, (void *)this);
-        xTaskCreate(_taskShim, "BackgroundAudioI2S", 4096, (void*)this, 2, &_taskHandle);
+        xTaskCreate(_taskShim, "BackgroundAudioI2S", 8192, (void*)this, 2, &_taskHandle);
         _running = ESP_OK == i2s_channel_enable(_tx_handle);
         return _running;
     }

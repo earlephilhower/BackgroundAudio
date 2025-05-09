@@ -193,6 +193,7 @@ if (CheckTranslator(translator, langopts_tab, key) != 0) {
 #endif
 
 void LoadConfig(void) {
+#if 0 // EFP3 - We don't have a FS or config file!
 	// Load configuration file, if one exists
 	char buf[sizeof(path_home)+10];
 	FILE *f;
@@ -221,6 +222,7 @@ void LoadConfig(void) {
 		}
 	}
 	fclose(f);
+#endif
 }
 
 

@@ -939,7 +939,8 @@ void CalcPitches(Translator *tr, int clause_type)
 	PHONEME_TAB *ph;
 	int ph_end = n_phoneme_list;
 
-	SYLLABLE syllable_tab[N_PHONEME_LIST];
+	SYLLABLE *syllable_tab; // [N_PHONEME_LIST]; EFP3 - 6K in size
+        syllable_tab = (SYLLABLE*)malloc(n_phoneme_list * sizeof(SYLLABLE));
 	n_st = 0;
 	n_primary = 0;
 	for (ix = 0; ix < (n_phoneme_list-1); ix++) {
@@ -957,11 +958,14 @@ void CalcPitches(Translator *tr, int clause_type)
 	}
 	syllable_tab[n_st].stress = 0; // extra 0 entry at the end
 
-	if (n_st == 0)
+	if (n_st == 0) {
+                free(syllable_tab);
 		return; // nothing to do
+        }
 
 	if (tr->langopts.tone_language == 1) {
 		CalcPitches_Tone(tr);
+                free(syllable_tab);
 		return;
 	}
 
@@ -1097,4 +1101,5 @@ void CalcPitches(Translator *tr, int clause_type)
 			st_ix++;
 		}
 	}
+        free(syllable_tab);
 }
