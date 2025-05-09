@@ -1122,8 +1122,10 @@ char const *SelectVoice(espeak_VOICE *voice_select, int *found)
 	espeak_VOICE *vp = NULL;
 	espeak_VOICE *vp2;
 	espeak_VOICE voice_select2;
-	espeak_VOICE *voices[N_VOICES_LIST]; // list of candidates
-	espeak_VOICE *voices2[N_VOICES_LIST+N_VOICE_VARIANTS];
+	espeak_VOICE **voices;// EFP3 [N_VOICES_LIST]; // list of candidates
+        voices = (espeak_VOICE **)malloc(N_VOICES_LIST * sizeof(espeak_VOICE *));
+	espeak_VOICE **voices2;//EFP3 [N_VOICES_LIST+N_VOICE_VARIANTS];
+        voices2 = (espeak_VOICE **)malloc((N_VOICES_LIST+N_VOICE_VARIANTS) * sizeof(espeak_VOICE *));
 	static espeak_VOICE voice_variants[N_VOICE_VARIANTS];
 	static char voice_id[50];
 
@@ -1155,9 +1157,13 @@ char const *SelectVoice(espeak_VOICE *voice_select, int *found)
 			if ((voice_select2.gender == ENGENDER_UNKNOWN) && (voice_select2.age == 0) && (voice_select2.variant == 0)) {
 				if (variant_name[0] != 0) {
 					sprintf(voice_id, "%s+%s", vp->identifier, variant_name);
+                                        free(voices2);
+                                        free(voices);
 					return voice_id;
 				}
 
+                                free(voices2);
+                                free(voices);
 				return vp->identifier;
 			}
 		}
@@ -1226,8 +1232,11 @@ char const *SelectVoice(espeak_VOICE *voice_select, int *found)
 	}
 
 	// index the sorted list by the required variant number
-	if (ix2 == 0)
+	if (ix2 == 0) {
+                free(voices2);
+                free(voices);
 		return NULL;
+        }
 	vp = voices2[voice_select2.variant % ix2];
 
 	if (vp->variant != 0) {
@@ -1235,6 +1244,8 @@ char const *SelectVoice(espeak_VOICE *voice_select, int *found)
 		sprintf(voice_id, "%s+%s", vp->identifier, variant_name);
 		return voice_id;
 	}
+        free(voices2);
+        free(voices);
 
 	return vp->identifier;
 }

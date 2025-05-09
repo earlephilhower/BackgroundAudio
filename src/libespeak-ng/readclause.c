@@ -477,6 +477,8 @@ static int CheckPhonemeMode(int option_phoneme_input, int phoneme_mode, int c1, 
     return phoneme_mode;
 }
 
+//EFP3 - Sorry again for this hack, needed to deallocate the XML on return
+#define return_and_free(x) { free(xml_buf); return (x); }
 int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_buf, int *tone_type, char *voice_change)
 {
 	/* Find the end of the current clause.
@@ -510,7 +512,8 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 	bool stressed_word = false;
 	int end_clause_after_tag = 0;
 	int end_clause_index = 0;
-	wchar_t xml_buf[N_XML_BUF+1];
+	wchar_t *xml_buf;//EFP3 [N_XML_BUF+1];
+        xml_buf = (wchar_t *)malloc((N_XML_BUF+1) * sizeof(wchar_t));
 
 	#define N_XML_BUF2 20
 	char xml_buf2[N_XML_BUF2+2]; // for &<name> and &<number> sequences
@@ -539,7 +542,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 	while (!Eof() || (ungot_char != 0) || (ungot_char2 != 0) || (ungot_string_ix >= 0)) {
 		if (!iswalnum(c1)) {
 			if ((end_character_position > 0) && (count_characters > end_character_position)) {
-				return CLAUSE_EOF;
+				return_and_free(CLAUSE_EOF);
 			}
 
 			if ((skip_characters > 0) && (count_characters >= skip_characters)) {
@@ -548,7 +551,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 				clear_skipping_text = true;
 				skip_characters = 0;
 				UngetC(c2);
-				return CLAUSE_NONE;
+				return_and_free(CLAUSE_NONE);
 			}
 		}
 		int cprev2 = cprev;
@@ -610,7 +613,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 						// Perhaps not enough room, end the clause before the SSML tag
 						ungot_char2 = c1;
 						TerminateBufWithSpaceAndZero(buf, ix, &c2);
-						return CLAUSE_NONE;
+						return_and_free(CLAUSE_NONE);
 					}
 
 					// SSML Tag
@@ -632,7 +635,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 
 						if (terminator & CLAUSE_TYPE_VOICE_CHANGE)
 							strcpy(voice_change, current_voice_id);
-						return terminator;
+						return_and_free(terminator);
 					}
 					c1 = ' ';
 					if (!Eof()) {
@@ -655,7 +658,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 				terminator = CLAUSE_PERIOD; // line doesn't end in punctuation, assume period
 			}
 			TerminateBufWithSpaceAndZero(buf, ix, NULL);
-			return terminator;
+			return_and_free(terminator);
 		}
 
 		if (c1 == CTRL_EMBEDDED) {
@@ -665,7 +668,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 				while (!Eof() && !iswspace(c1 = GetC()) && (ix < (n_buf-1)))
 					buf[ix++] = c1; // add voice name to end of buffer, after the text
 				buf[ix++] = 0;
-				return CLAUSE_VOICE;
+				return_and_free(CLAUSE_VOICE);
 			} else if (c2 == 'B') {
 				// set the punctuation option from an embedded command
 				//  B0     B1     B<punct list><space>
@@ -756,13 +759,13 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 				if (parag > 3)
 					parag = 3;
 				if (option_ssml) parag = 1;
-				return (CLAUSE_PARAGRAPH-30) + 30*parag; // several blank lines, longer pause
+				return_and_free((CLAUSE_PARAGRAPH-30) + 30*parag); // several blank lines, longer pause
 			}
 
 			if (linelength <= option_linelength) {
 				// treat lines shorter than a specified length as end-of-clause
 				TerminateBufWithSpaceAndZero(buf, ix, &c2);
-				return CLAUSE_COLON;
+				return_and_free(CLAUSE_COLON);
 			}
 
 			linelength = 0;
@@ -782,7 +785,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 					if (!IsAlpha(c1) || !iswlower(c1)) {
 						ungot_char2 = c1;
 						TerminateBufWithSpaceAndZero(buf, end_clause_index, &c2);
-						return end_clause_after_tag;
+						return_and_free(end_clause_after_tag);
 					}
 					end_clause_after_tag = 0;
 				}
@@ -833,7 +836,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 				if ((option_punctuation == 1) || (wcschr(option_punctlist, c1) != NULL)) {
 					tr->phonemes_repeat_count = 0;
 					if ((terminator = AnnouncePunctuation(tr, c1, &c2, buf, &ix, is_end_clause)) >= 0)
-						return terminator;
+						return_and_free(terminator);
 					announced_punctuation = c1;
 				}
 			}
@@ -921,10 +924,10 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 						punct_data &= ~CLAUSE_DOT_AFTER_LAST_WORD;
 					if (nl_count > 1) {
 						if ((punct_data == CLAUSE_QUESTION) || (punct_data == CLAUSE_EXCLAMATION))
-							return punct_data + 35; // with a longer pause
-						return CLAUSE_PARAGRAPH;
+							return_and_free(punct_data + 35); // with a longer pause
+						return_and_free(CLAUSE_PARAGRAPH);
 					}
-					return punct_data; // only recognise punctuation if followed by a blank or bracket/quote
+					return_and_free(punct_data); // only recognise punctuation if followed by a blank or bracket/quote
 				} else if (!Eof()) {
 					if (iswspace(c2))
 						UngetC(c_next);
@@ -961,7 +964,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 			// try to break at a word boundary (unless we actually reach the end of buffer).
 			// (n_buf-4) is to allow for 3 bytes of multibyte character plus terminator.
 			TerminateBufWithSpaceAndZero(buf, ix, &c2);
-			return CLAUSE_NONE;
+			return_and_free(CLAUSE_NONE);
 		}
 	}
 
@@ -970,7 +973,7 @@ int ReadClause(Translator *tr, char *buf, short *charix, int *charix_top, int n_
 	if (end_clause_after_tag)
 		RemoveChar(&buf[end_clause_index]); // delete clause-end punctiation
 	TerminateBufWithSpaceAndZero(buf, ix, NULL);
-	return CLAUSE_EOF; // end of file
+	return_and_free(CLAUSE_EOF); // end of file
 }
 
 void InitNamedata(void)

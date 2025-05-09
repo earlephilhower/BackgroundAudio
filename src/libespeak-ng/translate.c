@@ -969,18 +969,22 @@ void TranslateClauseWithTerminator(Translator *tr, int *tone_out, char **voice_c
 	int n_digits;
 	int charix_top = 0;
 
-	short charix[N_TR_SOURCE+4];
-	WORD_TAB words[N_CLAUSE_WORDS];
+	short *charix; //[N_TR_SOURCE+4];  EFP3
+	WORD_TAB *words; //[N_CLAUSE_WORDS]; EFP3
 	static char voice_change_name[40];
 	int word_count = 0; // index into words
 
-	char sbuf[N_TR_SOURCE];
+	char *sbuf; // [N_TR_SOURCE]; EFP3
 
 	int terminator;
 	int tone;
 
 	if (tr == NULL)
 		return;
+
+        charix = (short *)malloc((N_TR_SOURCE+4) * sizeof(short));
+        words = (WORD_TAB *)malloc(N_CLAUSE_WORDS * sizeof(WORD_TAB));
+        sbuf = (char*)malloc(N_TR_SOURCE);
 
 	MAKE_MEM_UNDEFINED(&voice_change_name, sizeof(voice_change_name));
 
@@ -1079,7 +1083,7 @@ void TranslateClauseWithTerminator(Translator *tr, int *tone_out, char **voice_c
 	words[0].length = CalcWordLength(source_index, charix_top, charix, words, 0);
 
 	int prev_out2;
-	while (!finished && (ix < (int)sizeof(sbuf) - 1)) {
+	while (!finished && (ix < (int)N_TR_SOURCE - 1)) {
 		prev_out2 = prev_out;
 		utf8_in2(&prev_out, &sbuf[ix-1], 1);
 
@@ -1504,13 +1508,14 @@ void TranslateClauseWithTerminator(Translator *tr, int *tone_out, char **voice_c
 
 	// Each TranslateWord2 may require up to 7 phonemes
 	// and after this loop we require 2 phonemes
+	char number_buf[150];
+	WORD_TAB *num_wtab; // EFP3 [N_CLAUSE_WORDS]; // copy of 'words', when splitting numbers into parts
+        num_wtab = (WORD_TAB *)malloc(N_CLAUSE_WORDS * sizeof(WORD_TAB));
 	for (ix = 0; ix < word_count && (n_ph_list2 < N_PHONEME_LIST-7-2); ix++) {
 		int nx;
 		int c_temp;
 		char *pn;
 		char *pw;
-		char number_buf[150];
-		WORD_TAB num_wtab[N_CLAUSE_WORDS]; // copy of 'words', when splitting numbers into parts
 
 		// start speaking at a specified word position in the text?
 		count_words++;
@@ -1646,6 +1651,7 @@ void TranslateClauseWithTerminator(Translator *tr, int *tone_out, char **voice_c
 			}
 		}
 	}
+        free(num_wtab);
 
 	if (embedded_read < embedded_ix) {
 		// any embedded commands not yet processed?
@@ -1687,6 +1693,9 @@ void TranslateClauseWithTerminator(Translator *tr, int *tone_out, char **voice_c
 		else
 			*voice_change = NULL;
 	}
+        free(sbuf);
+        free(words);
+        free(charix);
 }
 
 void TranslateClause(Translator *tr, int *tone_out, char **voice_change)
