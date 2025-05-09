@@ -147,7 +147,8 @@ void MakePhonemeList(Translator *tr, int post_pause, bool start_sentence)
 	int n_ph_list3;
 	PHONEME_LIST *plist3;
 	PHONEME_LIST *plist3_inserted = NULL;
-	PHONEME_LIST ph_list3[N_PHONEME_LIST];
+	PHONEME_LIST *ph_list3; //[N_PHONEME_LIST]; // EFP3 - This would be 32K!!!  Use dynamic allocation
+        ph_list3 = (PHONEME_LIST *)malloc(N_PHONEME_LIST * sizeof(PHONEME_LIST));
 
 	PHONEME_LIST2 *plist2;
 	WORD_PH_DATA worddata;
@@ -504,6 +505,8 @@ void MakePhonemeList(Translator *tr, int post_pause, bool start_sentence)
 	n_phoneme_list = ix;
 
 	SelectPhonemeTable(tr->phoneme_tab_ix);
+
+        free(ph_list3); // EFP3
 }
 
 static void SetRegressiveVoicing(int regression, PHONEME_LIST2 *plist2, PHONEME_TAB *ph, Translator *tr) {
