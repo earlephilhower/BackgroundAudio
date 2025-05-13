@@ -101,6 +101,23 @@ ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT
 The `ESP32I2SAudio` object can be passed in to any of the BackgroundAudio constructors as it implements
 the `AudioOutputBase` class.
 
+## ESP32 and Platform.IO
+
+It seems that Espressif discontinued official Platform.IO integration of their Arduino several
+releases ago.  The `platformio/framework-arduinoespressif32` package available is much older
+than the latest Espressif Arduino core and at IDF 4.x.  This library needs IDF 5.x and the new
+I2S APIs to function, so if you attempt to build using ``platformio/framework-arduinoespressif32``
+you will get errors like, `cannot open source file "driver/i2s_std.h"`.
+
+The solution is to move to @Jason2866's community
+[pioarduino](https://github.com/pioarduino/platform-espressif32) core which is built from the
+current Espressif Arduino with IDF 5.x.  Simply change `platform` in your `platform.ini` as below:
+
+```ini
+; Pioarduino Arduino-ESP32 3.2.0
+platform = https://github.com/pioarduino/platform-espressif32/releases/download/54.03.20/platform-espressif32.zip
+```
+
 ## Performance
 
 The SpeedTest example included provided allows for different optimization and CPUs to be tested.  I
