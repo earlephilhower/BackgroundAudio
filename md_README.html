@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.2</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.3</span>
    </div>
   </td>
  </tr>
@@ -128,19 +128,25 @@ ESP32 Implementation</h1>
 <div class="line">ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT</div>
 </div><!-- fragment --><p>The <code><a class="el" href="classESP32I2SAudio.html" title="I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio.">ESP32I2SAudio</a></code> object can be passed in to any of the BackgroundAudio constructors as it implements the <code>AudioOutputBase</code> class.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
+ESP32 and Platform.IO</h1>
+<p>It seems that Espressif discontinued official Platform.IO integration of their Arduino several releases ago. The <code>platformio/framework-arduinoespressif32</code> package available is much older than the latest Espressif Arduino core and at IDF 4.x. This library needs IDF 5.x and the new I2S APIs to function, so if you attempt to build using <code>platformio/framework-arduinoespressif32</code> you will get errors like, <code>cannot open source file "driver/i2s_std.h"</code>.</p>
+<p>The solution is to move to @Jason2866's community <a href="https://github.com/pioarduino/platform-espressif32">pioarduino</a> core which is built from the current Espressif Arduino with IDF 5.x. Simply change <code>platform</code> in your <code>platform.ini</code> as below:</p>
+<div class="fragment"><div class="line">; Pioarduino Arduino-ESP32 3.2.0</div>
+<div class="line">platform = https://github.com/pioarduino/platform-espressif32/releases/download/54.03.20/platform-espressif32.zip</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
 Performance</h1>
 <p>The SpeedTest example included provided allows for different optimization and CPUs to be tested. I recommend using <code>-O3</code> optimization mode, available in the IDE menus, as it can reduce CPU usage by a very large amount on the Pico. As is obvious from the numbers below, HE-AAC decoding is much more computationally intensive than simple AAC. (The original Pico can playback most normal AAC files without issue, but many web radio streamers use HE-AAC to minimize bandwidth.)</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 PICO 2, -O3  (ARM mode)</h2>
 <div class="fragment"><div class="line">HE-AAC decode cycles: 112322331, frames 103, cycles/sample 1486.00</div>
 <div class="line">AAC decode cycles: 112322331, frames 206, cycles/sample 532.47</div>
 <div class="line">MP3 decode cycles: 111250252, frames 183, cycles/sample 527.71</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
 PICO, -O3</h2>
 <div class="fragment"><div class="line">HE-AAC decode cycles: 310594598, frames 103, cycles/sample 6390.67</div>
 <div class="line">AAC decode cycles: 310594598, frames 206, cycles/sample 1472.40</div>
 <div class="line">MP3 decode cycles: 201450592, frames 183, cycles/sample 955.58</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
 Examples</h1>
 <ul>
 <li>BeepSpeech : Says "Beep Boop" every time the BOOTSEL is pressed. Demonstrates how the main app continues while speech is being generated, and how to stop a dictation in mid-stream.</li>
@@ -152,7 +158,7 @@ Examples</h1>
 <li>SpeedTest : Calculates the number of CPU cycles per output sample for MP3, AAC, and HE-AAC using the current CPU and optimization settings. Useful to see how different <code>-Ox</code> settings change performance,</li>
 <li>WebradioMP3PlusWebUI : Shows a more complete application that can play an MP3 web radio using HTTPS connectivity. Includes a serial and HTTP WebServer interface to allow the user to change URLs, volumes, and see the ICY metadata.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Codec Licensing</h1>
 <ul>
 <li>AAC decode source is from the Helix project and licensed under RealNetwork's RSPL license. For commercial use you're still going to need the usual AAC licensing from <a href="http://www.via-corp.com/us/en/licensing/aac/overview.html">Via Licensing</a>.</li>

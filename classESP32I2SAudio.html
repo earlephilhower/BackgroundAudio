@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.2</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.3</span>
    </div>
   </td>
  </tr>
@@ -141,9 +141,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>_backgroundTask</b> (
 <tr class="memitem:a703c3a005ca5edb460e7a96c5001a618" id="r_a703c3a005ca5edb460e7a96c5001a618"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a703c3a005ca5edb460e7a96c5001a618">underflows</a> ()</td></tr>
 <tr class="memdesc:a703c3a005ca5edb460e7a96c5001a618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of times the MP3 decoder has underflowed waiting on raw data since <code>begin</code>  <br /></td></tr>
 <tr class="separator:a703c3a005ca5edb460e7a96c5001a618"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a2e5ef52b6b1ee7fffb843df23970ed" id="r_a3a2e5ef52b6b1ee7fffb843df23970ed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a3a2e5ef52b6b1ee7fffb843df23970ed">_onSentCB</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow=false)</td></tr>
-<tr class="memdesc:a3a2e5ef52b6b1ee7fffb843df23970ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object-based callback for I2S Sent notification.  <br /></td></tr>
-<tr class="separator:a3a2e5ef52b6b1ee7fffb843df23970ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a315f26b08af3a5be97d6eae2e104ecd6" id="r_a315f26b08af3a5be97d6eae2e104ecd6"><td class="memItemLeft" align="right" valign="top">IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a315f26b08af3a5be97d6eae2e104ecd6">_onSentCB</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow=false)</td></tr>
+<tr class="memdesc:a315f26b08af3a5be97d6eae2e104ecd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object-based callback for I2S Sent notification.  <br /></td></tr>
+<tr class="separator:a315f26b08af3a5be97d6eae2e104ecd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e55040d0ba29a56bd3e4e93459127d4" id="r_a1e55040d0ba29a56bd3e4e93459127d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">end</a> () override</td></tr>
 <tr class="memdesc:a1e55040d0ba29a56bd3e4e93459127d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the I2S device.  <br /></td></tr>
 <tr class="separator:a1e55040d0ba29a56bd3e4e93459127d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,12 +165,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>_backgroundTask</b> (
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae73beb0f610e3d25d616a75e0f1173b9" id="r_ae73beb0f610e3d25d616a75e0f1173b9"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#ae73beb0f610e3d25d616a75e0f1173b9">_onSent</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</td></tr>
-<tr class="memdesc:ae73beb0f610e3d25d616a75e0f1173b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language wrapper for I2S Sent event.  <br /></td></tr>
-<tr class="separator:ae73beb0f610e3d25d616a75e0f1173b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc93d03ee93974abefc7216380c0d549" id="r_abc93d03ee93974abefc7216380c0d549"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#abc93d03ee93974abefc7216380c0d549">_onSentUnder</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</td></tr>
-<tr class="memdesc:abc93d03ee93974abefc7216380c0d549"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language wrapper for I2S Sent Underflow event.  <br /></td></tr>
-<tr class="separator:abc93d03ee93974abefc7216380c0d549"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab58dd1c2e51bf1216377c787d73c52d8" id="r_ab58dd1c2e51bf1216377c787d73c52d8"><td class="memItemLeft" align="right" valign="top">static IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#ab58dd1c2e51bf1216377c787d73c52d8">_onSent</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</td></tr>
+<tr class="memdesc:ab58dd1c2e51bf1216377c787d73c52d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language wrapper for I2S Sent event.  <br /></td></tr>
+<tr class="separator:ab58dd1c2e51bf1216377c787d73c52d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb06d412c2cc4af5f55721ab8f395476" id="r_acb06d412c2cc4af5f55721ab8f395476"><td class="memItemLeft" align="right" valign="top">static IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#acb06d412c2cc4af5f55721ab8f395476">_onSentUnder</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</td></tr>
+<tr class="memdesc:acb06d412c2cc4af5f55721ab8f395476"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language wrapper for I2S Sent Underflow event.  <br /></td></tr>
+<tr class="separator:acb06d412c2cc4af5f55721ab8f395476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a1a623a62e49d740e0dd579a3d6624a" id="r_a0a1a623a62e49d740e0dd579a3d6624a"><td class="memItemLeft" align="right" valign="top"><a id="a0a1a623a62e49d740e0dd579a3d6624a" name="a0a1a623a62e49d740e0dd579a3d6624a"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> (void *pvParameters)</td></tr>
 <tr class="memdesc:a0a1a623a62e49d740e0dd579a3d6624a"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language shim to start the real object's task. <br /></td></tr>
@@ -240,8 +240,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae73beb0f610e3d25d616a75e0f1173b9" name="ae73beb0f610e3d25d616a75e0f1173b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae73beb0f610e3d25d616a75e0f1173b9">&#9670;&#160;</a></span>_onSent()</h2>
+<a id="ab58dd1c2e51bf1216377c787d73c52d8" name="ab58dd1c2e51bf1216377c787d73c52d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab58dd1c2e51bf1216377c787d73c52d8">&#9670;&#160;</a></span>_onSent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +250,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool ESP32I2SAudio::_onSent </td>
+          <td class="memname">static IRAM_ATTR bool ESP32I2SAudio::_onSent </td>
           <td>(</td>
           <td class="paramtype">i2s_chan_handle_t&#160;</td>
           <td class="paramname"><em>handle</em>, </td>
@@ -285,8 +285,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 
 </div>
 </div>
-<a id="a3a2e5ef52b6b1ee7fffb843df23970ed" name="a3a2e5ef52b6b1ee7fffb843df23970ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a2e5ef52b6b1ee7fffb843df23970ed">&#9670;&#160;</a></span>_onSentCB()</h2>
+<a id="a315f26b08af3a5be97d6eae2e104ecd6" name="a315f26b08af3a5be97d6eae2e104ecd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a315f26b08af3a5be97d6eae2e104ecd6">&#9670;&#160;</a></span>_onSentCB()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -295,7 +295,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool ESP32I2SAudio::_onSentCB </td>
+          <td class="memname">IRAM_ATTR bool ESP32I2SAudio::_onSentCB </td>
           <td>(</td>
           <td class="paramtype">i2s_chan_handle_t&#160;</td>
           <td class="paramname"><em>handle</em>, </td>
@@ -330,8 +330,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 
 </div>
 </div>
-<a id="abc93d03ee93974abefc7216380c0d549" name="abc93d03ee93974abefc7216380c0d549"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc93d03ee93974abefc7216380c0d549">&#9670;&#160;</a></span>_onSentUnder()</h2>
+<a id="acb06d412c2cc4af5f55721ab8f395476" name="acb06d412c2cc4af5f55721ab8f395476"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb06d412c2cc4af5f55721ab8f395476">&#9670;&#160;</a></span>_onSentUnder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -340,7 +340,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool ESP32I2SAudio::_onSentUnder </td>
+          <td class="memname">static IRAM_ATTR bool ESP32I2SAudio::_onSentUnder </td>
           <td>(</td>
           <td class="paramtype">i2s_chan_handle_t&#160;</td>
           <td class="paramname"><em>handle</em>, </td>
