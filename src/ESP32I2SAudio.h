@@ -22,6 +22,7 @@
 #pragma once
 
 #include <driver/i2s_std.h>
+#include <atomic>
 #include "WrappedAudioOutputBase.h"
 
 /**
@@ -58,7 +59,7 @@ public:
         _running = false;
         _sampleRate = 44100;
         _buffers = 5;
-        _bufferWords = 512;
+        _bufferWords = 1023;
         _silenceSample = 0;
         _cb = nullptr;
         _underflowed = false;
@@ -175,7 +176,7 @@ public:
         // Make a new channel of the requested buffers (which may be ignored by the IDF!)
         i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
         chan_cfg.dma_desc_num = _buffers;
-        chan_cfg.dma_frame_num = _bufferWords * 4;
+        chan_cfg.dma_frame_num = _bufferWords;
         i2s_new_channel(&chan_cfg, &_tx_handle, nullptr);
 
         i2s_std_config_t std_cfg = {
@@ -196,12 +197,15 @@ public:
         };
         i2s_channel_init_std_mode(_tx_handle, &std_cfg);
 
+        i2s_chan_info_t _info;
+        i2s_channel_get_info(_tx_handle, &_info);
+        _totalAvailable = _info.total_dma_buf_size;
+
         // Prefill silence and calculate how bug we really have
         int16_t a[2] = {0, 0};
         size_t written = 0;
         do {
             i2s_channel_preload_data(_tx_handle, (void*)a, sizeof(a), &written);
-            _totalAvailable += written;
         } while (written);
 
         // The IRQ callbacks which will just trigger the playback task
@@ -209,7 +213,7 @@ public:
             .on_recv = nullptr,
             .on_recv_q_ovf = nullptr,
             .on_sent = _onSent,
-            .on_send_q_ovf = _onSentUnder
+            .on_send_q_ovf = nullptr
         };
         i2s_channel_register_event_callback(_tx_handle, &_cbs, (void *)this);
         xTaskCreate(_taskShim, "BackgroundAudioI2S", 8192, (void*)this, 2, &_taskHandle);
@@ -224,15 +228,6 @@ public:
     */
     static IRAM_ATTR bool _onSent(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
         return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event);
-    }
-
-    /**
-        @brief C-language wrapper for I2S Sent Underflow event
-
-        @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
-    */
-    static IRAM_ATTR bool _onSentUnder(i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx) {
-        return ((ESP32I2SAudio *)user_ctx)->_onSentCB(handle, event, true);
     }
 
     /**
@@ -253,21 +248,37 @@ public:
             // One DMA transfer == one frame
             _frames++;
             // Use the notification value to transmit how much data was in the DMA block.  When negative this was an underflow notification
-            int32_t size = (int32_t)ulNotifiedValue;
-            if (size < 0) {
-                _underflows++;
-                size = -size;
-            }
-            // Track the amount believed available, with some sanity checking
-            _available += size;
-            if (_available > _totalAvailable) {
-                _available = _totalAvailable;
-            }
+            // Saturating add: _available = min(_available + size, _totalAvailable)
+            _saturating_add_available((uint32_t)ulNotifiedValue);
             // Callback used from within a normal FreeRTOS task, so it can be slow and/or write I2S
             if (_cb) {
                 _cb(_cbData);
             }
         }
+    }
+
+    inline void _saturating_add_available(uint32_t add) {
+        uint32_t cur = _available.load(std::memory_order_relaxed);
+        do {
+            uint64_t sum = (uint64_t)cur + add;
+            uint32_t capped = (sum > _totalAvailable) ? (uint32_t)_totalAvailable : (uint32_t)sum;
+            if (_available.compare_exchange_weak(cur, capped,
+                   std::memory_order_release, std::memory_order_relaxed)) {
+                return;
+            }
+            // cur reloaded on failure
+        } while (true);
+    }
+
+    inline void _saturating_sub_available(uint32_t sub) {
+        uint32_t cur = _available.load(std::memory_order_relaxed);
+        do {
+            uint32_t next = (cur > sub) ? (cur - sub) : 0u;
+            if (_available.compare_exchange_weak(cur, next,
+                    std::memory_order_release, std::memory_order_relaxed)) {
+                return;
+            }
+        } while (true);
     }
 
 
@@ -311,7 +322,10 @@ public:
             if (underflow) {
                 _underflowed = true;
             }
-            xTaskNotifyFromISR(_taskHandle, event->size * (underflow ? -1 : 1), eSetValueWithOverwrite, &xHigherPriorityTaskWoken);
+            xTaskNotifyFromISR(_taskHandle, event->size, eSetValueWithoutOverwrite, &xHigherPriorityTaskWoken);
+        }
+        if (xHigherPriorityTaskWoken) {
+            portYIELD_FROM_ISR();
         }
         return (bool)xHigherPriorityTaskWoken;
     }
@@ -338,11 +352,8 @@ public:
         @return True if an underflow occurred.
     */
     bool getUnderflow() override {
-        noInterrupts();
-        auto ret = _underflowed;
-        _underflowed = false;
-        interrupts();
-        return ret;
+        // Atomically read-and-clear
+        return _underflowed.exchange(false, std::memory_order_acq_rel);
     }
 
     /**
@@ -369,15 +380,7 @@ public:
     size_t write(const uint8_t *buffer, size_t size) override {
         size_t written = 0;
         i2s_channel_write(_tx_handle, buffer, size, &written, 0);
-        noInterrupts(); // TODO - Freertos task protection instead?
-        if (written != size) {
-            _available = 0;
-        } else if (_available >= written) {
-            _available -= written;
-        } else {
-            _available = 0;
-        }
-        interrupts();
+        _saturating_sub_available((uint32_t)written);
         return  written;
     }
 
@@ -391,12 +394,14 @@ public:
     }
 
     /**
-        @brief Determine the number of bytes we can write to the DMA buffers at this instant
+        @brief Determine the number of frames we can write to the DMA buffers at this instant
 
-        @return Number of bytes available.  May not be completely accurate
+        @return Number of frames available.  May not be completely accurate
     */
     int availableForWrite() override {
-        return _available; // It's our best guess for now
+        i2s_chan_info_t _info;
+        i2s_channel_get_info(_tx_handle, &_info);
+        return (int)_available.load(std::memory_order_acquire)/4;
     }
 
 private:
@@ -408,7 +413,7 @@ private:
     bool _bclkInv = false;
     bool _wsInv = false;
     bool _mclkInv = false;
-    bool _underflowed = false;
+    std::atomic<bool> _underflowed{false};
     size_t _sampleRate;
     size_t _buffers;
     size_t _bufferWords;
@@ -419,7 +424,7 @@ private:
     // I2S IDF object and info
     i2s_chan_handle_t _tx_handle;
     size_t _totalAvailable = 0;
-    size_t _available = 0;
+    std::atomic<uint32_t> _available{0};
     uint32_t _irqs = 0; // Number of I2S IRQs received
     uint32_t _frames = 0; // Number of DMA buffers sent
     uint32_t _underflows = 0; // Number of underflowed DMA buffers

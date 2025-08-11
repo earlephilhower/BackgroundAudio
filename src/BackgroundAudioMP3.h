@@ -351,7 +351,15 @@ private:
                     _out->setFrequency(_synth.pcm.samplerate);
                 }
             }
-            _out->write((uint8_t *)_synth.pcm.samplesX, _synth.pcm.length * 4);
+            
+            // Try to push the whole frame, but don't spin forever if we can't
+            uint8_t* p = reinterpret_cast<uint8_t*>(_synth.pcm.samplesX);
+            size_t remaining = _synth.pcm.length * 4;
+            while (remaining) {
+                size_t n = _out->write(p, remaining);
+                p += n;
+                remaining -= n;
+            }
         }
     }
 
