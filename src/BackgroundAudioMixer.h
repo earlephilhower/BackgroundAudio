@@ -230,7 +230,7 @@ public:
         }
         size_t words = size / sizeof(uint32_t);
         while (words) {
-            AudioBuffer **volatile p = (AudioBuffer * *volatile)&_empty;
+            AudioBuffer **volatile p = &_empty;
             if (!*p) {
                 break;
             }
