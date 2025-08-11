@@ -262,8 +262,7 @@ public:
         do {
             uint64_t sum = (uint64_t)cur + add;
             uint32_t capped = (sum > _totalAvailable) ? (uint32_t)_totalAvailable : (uint32_t)sum;
-            if (_available.compare_exchange_weak(cur, capped,
-                   std::memory_order_release, std::memory_order_relaxed)) {
+            if (_available.compare_exchange_weak(cur, capped, std::memory_order_release, std::memory_order_relaxed)) {
                 return;
             }
             // cur reloaded on failure
@@ -274,8 +273,7 @@ public:
         uint32_t cur = _available.load(std::memory_order_relaxed);
         do {
             uint32_t next = (cur > sub) ? (cur - sub) : 0u;
-            if (_available.compare_exchange_weak(cur, next,
-                    std::memory_order_release, std::memory_order_relaxed)) {
+            if (_available.compare_exchange_weak(cur, next, std::memory_order_release, std::memory_order_relaxed)) {
                 return;
             }
         } while (true);
@@ -401,7 +399,7 @@ public:
     int availableForWrite() override {
         i2s_chan_info_t _info;
         i2s_channel_get_info(_tx_handle, &_info);
-        return (int)_available.load(std::memory_order_acquire)/4;
+        return (int)_available.load(std::memory_order_acquire) / 4;
     }
 
 private:
