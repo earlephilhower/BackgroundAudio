@@ -46,7 +46,7 @@ NetworkClientSecure client;
 WiFiClientSecure client;  // Because URL is HTTPS, need a WiFiSecureClient.  Plain HTTP can use WiFiClient
 #endif
 
-String url = "https://cromwell-ice.streamguys1.com/WCJZFM"; // "https://ice.audionow.com/485BBCWorld.mp3"; // Check out https://fmstream.org/index.php?c=FT for others
+String url = "https://ice.audionow.com/485BBCWorld.mp3"; // Check out https://fmstream.org/index.php?c=FT for others
 HTTPClient http;
 uint8_t buff[512]; // HTTP reads into this before sending to MP3
 WebServer web(80); // The HTTP interface for remote control
