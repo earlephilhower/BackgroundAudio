@@ -109,6 +109,13 @@ public:
         if (!_running) {
             _buffers = buffers;
             _bufferWords = bufferWords;
+            // We need DMA buffers of 1023 4-byte samples or less. Adjust behind the scenes.
+            // The upper level code will get 2x or 4x the IRQs, but availableForWrite() should
+            // still report the proper space and let it do nothing for the extra IRQs.
+            while (_bufferWords > 1023) {
+                _buffers *= 2;
+                _bufferWords /= 2;
+            }
             _silenceSample = silenceSample;
         }
         return !_running;
@@ -177,7 +184,7 @@ public:
         i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
         chan_cfg.dma_desc_num = _buffers;
         chan_cfg.dma_frame_num = _bufferWords;
-        i2s_new_channel(&chan_cfg, &_tx_handle, nullptr);
+        assert(ESP_OK == i2s_new_channel(&chan_cfg, &_tx_handle, nullptr));
 
         i2s_std_config_t std_cfg = {
             .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(_sampleRate),
@@ -195,10 +202,12 @@ public:
                 },
             },
         };
-        i2s_channel_init_std_mode(_tx_handle, &std_cfg);
+        assert(ESP_OK == i2s_channel_init_std_mode(_tx_handle, &std_cfg));
 
         i2s_chan_info_t _info;
         i2s_channel_get_info(_tx_handle, &_info);
+        // If the IDF has changed our buffer size or count then we can't work
+        assert(_info.total_dma_buf_size == _buffers * _bufferWords * 4);
         _totalAvailable = _info.total_dma_buf_size;
 
         // Prefill silence and calculate how bug we really have
@@ -215,7 +224,7 @@ public:
             .on_sent = _onSent,
             .on_send_q_ovf = nullptr
         };
-        i2s_channel_register_event_callback(_tx_handle, &_cbs, (void *)this);
+        assert(ESP_OK == i2s_channel_register_event_callback(_tx_handle, &_cbs, (void *)this));
         xTaskCreate(_taskShim, "BackgroundAudioI2S", 8192, (void*)this, 2, &_taskHandle);
         _running = ESP_OK == i2s_channel_enable(_tx_handle);
         return _running;
@@ -261,7 +270,13 @@ public:
         uint32_t cur = _available.load(std::memory_order_relaxed);
         do {
             uint64_t sum = (uint64_t)cur + add;
-            uint32_t capped = (sum > _totalAvailable) ? (uint32_t)_totalAvailable : (uint32_t)sum;
+            uint32_t capped = sum;
+            if (sum > _totalAvailable) {
+                capped = (uint32_t) _totalAvailable;  // Cap to the total available
+                _underflowed.store(true, std::memory_order_release);
+                _underflows.fetch_add(1, std::memory_order_relaxed);
+            }
+
             if (_available.compare_exchange_weak(cur, capped, std::memory_order_release, std::memory_order_relaxed)) {
                 return;
             }
@@ -304,7 +319,7 @@ public:
               @return Number of frames of underflow data have occurred
     */
     uint32_t underflows() {
-        return _underflows;
+        return _underflows.load(std::memory_order_acquire);
     }
 
     /**
@@ -312,14 +327,11 @@ public:
 
         @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
     */
-    IRAM_ATTR bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow = false) {
+    IRAM_ATTR bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event) {
         BaseType_t xHigherPriorityTaskWoken;
         xHigherPriorityTaskWoken = pdFALSE;
         if (_taskHandle) {
             _irqs++;
-            if (underflow) {
-                _underflowed = true;
-            }
             xTaskNotifyFromISR(_taskHandle, event->size, eSetValueWithoutOverwrite, &xHigherPriorityTaskWoken);
         }
         if (xHigherPriorityTaskWoken) {
@@ -376,10 +388,22 @@ public:
         @return Number of bytes actually written to the I2S DMA buffers
     */
     size_t write(const uint8_t *buffer, size_t size) override {
-        size_t written = 0;
-        i2s_channel_write(_tx_handle, buffer, size, &written, 0);
-        _saturating_sub_available((uint32_t)written);
-        return  written;
+        // The ESP32 i2s_channel_write will stop at a DMA buffer end even if add'l DMA buffers are free
+        // So explicitly loop until either we run out of DMA buffers or data to fill them with
+        size_t cumWritten = 0;
+        while (size) {
+            size_t written = 0;
+            i2s_channel_write(_tx_handle, buffer, size, &written, 100);
+            _saturating_sub_available((uint32_t)written);
+            buffer += written;
+            size -= written;
+            cumWritten += written;
+            // If we're full-up, don't block just exit
+            if (!written) {
+                break;
+            }
+        }
+        return cumWritten;
     }
 
     /**
@@ -423,5 +447,5 @@ protected:
     std::atomic<uint32_t> _available{0};
     uint32_t _irqs = 0; // Number of I2S IRQs received
     uint32_t _frames = 0; // Number of DMA buffers sent
-    uint32_t _underflows = 0; // Number of underflowed DMA buffers
+    std::atomic<uint32_t> _underflows{0}; // Number of underflowed DMA buffers
 };
