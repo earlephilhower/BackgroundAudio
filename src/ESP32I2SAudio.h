@@ -424,7 +424,7 @@ public:
         return (int)_available.load(std::memory_order_acquire) / 4;
     }
 
-private:
+protected:
     bool _running;
     int8_t _bclk = 0;
     int8_t _ws = 1;

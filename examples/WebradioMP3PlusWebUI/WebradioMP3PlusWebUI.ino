@@ -21,6 +21,9 @@ const char *pass = STAPSK;
 #ifdef ESP32
 #include <ESP32I2SAudio.h>
 ESP32I2SAudio audio(4, 5, 6); // BCLK, LRCLK, DOUT (, MCLK)
+// Or for 1-pin PDM with external LPF
+//#include <ESP32PDMAudio.h>
+//ESP32PDMAudio audio(5);
 #else
 #include <I2S.h>
 #include <PWMAudio.h>
