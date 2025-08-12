@@ -332,7 +332,7 @@ private:
                     _out->setFrequency(_sampleRate);
                 }
             }
-            _out->write((uint8_t *)_outSample, _outSamples * 2 * sizeof(int16_t));
+            assert(_out->write((uint8_t *)_outSample, _outSamples * 2 * sizeof(int16_t)) == _outSamples * 2 * sizeof(int16_t));
         }
     }
 

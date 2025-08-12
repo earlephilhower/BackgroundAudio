@@ -393,7 +393,7 @@ public:
         size_t cumWritten = 0;
         while (size) {
             size_t written = 0;
-            i2s_channel_write(_tx_handle, buffer, size, &written, 0);
+            i2s_channel_write(_tx_handle, buffer, size, &written, 100);
             _saturating_sub_available((uint32_t)written);
             buffer += written;
             size -= written;
