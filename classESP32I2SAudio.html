@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.3</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.0</span>
    </div>
   </td>
  </tr>
@@ -72,6 +72,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classESP32I2SAudio-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">ESP32I2SAudio Class Reference</div></div>
 </div><!--header-->
@@ -87,6 +88,8 @@ Inheritance diagram for ESP32I2SAudio:</div>
 <div class="center"><img src="classESP32I2SAudio__inherit__graph.png" border="0" usemap="#aESP32I2SAudio_inherit__map" alt="Inheritance graph"/></div>
 <map name="aESP32I2SAudio_inherit__map" id="aESP32I2SAudio_inherit__map">
 <area shape="rect" title="I2S object with IRQ&#45;based callbacks to a FreeRTOS task, for use with BackgroundAudio." alt="" coords="13,79,133,104"/>
+<area shape="rect" href="classESP32PDMAudio.html" title="PDM object with IRQ&#45;based callbacks to a FreeRTOS task, for use with BackgroundAudio." alt="" coords="8,152,137,177"/>
+<area shape="poly" title=" " alt="" coords="75,118,75,152,70,152,70,118"/>
 <area shape="rect" title=" " alt="" coords="5,5,140,31"/>
 <area shape="poly" title=" " alt="" coords="75,44,75,79,70,79,70,44"/>
 </map>
@@ -132,6 +135,12 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>_backgroundTask</b> ()</td></tr>
 <tr class="memdesc:a0d338d0dfcf436bf5b1c8265c926409a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background I2S DMA buffer notification task. Tracks number of bytes available to be written. <br /></td></tr>
 <tr class="separator:a0d338d0dfcf436bf5b1c8265c926409a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40df407b9d178f034dc5a930cb36c4b2" id="r_a40df407b9d178f034dc5a930cb36c4b2"><td class="memItemLeft" align="right" valign="top"><a id="a40df407b9d178f034dc5a930cb36c4b2" name="a40df407b9d178f034dc5a930cb36c4b2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_saturating_add_available</b> (uint32_t add)</td></tr>
+<tr class="separator:a40df407b9d178f034dc5a930cb36c4b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa817ea070582c6de705cb6db25ff7a7e" id="r_aa817ea070582c6de705cb6db25ff7a7e"><td class="memItemLeft" align="right" valign="top"><a id="aa817ea070582c6de705cb6db25ff7a7e" name="aa817ea070582c6de705cb6db25ff7a7e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>_saturating_sub_available</b> (uint32_t sub)</td></tr>
+<tr class="separator:aa817ea070582c6de705cb6db25ff7a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a76caff343cea29ae05b25ea51edd05" id="r_a3a76caff343cea29ae05b25ea51edd05"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a3a76caff343cea29ae05b25ea51edd05">frames</a> ()</td></tr>
 <tr class="memdesc:a3a76caff343cea29ae05b25ea51edd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of DMA frames(buffers) processed.  <br /></td></tr>
 <tr class="separator:a3a76caff343cea29ae05b25ea51edd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,9 +150,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>_backgroundTask</b> (
 <tr class="memitem:a703c3a005ca5edb460e7a96c5001a618" id="r_a703c3a005ca5edb460e7a96c5001a618"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a703c3a005ca5edb460e7a96c5001a618">underflows</a> ()</td></tr>
 <tr class="memdesc:a703c3a005ca5edb460e7a96c5001a618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of times the MP3 decoder has underflowed waiting on raw data since <code>begin</code>  <br /></td></tr>
 <tr class="separator:a703c3a005ca5edb460e7a96c5001a618"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a315f26b08af3a5be97d6eae2e104ecd6" id="r_a315f26b08af3a5be97d6eae2e104ecd6"><td class="memItemLeft" align="right" valign="top">IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a315f26b08af3a5be97d6eae2e104ecd6">_onSentCB</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow=false)</td></tr>
-<tr class="memdesc:a315f26b08af3a5be97d6eae2e104ecd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object-based callback for I2S Sent notification.  <br /></td></tr>
-<tr class="separator:a315f26b08af3a5be97d6eae2e104ecd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a854a4953c793dc725d4c6610e23985bb" id="r_a854a4953c793dc725d4c6610e23985bb"><td class="memItemLeft" align="right" valign="top">IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a854a4953c793dc725d4c6610e23985bb">_onSentCB</a> (i2s_chan_handle_t handle, i2s_event_data_t *event)</td></tr>
+<tr class="memdesc:a854a4953c793dc725d4c6610e23985bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object-based callback for I2S Sent notification.  <br /></td></tr>
+<tr class="separator:a854a4953c793dc725d4c6610e23985bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e55040d0ba29a56bd3e4e93459127d4" id="r_a1e55040d0ba29a56bd3e4e93459127d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#a1e55040d0ba29a56bd3e4e93459127d4">end</a> () override</td></tr>
 <tr class="memdesc:a1e55040d0ba29a56bd3e4e93459127d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the I2S device.  <br /></td></tr>
 <tr class="separator:a1e55040d0ba29a56bd3e4e93459127d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,7 +169,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>_backgroundTask</b> (
 <tr class="memdesc:ab6dd7004d4b33df82fa48aafb71aedb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write single byte to I2S buffers. Not supported.  <br /></td></tr>
 <tr class="separator:ab6dd7004d4b33df82fa48aafb71aedb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3a026d17e68cf3559db77c8875c0136" id="r_aa3a026d17e68cf3559db77c8875c0136"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#aa3a026d17e68cf3559db77c8875c0136">availableForWrite</a> () override</td></tr>
-<tr class="memdesc:aa3a026d17e68cf3559db77c8875c0136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the number of bytes we can write to the DMA buffers at this instant.  <br /></td></tr>
+<tr class="memdesc:aa3a026d17e68cf3559db77c8875c0136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the number of frames we can write to the DMA buffers at this instant.  <br /></td></tr>
 <tr class="separator:aa3a026d17e68cf3559db77c8875c0136"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -168,13 +177,79 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab58dd1c2e51bf1216377c787d73c52d8" id="r_ab58dd1c2e51bf1216377c787d73c52d8"><td class="memItemLeft" align="right" valign="top">static IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#ab58dd1c2e51bf1216377c787d73c52d8">_onSent</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</td></tr>
 <tr class="memdesc:ab58dd1c2e51bf1216377c787d73c52d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language wrapper for I2S Sent event.  <br /></td></tr>
 <tr class="separator:ab58dd1c2e51bf1216377c787d73c52d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb06d412c2cc4af5f55721ab8f395476" id="r_acb06d412c2cc4af5f55721ab8f395476"><td class="memItemLeft" align="right" valign="top">static IRAM_ATTR bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32I2SAudio.html#acb06d412c2cc4af5f55721ab8f395476">_onSentUnder</a> (i2s_chan_handle_t handle, i2s_event_data_t *event, void *user_ctx)</td></tr>
-<tr class="memdesc:acb06d412c2cc4af5f55721ab8f395476"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language wrapper for I2S Sent Underflow event.  <br /></td></tr>
-<tr class="separator:acb06d412c2cc4af5f55721ab8f395476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a1a623a62e49d740e0dd579a3d6624a" id="r_a0a1a623a62e49d740e0dd579a3d6624a"><td class="memItemLeft" align="right" valign="top"><a id="a0a1a623a62e49d740e0dd579a3d6624a" name="a0a1a623a62e49d740e0dd579a3d6624a"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> (void *pvParameters)</td></tr>
 <tr class="memdesc:a0a1a623a62e49d740e0dd579a3d6624a"><td class="mdescLeft">&#160;</td><td class="mdescRight">C-language shim to start the real object's task. <br /></td></tr>
 <tr class="separator:a0a1a623a62e49d740e0dd579a3d6624a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a0399daba4f2a63b406953cabdf723a23" id="r_a0399daba4f2a63b406953cabdf723a23"><td class="memItemLeft" align="right" valign="top"><a id="a0399daba4f2a63b406953cabdf723a23" name="a0399daba4f2a63b406953cabdf723a23"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_running</b></td></tr>
+<tr class="separator:a0399daba4f2a63b406953cabdf723a23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4af9d6f22a2ba348a8d2ce7355946617" id="r_a4af9d6f22a2ba348a8d2ce7355946617"><td class="memItemLeft" align="right" valign="top"><a id="a4af9d6f22a2ba348a8d2ce7355946617" name="a4af9d6f22a2ba348a8d2ce7355946617"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><b>_bclk</b> = 0</td></tr>
+<tr class="separator:a4af9d6f22a2ba348a8d2ce7355946617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0cf28d19c53a819e34f6d82965dc0af" id="r_af0cf28d19c53a819e34f6d82965dc0af"><td class="memItemLeft" align="right" valign="top"><a id="af0cf28d19c53a819e34f6d82965dc0af" name="af0cf28d19c53a819e34f6d82965dc0af"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><b>_ws</b> = 1</td></tr>
+<tr class="separator:af0cf28d19c53a819e34f6d82965dc0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f750b6ccb485384467455efc7408829" id="r_a4f750b6ccb485384467455efc7408829"><td class="memItemLeft" align="right" valign="top"><a id="a4f750b6ccb485384467455efc7408829" name="a4f750b6ccb485384467455efc7408829"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><b>_dout</b> = 2</td></tr>
+<tr class="separator:a4f750b6ccb485384467455efc7408829"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a722c1c64d6798b64e3ca65d0701e954f" id="r_a722c1c64d6798b64e3ca65d0701e954f"><td class="memItemLeft" align="right" valign="top"><a id="a722c1c64d6798b64e3ca65d0701e954f" name="a722c1c64d6798b64e3ca65d0701e954f"></a>
+int8_t&#160;</td><td class="memItemRight" valign="bottom"><b>_mclk</b> = -1</td></tr>
+<tr class="separator:a722c1c64d6798b64e3ca65d0701e954f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07806466dcb2679d365615c1cc56a788" id="r_a07806466dcb2679d365615c1cc56a788"><td class="memItemLeft" align="right" valign="top"><a id="a07806466dcb2679d365615c1cc56a788" name="a07806466dcb2679d365615c1cc56a788"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_bclkInv</b> = false</td></tr>
+<tr class="separator:a07806466dcb2679d365615c1cc56a788"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03e11c8c78e7bc402e861869cc22cd0b" id="r_a03e11c8c78e7bc402e861869cc22cd0b"><td class="memItemLeft" align="right" valign="top"><a id="a03e11c8c78e7bc402e861869cc22cd0b" name="a03e11c8c78e7bc402e861869cc22cd0b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_wsInv</b> = false</td></tr>
+<tr class="separator:a03e11c8c78e7bc402e861869cc22cd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeb144eec1776e888c0a3def292dfdcc" id="r_adeb144eec1776e888c0a3def292dfdcc"><td class="memItemLeft" align="right" valign="top"><a id="adeb144eec1776e888c0a3def292dfdcc" name="adeb144eec1776e888c0a3def292dfdcc"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_mclkInv</b> = false</td></tr>
+<tr class="separator:adeb144eec1776e888c0a3def292dfdcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f12a862ccb4227b10049bf5b79da6f3" id="r_a8f12a862ccb4227b10049bf5b79da6f3"><td class="memItemLeft" align="right" valign="top"><a id="a8f12a862ccb4227b10049bf5b79da6f3" name="a8f12a862ccb4227b10049bf5b79da6f3"></a>
+std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_underflowed</b> {false}</td></tr>
+<tr class="separator:a8f12a862ccb4227b10049bf5b79da6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2d9bd30c0f3d981eddf283b51234014" id="r_af2d9bd30c0f3d981eddf283b51234014"><td class="memItemLeft" align="right" valign="top"><a id="af2d9bd30c0f3d981eddf283b51234014" name="af2d9bd30c0f3d981eddf283b51234014"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>_sampleRate</b></td></tr>
+<tr class="separator:af2d9bd30c0f3d981eddf283b51234014"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf5fd0ca99c9164480dec7f19e5b4638" id="r_acf5fd0ca99c9164480dec7f19e5b4638"><td class="memItemLeft" align="right" valign="top"><a id="acf5fd0ca99c9164480dec7f19e5b4638" name="acf5fd0ca99c9164480dec7f19e5b4638"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>_buffers</b></td></tr>
+<tr class="separator:acf5fd0ca99c9164480dec7f19e5b4638"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a023c8882d3ced4dc9019a6000f4f7210" id="r_a023c8882d3ced4dc9019a6000f4f7210"><td class="memItemLeft" align="right" valign="top"><a id="a023c8882d3ced4dc9019a6000f4f7210" name="a023c8882d3ced4dc9019a6000f4f7210"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>_bufferWords</b></td></tr>
+<tr class="separator:a023c8882d3ced4dc9019a6000f4f7210"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3e402efc5d0313c62804bc6887266a2" id="r_aa3e402efc5d0313c62804bc6887266a2"><td class="memItemLeft" align="right" valign="top"><a id="aa3e402efc5d0313c62804bc6887266a2" name="aa3e402efc5d0313c62804bc6887266a2"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_silenceSample</b></td></tr>
+<tr class="separator:aa3e402efc5d0313c62804bc6887266a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5d277c16120806850e3f02be1e35c9" id="r_a6f5d277c16120806850e3f02be1e35c9"><td class="memItemLeft" align="right" valign="top"><a id="a6f5d277c16120806850e3f02be1e35c9" name="a6f5d277c16120806850e3f02be1e35c9"></a>
+TaskHandle_t&#160;</td><td class="memItemRight" valign="bottom"><b>_taskHandle</b> = 0</td></tr>
+<tr class="separator:a6f5d277c16120806850e3f02be1e35c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a299f7d9fe19a452a4d4c81274f9836a9" id="r_a299f7d9fe19a452a4d4c81274f9836a9"><td class="memItemLeft" align="right" valign="top"><a id="a299f7d9fe19a452a4d4c81274f9836a9" name="a299f7d9fe19a452a4d4c81274f9836a9"></a>
+void(*&#160;</td><td class="memItemRight" valign="bottom"><b>_cb</b> )(void *)</td></tr>
+<tr class="separator:a299f7d9fe19a452a4d4c81274f9836a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab01c8dc9107d5ebc777d644824711b42" id="r_ab01c8dc9107d5ebc777d644824711b42"><td class="memItemLeft" align="right" valign="top"><a id="ab01c8dc9107d5ebc777d644824711b42" name="ab01c8dc9107d5ebc777d644824711b42"></a>
+void *&#160;</td><td class="memItemRight" valign="bottom"><b>_cbData</b></td></tr>
+<tr class="separator:ab01c8dc9107d5ebc777d644824711b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39f7c4962a2663fac529066932601191" id="r_a39f7c4962a2663fac529066932601191"><td class="memItemLeft" align="right" valign="top"><a id="a39f7c4962a2663fac529066932601191" name="a39f7c4962a2663fac529066932601191"></a>
+i2s_chan_handle_t&#160;</td><td class="memItemRight" valign="bottom"><b>_tx_handle</b></td></tr>
+<tr class="separator:a39f7c4962a2663fac529066932601191"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe654408a2f208aae03d846cf4d040d6" id="r_abe654408a2f208aae03d846cf4d040d6"><td class="memItemLeft" align="right" valign="top"><a id="abe654408a2f208aae03d846cf4d040d6" name="abe654408a2f208aae03d846cf4d040d6"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>_totalAvailable</b> = 0</td></tr>
+<tr class="separator:abe654408a2f208aae03d846cf4d040d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af54c251cfeef5270b6fb63ca8fa7e842" id="r_af54c251cfeef5270b6fb63ca8fa7e842"><td class="memItemLeft" align="right" valign="top"><a id="af54c251cfeef5270b6fb63ca8fa7e842" name="af54c251cfeef5270b6fb63ca8fa7e842"></a>
+std::atomic&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_available</b> {0}</td></tr>
+<tr class="separator:af54c251cfeef5270b6fb63ca8fa7e842"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7802da4433e6e81485e0eaf4db9b9fe6" id="r_a7802da4433e6e81485e0eaf4db9b9fe6"><td class="memItemLeft" align="right" valign="top"><a id="a7802da4433e6e81485e0eaf4db9b9fe6" name="a7802da4433e6e81485e0eaf4db9b9fe6"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_irqs</b> = 0</td></tr>
+<tr class="separator:a7802da4433e6e81485e0eaf4db9b9fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94a92b72c96346eed0eca033fcf43494" id="r_a94a92b72c96346eed0eca033fcf43494"><td class="memItemLeft" align="right" valign="top"><a id="a94a92b72c96346eed0eca033fcf43494" name="a94a92b72c96346eed0eca033fcf43494"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>_frames</b> = 0</td></tr>
+<tr class="separator:a94a92b72c96346eed0eca033fcf43494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a568011189e513814acea3b7c5d086f32" id="r_a568011189e513814acea3b7c5d086f32"><td class="memItemLeft" align="right" valign="top"><a id="a568011189e513814acea3b7c5d086f32" name="a568011189e513814acea3b7c5d086f32"></a>
+std::atomic&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_underflows</b> {0}</td></tr>
+<tr class="separator:a568011189e513814acea3b7c5d086f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>I2S object with IRQ-based callbacks to a FreeRTOS task, for use with BackgroundAudio. </p>
@@ -285,8 +360,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 
 </div>
 </div>
-<a id="a315f26b08af3a5be97d6eae2e104ecd6" name="a315f26b08af3a5be97d6eae2e104ecd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a315f26b08af3a5be97d6eae2e104ecd6">&#9670;&#160;</a></span>_onSentCB()</h2>
+<a id="a854a4953c793dc725d4c6610e23985bb" name="a854a4953c793dc725d4c6610e23985bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a854a4953c793dc725d4c6610e23985bb">&#9670;&#160;</a></span>_onSentCB()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -304,13 +379,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">i2s_event_data_t *&#160;</td>
-          <td class="paramname"><em>event</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>underflow</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>event</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -326,51 +395,6 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 </div><div class="memdoc">
 
 <p>Object-based callback for I2S Sent notification. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken) </dd></dl>
-
-</div>
-</div>
-<a id="acb06d412c2cc4af5f55721ab8f395476" name="acb06d412c2cc4af5f55721ab8f395476"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb06d412c2cc4af5f55721ab8f395476">&#9670;&#160;</a></span>_onSentUnder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static IRAM_ATTR bool ESP32I2SAudio::_onSentUnder </td>
-          <td>(</td>
-          <td class="paramtype">i2s_chan_handle_t&#160;</td>
-          <td class="paramname"><em>handle</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">i2s_event_data_t *&#160;</td>
-          <td class="paramname"><em>event</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>user_ctx</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>C-language wrapper for I2S Sent Underflow event. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken) </dd></dl>
 
 </div>
@@ -398,8 +422,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_taskShim</b> 
 </table>
 </div><div class="memdoc">
 
-<p>Determine the number of bytes we can write to the DMA buffers at this instant. </p>
-<dl class="section return"><dt>Returns</dt><dd>Number of bytes available. May not be completely accurate </dd></dl>
+<p>Determine the number of frames we can write to the DMA buffers at this instant. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of frames available. May not be completely accurate </dd></dl>
 
 </div>
 </div>

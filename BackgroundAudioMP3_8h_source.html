@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.3.3</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.0</span>
    </div>
   </td>
  </tr>
@@ -356,7 +356,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>                    _out-&gt;setFrequency(_synth.pcm.samplerate);</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>                }</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            }</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            _out-&gt;write((uint8_t *)_synth.pcm.samplesX, _synth.pcm.length * 4);</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            assert(_out-&gt;write((uint8_t *)_synth.pcm.samplesX, _synth.pcm.length * 4) == _synth.pcm.length * 4);</div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        }</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    }</div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span> </div>

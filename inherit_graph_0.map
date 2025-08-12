@@ -4,4 +4,6 @@
 <area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="153,31,188,27,188,33,154,37"/>
 <area shape="rect" id="Node000002" href="$classESP32I2SAudio.html" title="I2S object with IRQ&#45;based callbacks to a FreeRTOS task, for use with BackgroundAudio." alt="" coords="231,55,351,80"/>
 <area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="154,50,231,58,230,63,154,55"/>
+<area shape="rect" id="Node000003" href="$classESP32PDMAudio.html" title="PDM object with IRQ&#45;based callbacks to a FreeRTOS task, for use with BackgroundAudio." alt="" coords="441,55,571,80"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="364,65,441,65,441,70,364,70"/>
 </map>
