@@ -66,14 +66,17 @@ public:
         @return True if succeeded
     */
     bool setFrequency(int freq) override {
+        freq /= 1.25; // TODO - There is some fixed off-by-ratio in the PDM output clock vs. the PCM input data at IDF 5.5
         if (_running && (_sampleRate != freq)) {
             i2s_pdm_tx_clk_config_t clk_cfg;
             clk_cfg = I2S_PDM_TX_CLK_DEFAULT_CONFIG((uint32_t)freq);
+            clk_cfg.up_sample_fp = 960;
+            clk_cfg.up_sample_fs = 480;
             i2s_channel_disable(_tx_handle);
             i2s_channel_reconfig_pdm_tx_clock(_tx_handle, &clk_cfg);
             i2s_channel_enable(_tx_handle);
+            _sampleRate = freq;
         }
-        _sampleRate = freq;
         return true;
     }
 
@@ -96,11 +99,12 @@ public:
         i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
         chan_cfg.dma_desc_num = _buffers;
         chan_cfg.dma_frame_num = _bufferWords;
-        i2s_new_channel(&chan_cfg, &_tx_handle, nullptr);
+        Serial.printf("_buffers=%d, _bufferWords=%d\n", _buffers, _bufferWords);
+        assert(ESP_OK == i2s_new_channel(&chan_cfg, &_tx_handle, nullptr));
 
         i2s_pdm_tx_config_t pdm_cfg = {
             .clk_cfg = I2S_PDM_TX_CLK_DEFAULT_CONFIG(_sampleRate),
-            .slot_cfg = I2S_PDM_TX_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_MONO),
+            .slot_cfg = I2S_PDM_TX_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO),
             .gpio_cfg = {
                 .clk = I2S_GPIO_UNUSED,
                 .dout = (gpio_num_t)_dout,
@@ -110,14 +114,23 @@ public:
                 },
             },
         };
-        i2s_channel_init_pdm_tx_mode(_tx_handle, &pdm_cfg);
+        pdm_cfg.slot_cfg.data_fmt = I2S_PDM_DATA_FMT_PCM;
+        pdm_cfg.clk_cfg.up_sample_fp = 960;
+        pdm_cfg.clk_cfg.up_sample_fs = 480;
+        assert(ESP_OK == i2s_channel_init_pdm_tx_mode(_tx_handle, &pdm_cfg));
+
+        i2s_chan_info_t _info;
+        i2s_channel_get_info(_tx_handle, &_info);
+        // If the IDF has changed our buffer size or count then we can't work
+        Serial.printf("%d %d %d %d\n", _info.total_dma_buf_size, _buffers, _bufferWords , _buffers * _bufferWords * 4);
+        assert(_info.total_dma_buf_size == _buffers * _bufferWords * 4);
+        _totalAvailable = _info.total_dma_buf_size;
 
         // Prefill silence and calculate how bug we really have
         int16_t a[2] = {0, 0};
         size_t written = 0;
         do {
             i2s_channel_preload_data(_tx_handle, (void*)a, sizeof(a), &written);
-            _totalAvailable += written;
         } while (written);
 
         // The IRQ callbacks which will just trigger the playback task
@@ -127,7 +140,7 @@ public:
             .on_sent = _onSent,
             .on_send_q_ovf = nullptr
         };
-        i2s_channel_register_event_callback(_tx_handle, &_cbs, (void *)this);
+        assert(ESP_OK == i2s_channel_register_event_callback(_tx_handle, &_cbs, (void *)this));
         xTaskCreate(_taskShim, "BackgroundAudioI2S", 8192, (void*)this, 2, &_taskHandle);
         _running = ESP_OK == i2s_channel_enable(_tx_handle);
         return _running;
