@@ -379,10 +379,22 @@ public:
         @return Number of bytes actually written to the I2S DMA buffers
     */
     size_t write(const uint8_t *buffer, size_t size) override {
-        size_t written = 0;
-        i2s_channel_write(_tx_handle, buffer, size, &written, 0);
-        _saturating_sub_available((uint32_t)written);
-        return  written;
+        // The ESP32 i2s_channel_write will stop at a DMA buffer end even if add'l DMA buffers are free
+        // So explicitly loop until either we run out of DMA buffers or data to fill them with
+        size_t cumWritten = 0;
+        while (size) {
+            size_t written = 0;
+            i2s_channel_write(_tx_handle, buffer, size, &written, 0);
+            _saturating_sub_available((uint32_t)written);
+            buffer += written;
+            size -= written;
+            cumWritten += written;
+            // If we're full-up, don't block just exit
+            if (!written) {
+                break;
+            }
+        }
+        return cumWritten;
     }
 
     /**
