@@ -397,12 +397,10 @@ public:
         @return Number of frames available.  May not be completely accurate
     */
     int availableForWrite() override {
-        i2s_chan_info_t _info;
-        i2s_channel_get_info(_tx_handle, &_info);
         return (int)_available.load(std::memory_order_acquire) / 4;
     }
 
-private:
+protected:
     bool _running;
     int8_t _bclk = 0;
     int8_t _ws = 1;

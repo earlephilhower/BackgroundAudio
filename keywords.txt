@@ -16,6 +16,8 @@ RawDataBuffer	KEYWORD1
 ROMBackgroundAudioAAC	KEYWORD1
 ROMBackgroundAudioMP3	KEYWORD1
 ROMBackgroundAudioWAV	KEYWORD1
+ESP32I2SAudio	KEYWORD1
+ESP32PWMAudio	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
