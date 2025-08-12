@@ -267,7 +267,7 @@ public:
                 _underflowed.store(true, std::memory_order_release);
                 _underflows.fetch_add(1, std::memory_order_relaxed);
             }
-            
+
             if (_available.compare_exchange_weak(cur, capped, std::memory_order_release, std::memory_order_relaxed)) {
                 return;
             }
