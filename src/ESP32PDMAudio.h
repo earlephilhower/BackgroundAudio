@@ -66,7 +66,10 @@ public:
         @return True if succeeded
     */
     bool setFrequency(int freq) override {
-        freq /= 1.25; // TODO - There is some fixed off-by-ratio in the PDM output clock vs. the PCM input data at IDF 5.5
+
+        // TODO - There is some fixed off-by-ratio 1/1.25 in the PDM output clock vs. the PCM input data at IDF 5.5
+        freq *= 8;
+        freq /= 10;
         if (_running && (_sampleRate != freq)) {
             i2s_pdm_tx_clk_config_t clk_cfg;
             clk_cfg = I2S_PDM_TX_CLK_DEFAULT_CONFIG((uint32_t)freq);
@@ -99,7 +102,6 @@ public:
         i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
         chan_cfg.dma_desc_num = _buffers;
         chan_cfg.dma_frame_num = _bufferWords;
-        Serial.printf("_buffers=%d, _bufferWords=%d\n", _buffers, _bufferWords);
         assert(ESP_OK == i2s_new_channel(&chan_cfg, &_tx_handle, nullptr));
 
         i2s_pdm_tx_config_t pdm_cfg = {
@@ -122,7 +124,6 @@ public:
         i2s_chan_info_t _info;
         i2s_channel_get_info(_tx_handle, &_info);
         // If the IDF has changed our buffer size or count then we can't work
-        Serial.printf("%d %d %d %d\n", _info.total_dma_buf_size, _buffers, _bufferWords , _buffers * _bufferWords * 4);
         assert(_info.total_dma_buf_size == _buffers * _bufferWords * 4);
         _totalAvailable = _info.total_dma_buf_size;
 
