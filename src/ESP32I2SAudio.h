@@ -261,7 +261,13 @@ public:
         uint32_t cur = _available.load(std::memory_order_relaxed);
         do {
             uint64_t sum = (uint64_t)cur + add;
-            uint32_t capped = (sum > _totalAvailable) ? (uint32_t)_totalAvailable : (uint32_t)sum;
+            uint32_t capped = sum;
+            if (sum > _totalAvailable) {
+                capped = (uint32_t) _totalAvailable;  // Cap to the total available
+                _underflowed.store(true, std::memory_order_release);
+                _underflows.fetch_add(1, std::memory_order_relaxed);
+            }
+
             if (_available.compare_exchange_weak(cur, capped, std::memory_order_release, std::memory_order_relaxed)) {
                 return;
             }
@@ -304,7 +310,7 @@ public:
               @return Number of frames of underflow data have occurred
     */
     uint32_t underflows() {
-        return _underflows;
+        return _underflows.load(std::memory_order_acquire);
     }
 
     /**
@@ -312,14 +318,11 @@ public:
 
         @return True if a task was woken up (FreeRTOS xHigherPriorityTaskWoken)
     */
-    IRAM_ATTR bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event, bool underflow = false) {
+    IRAM_ATTR bool _onSentCB(i2s_chan_handle_t handle, i2s_event_data_t *event) {
         BaseType_t xHigherPriorityTaskWoken;
         xHigherPriorityTaskWoken = pdFALSE;
         if (_taskHandle) {
             _irqs++;
-            if (underflow) {
-                _underflowed = true;
-            }
             xTaskNotifyFromISR(_taskHandle, event->size, eSetValueWithoutOverwrite, &xHigherPriorityTaskWoken);
         }
         if (xHigherPriorityTaskWoken) {
@@ -425,5 +428,5 @@ private:
     std::atomic<uint32_t> _available{0};
     uint32_t _irqs = 0; // Number of I2S IRQs received
     uint32_t _frames = 0; // Number of DMA buffers sent
-    uint32_t _underflows = 0; // Number of underflowed DMA buffers
+    std::atomic<uint32_t> _underflows{0}; // Number of underflowed DMA buffers
 };
