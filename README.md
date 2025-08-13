@@ -43,7 +43,7 @@ When the app is initialized, simply call `begin()` and start `write`ing in data 
 Note that the app is responsible for feeding in data from whatever source to the decoder.  The decoder itself,
 because it runs at interrupt level, cannot read the filesystem or network to collect samples (either operation
 could block which is not allowed at interrupt time).  If all data can live in flash, there is a ROM-based
-playback object which _can_ feed itself, but only from arrays in flash and not files in `LittleFS` or `SD.  See
+playback object which _can_ feed itself, but only from arrays in flash and not files in `LittleFS` or `SD`.  See
 the examples for more details on this mode.
 
 In the case of underflow the playback object will play silence and should recover when new data arrives.  The
