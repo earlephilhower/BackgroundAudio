@@ -409,7 +409,7 @@ private:
     }
 
     void pump() {
-        while (_out->availableForWrite() >= (int)framelen * 4) {
+        while (_out->availableForWrite() >= (int)(framelen * 4)) {
             if (!_frameLen && !_paused) {
                 generateOneFrame();
             }

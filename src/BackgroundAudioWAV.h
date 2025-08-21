@@ -420,7 +420,7 @@ underflow:
 
 
     void pump() {
-        while (_out->availableForWrite() >= (int)framelen * 2 * sizeof(int16_t)) {
+        while (_out->availableForWrite() >= (int)(framelen * 2 * sizeof(int16_t))) {
             if (_paused) {
                 bzero((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
             } else {
