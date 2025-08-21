@@ -498,9 +498,9 @@ private:
         @brief Pumps all inputs to get their next block of data or silence and sends it to the real output device
     */
     void pump() {
-        while (_out->availableForWrite() >= (int)_outWords) {
+        while (_out->availableForWrite() >= (int)_outWords * 4) {
             generateOneFrame();
-            _out->write((uint8_t *)_outBuff, _outWords * 4);
+            assert(_out->write((uint8_t *)_outBuff, _outWords * 4) == _outWords * 4);
         }
     }
 

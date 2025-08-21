@@ -323,7 +323,7 @@ private:
     }
 
     void pump() {
-        while (_out->availableForWrite() >= (int)framelen) {
+        while (_out->availableForWrite() >= (int)framelen * 2 * sizeof(int16_t)) {
             if (_paused) {
                 bzero((uint8_t *)_outSample, _outSamples * 2 * sizeof(int16_t));
             } else {

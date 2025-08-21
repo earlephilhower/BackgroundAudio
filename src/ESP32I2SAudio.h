@@ -421,7 +421,7 @@ public:
         @return Number of frames available.  May not be completely accurate
     */
     int availableForWrite() override {
-        return (int)_available.load(std::memory_order_acquire) / 4;
+        return (int)_available.load(std::memory_order_acquire);
     }
 
 protected:

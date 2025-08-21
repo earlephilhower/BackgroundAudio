@@ -342,7 +342,7 @@ private:
     }
 
     void pump() {
-        while (_out->availableForWrite() >= (int)framelen) {
+        while (_out->availableForWrite() >= (int)framelen * 4) {
             if (_paused) {
                 bzero(_synth.pcm.samplesX, _synth.pcm.length * 4);
             } else {
