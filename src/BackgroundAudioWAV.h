@@ -420,7 +420,7 @@ underflow:
 
 
     void pump() {
-        while (_out->availableForWrite() >= (int)framelen) {
+        while (_out->availableForWrite() >= (int)(framelen * 2 * sizeof(int16_t))) {
             if (_paused) {
                 bzero((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
             } else {
@@ -429,7 +429,7 @@ underflow:
                     _out->setFrequency(_sampleRate);
                 }
             }
-            _out->write((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t));
+            assert(_out->write((uint8_t *)_outSample, framelen * 2 * sizeof(int16_t)) == framelen * 2 * sizeof(int16_t));
         }
     }
 
