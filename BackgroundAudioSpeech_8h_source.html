@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.0</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.1</span>
    </div>
   </td>
  </tr>
@@ -390,7 +390,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    }</div>
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span> </div>
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="keywordtype">void</span> pump() {</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        <span class="keywordflow">while</span> (_out-&gt;availableForWrite() &gt;= (<span class="keywordtype">int</span>)framelen) {</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        <span class="keywordflow">while</span> (_out-&gt;availableForWrite() &gt;= (<span class="keywordtype">int</span>)(framelen * 4)) {</div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>            <span class="keywordflow">if</span> (!_frameLen &amp;&amp; !_paused) {</div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                generateOneFrame();</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>            }</div>

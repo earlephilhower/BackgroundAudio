@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.0</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.1</span>
    </div>
   </td>
  </tr>
@@ -475,9 +475,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>    }</div>
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span> </div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>    <span class="keywordtype">void</span> pump() {</div>
-<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>        <span class="keywordflow">while</span> (_out-&gt;availableForWrite() &gt;= (<span class="keywordtype">int</span>)_outWords) {</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>        <span class="keywordflow">while</span> (_out-&gt;availableForWrite() &gt;= (<span class="keywordtype">int</span>)(_outWords * 4)) {</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>            generateOneFrame();</div>
-<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>            _out-&gt;write((uint8_t *)_outBuff, _outWords * 4);</div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>            assert(_out-&gt;write((uint8_t *)_outBuff, _outWords * 4) == _outWords * 4);</div>
 <div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>        }</div>
 <div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>    }</div>
 <div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span> </div>

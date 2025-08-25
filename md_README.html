@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.0</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.1</span>
    </div>
   </td>
  </tr>
@@ -85,7 +85,7 @@ Compatibility</h1>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Adding BackgroundAudio to an Application</h1>
 <p>Simply include the appropriate header, or <code><a class="el" href="BackgroundAudio_8h_source.html">BackgroundAudio.h</a></code> for all codecs. Instantiate a global object of the appropriate type, passing in an output device (<code>I2S</code>, <code>PWMAudio</code>, or even <code>A2DPSink</code>) to the constructor. When the app is initialized, simply call <code>begin()</code> and start <code>write</code>ing in data as it is available.</p>
-<p>Note that the app is responsible for feeding in data from whatever source to the decoder. The decoder itself, because it runs at interrupt level, cannot read the filesystem or network to collect samples (either operation could block which is not allowed at interrupt time). If all data can live in flash, there is a ROM-based playback object which <em>can</em> feed itself, but only from arrays in flash and not files in <code>LittleFS</code> or `SD. See the examples for more details on this mode.</p>
+<p>Note that the app is responsible for feeding in data from whatever source to the decoder. The decoder itself, because it runs at interrupt level, cannot read the filesystem or network to collect samples (either operation could block which is not allowed at interrupt time). If all data can live in flash, there is a ROM-based playback object which <em>can</em> feed itself, but only from arrays in flash and not files in <code>LittleFS</code> or <code>SD</code>. See the examples for more details on this mode.</p>
 <p>In the case of underflow the playback object will play silence and should recover when new data arrives. The built-in source (raw, uncompressed) buffer should help reduce this possibility.</p>
 <div class="fragment"><div class="line">// Barnyard sounds for children sketch</div>
 <div class="line">#include &lt;BackgroundAudio.h&gt;</div>
