@@ -240,7 +240,7 @@ public:
     */
     void flush() {
         noInterrupts();
-        _ib->flush();
+        _ib.flush();
         _accumShift = 0;
         interrupts();
     }
