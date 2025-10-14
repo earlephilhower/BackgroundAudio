@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.2</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.3</span>
    </div>
   </td>
  </tr>
@@ -236,7 +236,7 @@ template&lt;size_t bytes&gt; </div>
 </div><div class="memdoc">
 
 <p>Invalidate a portion of buffer and shift remaining data up. </p>
-<p>Decoders need to be able to read an entier frame's worth of raw data from a contiguous memory region. They all operate by using the internal buffer pointer plus an offset, which they track, to avoid having to shift old data out every single frame (i.e. avoiding <code>memcpy</code>s). When they have accumulated enough of a virtual shift in their reading, they call <code>shiftUp</code> to actually do the memory copy and invalidate that old portion of the buffer.</p>
+<p>Decoders need to be able to read an entire frame's worth of raw data from a contiguous memory region. They all operate by using the internal buffer pointer plus an offset, which they track, to avoid having to shift old data out every single frame (i.e. avoiding <code>memcpy</code>s). When they have accumulated enough of a virtual shift in their reading, they call <code>shiftUp</code> to actually do the memory copy and invalidate that old portion of the buffer.</p>
 <p>In general decoders want to call this function ad <em>infrequently</em> as possible. </p>
 
 </div>
