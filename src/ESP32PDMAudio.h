@@ -78,8 +78,8 @@ public:
             i2s_channel_disable(_tx_handle);
             i2s_channel_reconfig_pdm_tx_clock(_tx_handle, &clk_cfg);
             i2s_channel_enable(_tx_handle);
-            _sampleRate = freq;
         }
+        _sampleRate = freq;
         return true;
     }
 
