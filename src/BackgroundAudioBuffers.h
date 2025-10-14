@@ -137,7 +137,7 @@ public:
         @brief Invalidate a portion of buffer and shift remaining data up
 
         @details
-        Decoders need to be able to read an entier frame's worth of raw data from a contiguous memory region.  They
+        Decoders need to be able to read an entire frame's worth of raw data from a contiguous memory region.  They
         all operate by using the internal buffer pointer plus an offset, which they track, to avoid having to shift
         old data out every single frame (i.e. avoiding `memcpy`s).  When they have accumulated enough of a virtual
         shift in their reading, they call `shiftUp` to actually do the memory copy and invalidate that old portion
@@ -279,7 +279,7 @@ public:
         @brief Invalidate a portion of buffer and shift remaining data up
 
         @details
-        Decoders need to be able to read an entier frame's worth of raw data from a contiguous memory region.  They
+        Decoders need to be able to read an entire frame's worth of raw data from a contiguous memory region.  They
         all operate by using the internal buffer pointer plus an offset, which they track, to avoid having to shift
         old data out every single frame (i.e. avoiding `memcpy`s).  When they have accumulated enough of a virtual
         shift in their reading, they call `shiftUp` to actually do the memory copy and invalidate that old portion
