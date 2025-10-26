@@ -91,6 +91,14 @@ public:
             return false;
         }
 
+#ifdef ARDUINO_ARCH_RP2040
+        _workIRQ = user_irq_claim_unused(true);
+        _workObj = this;
+        irq_set_exclusive_handler(_workIRQ, _irqStub);
+        irq_set_priority(_workIRQ, 0xc0); // Lowest prio
+        irq_set_enabled(_workIRQ, true);
+#endif
+
         _hAACDecoder = AACInitDecoderPre(_private, sizeof(_private));
         if (!_hAACDecoder) {
             return false;
@@ -119,6 +127,10 @@ public:
     */
     void end() {
         if (_playing) {
+#ifdef ARDUINO_ARCH_RP2040
+            irq_set_enabled(_workIRQ, false);
+            user_irq_unclaim(_workIRQ);
+#endif
             _out->end();
         }
     }
@@ -205,7 +217,7 @@ public:
     }
 
     /**
-              @brief Get the number of times the MP3 decoder has underflowed waiting on raw data since `begin`
+              @brief Get the number of times the AAC decoder has underflowed waiting on raw data since `begin`
 
               @return Number of frames of underflow data have occurred
     */
@@ -232,11 +244,11 @@ public:
     }
 
     /**
-                @brief Flushes any existing raw data, resets the processor to start a new MP3
+                @brief Flushes any existing raw data, resets the processor to start a new AAC
 
                 @details
-                This is only needed to abort a currently playing MP3 file (i.e. skipping a track in the middle).
-                Multiple MP3 files can just be concatenated together in the input buffer with `write`
+                This is only needed to abort a currently playing AAC file (i.e. skipping a track in the middle).
+                Multiple AAC files can just be concatenated together in the input buffer with `write`
     */
     void flush() {
         noInterrupts();
@@ -269,9 +281,20 @@ public:
     }
 
 private:
+#ifdef ARDUINO_ARCH_RP2040
+    static void _irqStub() {
+        BackgroundAudioAACClass<DataBuffer>::_workObj->pump();
+    }
+
+    static void _cb(void *ptr) {
+        // Don't actually do work in the DMA interrupt, do it in the work IRQ context (low prio)
+        irq_set_pending(BackgroundAudioAACClass<DataBuffer>::_workIRQ);
+    }
+#else
     static void _cb(void *ptr) {
         ((BackgroundAudioAACClass*)ptr)->pump();
     }
+#endif
 
     void generateOneFrame() {
         // Every frame requires shifting all remaining data (6K?) before processing.
@@ -322,6 +345,9 @@ private:
         ApplyGain((int16_t *)_outSample, _outSamples * 2, _gain);
     }
 
+#ifdef ARDUINO_ARCH_RP2040
+public:
+#endif
     void pump() {
         while (_out->availableForWrite() >= (int)(framelen * 2 * sizeof(int16_t))) {
             if (_paused) {
@@ -334,7 +360,15 @@ private:
             }
             assert(_out->write((uint8_t *)_outSample, _outSamples * 2 * sizeof(int16_t)) == _outSamples * 2 * sizeof(int16_t));
         }
+#ifdef ARDUINO_ARCH_RP2040
+        irq_clear(_workIRQ);
+#endif
     }
+
+#ifdef ARDUINO_ARCH_RP2040
+    static uint8_t _workIRQ;
+    static BackgroundAudioAACClass<DataBuffer> *_workObj;
+#endif
 
 private:
     AudioOutputBase *_out = nullptr;
@@ -358,6 +392,10 @@ private:
     uint32_t _dumps = 0;
 };
 
+#ifdef ARDUINO_ARCH_RP2040
+template<class DataBuffer> uint8_t BackgroundAudioAACClass<DataBuffer>::_workIRQ;
+template<class DataBuffer> BackgroundAudioAACClass<DataBuffer> *BackgroundAudioAACClass<DataBuffer>::_workObj;
+#endif
 
 /**
     @brief General purpose AAC background player with an 8KB buffer.  Needs to have `write` called repeatedly with data.
