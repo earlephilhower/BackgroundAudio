@@ -79,12 +79,26 @@ public:
     }
 
 
+
+
     /**
         @brief Starts the background MP3 decoder/player.  Will initialize the output device and start sending silence immediately.
 
         @return True on success, false if already started.
     */
     bool begin() {
+        if (_playing || !_out) {
+            return false;
+        }
+
+#ifdef ARDUINO_ARCH_RP2040
+        _workIRQ = user_irq_claim_unused(true);
+        _workObj = this;
+        irq_set_exclusive_handler(_workIRQ, _irqStub);
+        irq_set_priority(_workIRQ, 0xc0); // Lowest prio
+        irq_set_enabled(_workIRQ, true);
+#endif
+
         // MP3 processing init
         mad_stream_init(&_stream);
         mad_frame_init(&_frame);
@@ -115,6 +129,10 @@ public:
     */
     void end() {
         if (_playing) {
+#ifdef ARDUINO_ARCH_RP2040
+            irq_set_enabled(_workIRQ, false);
+            user_irq_unclaim(_workIRQ);
+#endif
             _out->end();
         }
         _playing = false;
@@ -268,9 +286,20 @@ public:
     }
 
 private:
+#ifdef ARDUINO_ARCH_RP2040
+    static void _irqStub() {
+        BackgroundAudioMP3Class<DataBuffer>::_workObj->pump();
+    }
+
+    static void _cb(void *ptr) {
+        // Don't actually do work in the DMA interrupt, do it in the work IRQ context (low prio)
+        irq_set_pending(BackgroundAudioMP3Class<DataBuffer>::_workIRQ);
+    }
+#else
     static void _cb(void *ptr) {
         ((BackgroundAudioMP3Class*)ptr)->pump();
     }
+#endif
 
     void generateOneFrame() {
         // Every frame requires shifting all remaining data (6K?) before processing.
@@ -341,6 +370,9 @@ private:
         ApplyGain((int16_t*)_synth.pcm.samplesX, framelen * 2, _gain);
     }
 
+#ifdef ARDUINO_ARCH_RP2040
+public:
+#endif
     void pump() {
         while (_out->availableForWrite() >= (int)(framelen * 4)) {
             if (_paused) {
@@ -353,12 +385,21 @@ private:
             }
             assert(_out->write((uint8_t *)_synth.pcm.samplesX, _synth.pcm.length * 4) == _synth.pcm.length * 4);
         }
+#ifdef ARDUINO_ARCH_RP2040
+        irq_clear(_workIRQ);
+#endif
     }
+
+#ifdef ARDUINO_ARCH_RP2040
+    static uint8_t _workIRQ;
+    static BackgroundAudioMP3Class<DataBuffer> *_workObj;
+#endif
 
 private:
     AudioOutputBase *_out;
     bool _playing = false;
     bool _paused = false;
+
     static const size_t framelen = 1152;
     static const size_t maxFrameSize = 2881;
     DataBuffer _ib;
@@ -376,6 +417,10 @@ private:
     uint32_t _dumps = 0;
 };
 
+#ifdef ARDUINO_ARCH_RP2040
+template<class DataBuffer> uint8_t BackgroundAudioMP3Class<DataBuffer>::_workIRQ;
+template<class DataBuffer> BackgroundAudioMP3Class<DataBuffer> *BackgroundAudioMP3Class<DataBuffer>::_workObj;
+#endif
 
 /**
     @brief General purpose MP3 background player with an 8KB buffer.  Needs to have `write` called repeatedly with data.
