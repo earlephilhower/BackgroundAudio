@@ -142,9 +142,17 @@ public:
         @return True on success, false if already started.
     */
     bool begin() {
-        if (_playing || !_voice || !_voiceLen) {
+        if (_playing || !_voice || !_voiceLen || !_out) {
             return false;
         }
+
+#ifdef ARDUINO_ARCH_RP2040
+        _workIRQ = user_irq_claim_unused(true);
+        _workObj = this;
+        irq_set_exclusive_handler(_workIRQ, _irqStub);
+        irq_set_priority(_workIRQ, 0xc0); // Lowest prio
+        irq_set_enabled(_workIRQ, true);
+#endif
 
         espeak_EnableSingleStep();
         espeak_InstallDict(__espeakng_dict, __espeakng_dictlen);
@@ -168,7 +176,7 @@ public:
 
         // Stuff with silence to start
         uint16_t zeros[32] __attribute__((aligned(4))) = {};
-        while (_out->availableForWrite() > 32) {
+        while (_out->availableForWrite() > 32 * 2) {
             _out->write((uint8_t *)zeros, sizeof(zeros));
         }
 
@@ -182,6 +190,10 @@ public:
     */
     void end() {
         if (_playing) {
+#ifdef ARDUINO_ARCH_RP2040
+            irq_set_enabled(_workIRQ, false);
+            user_irq_unclaim(_workIRQ);
+#endif
             _out->end();
         }
         _playing = false;
@@ -362,9 +374,20 @@ public:
     }
 
 private:
+#ifdef ARDUINO_ARCH_RP2040
+    static void _irqStub() {
+        BackgroundAudioSpeechClass<DataBuffer>::_workObj->pump();
+    }
+
+    static void _cb(void *ptr) {
+        // Don't actually do work in the DMA interrupt, do it in the work IRQ context (low prio)
+        irq_set_pending(BackgroundAudioSpeechClass<DataBuffer>::_workIRQ);
+    }
+#else
     static void _cb(void *ptr) {
         ((BackgroundAudioSpeechClass*)ptr)->pump();
     }
+#endif
 
     static int _speechCB(short *data, int count, espeak_EVENT *events) {
         return 0; // Should never really be called by ESpeak internals
@@ -408,6 +431,9 @@ private:
         }
     }
 
+#ifdef ARDUINO_ARCH_RP2040
+public:
+#endif
     void pump() {
         while (_out->availableForWrite() >= (int)(framelen * 4)) {
             if (!_frameLen && !_paused) {
@@ -415,12 +441,21 @@ private:
             }
             if (_paused || !_frameLen) {
                 bzero(_frame, sizeof(_frame));
-                _out->write((uint8_t *)_frame, sizeof(_frame));
+                assert(_out->write((uint8_t *)_frame, sizeof(_frame)) == sizeof(_frame));
             } else {
-                _frameLen -= _out->write((uint8_t *)_frame, _frameLen * 4) / 4;
+                assert(_out->write((uint8_t *)_frame, _frameLen * 4) == _frameLen * 4);
+                _frameLen = 0;
             }
         }
+#ifdef ARDUINO_ARCH_RP2040
+        irq_clear(_workIRQ);
+#endif
     }
+
+#ifdef ARDUINO_ARCH_RP2040
+    static uint8_t _workIRQ;
+    static BackgroundAudioSpeechClass<DataBuffer> *_workObj;
+#endif
 
 private:
     AudioOutputBase *_out;
@@ -446,6 +481,10 @@ private:
     uint32_t _dumps = 0;
 };
 
+#ifdef ARDUINO_ARCH_RP2040
+template<class DataBuffer> uint8_t BackgroundAudioSpeechClass<DataBuffer>::_workIRQ;
+template<class DataBuffer> BackgroundAudioSpeechClass<DataBuffer> *BackgroundAudioSpeechClass<DataBuffer>::_workObj;
+#endif
 
 /**
     @brief General purpose speaker background player with an 8KB buffer.  Needs to have `write` called repeatedly with data.
