@@ -443,7 +443,7 @@ public:
                 bzero(_frame, sizeof(_frame));
                 assert(_out->write((uint8_t *)_frame, sizeof(_frame)) == sizeof(_frame));
             } else {
-                assert(_out->write((uint8_t *)_frame, _frameLen * 4) == _frameLen * 4);
+                assert(_out->write((uint8_t *)_frame, _frameLen * 4) == (size_t)(_frameLen * 4));
                 _frameLen = 0;
             }
         }
