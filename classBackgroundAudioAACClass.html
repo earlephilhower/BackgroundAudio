@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.3</span>
+   <div id="projectname">BackgroundAudio<span id="projectnumber">&#160;1.4.4</span>
    </div>
   </td>
  </tr>
@@ -121,7 +121,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
 <tr class="memdesc:adfa517558a6edf2d6e72e9b5d5ba39cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of input data shifts processed by decoder since <code>begin</code>  <br /></td></tr>
 <tr class="separator:adfa517558a6edf2d6e72e9b5d5ba39cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0095a3326cefefd3db66e463701d9b93" id="r_a0095a3326cefefd3db66e463701d9b93"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioAACClass.html#a0095a3326cefefd3db66e463701d9b93">underflows</a> ()</td></tr>
-<tr class="memdesc:a0095a3326cefefd3db66e463701d9b93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of times the MP3 decoder has underflowed waiting on raw data since <code>begin</code>  <br /></td></tr>
+<tr class="memdesc:a0095a3326cefefd3db66e463701d9b93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of times the AAC decoder has underflowed waiting on raw data since <code>begin</code>  <br /></td></tr>
 <tr class="separator:a0095a3326cefefd3db66e463701d9b93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b8ce584ebdd323ed783c43b8c489fcf" id="r_a9b8ce584ebdd323ed783c43b8c489fcf"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioAACClass.html#a9b8ce584ebdd323ed783c43b8c489fcf">errors</a> ()</td></tr>
 <tr class="memdesc:a9b8ce584ebdd323ed783c43b8c489fcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of decoder errors since <code>begin</code>  <br /></td></tr>
@@ -130,7 +130,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
 <tr class="memdesc:a3ee6a9b57bc0d3877f6b1d3939c64895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of full buffer dumps (catastrophic data error) since <code>begin</code>  <br /></td></tr>
 <tr class="separator:a3ee6a9b57bc0d3877f6b1d3939c64895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dda53436ced8733ad26831fc2911acc" id="r_a5dda53436ced8733ad26831fc2911acc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBackgroundAudioAACClass.html#a5dda53436ced8733ad26831fc2911acc">flush</a> ()</td></tr>
-<tr class="memdesc:a5dda53436ced8733ad26831fc2911acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes any existing raw data, resets the processor to start a new MP3.  <br /></td></tr>
+<tr class="memdesc:a5dda53436ced8733ad26831fc2911acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes any existing raw data, resets the processor to start a new AAC.  <br /></td></tr>
 <tr class="separator:a5dda53436ced8733ad26831fc2911acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0534ccd40ff2b3fc80c69cd8d9f18c65" id="r_a0534ccd40ff2b3fc80c69cd8d9f18c65"><td class="memItemLeft" align="right" valign="top"><a id="a0534ccd40ff2b3fc80c69cd8d9f18c65" name="a0534ccd40ff2b3fc80c69cd8d9f18c65"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>pause</b> ()</td></tr>
@@ -398,8 +398,8 @@ template&lt;class DataBuffer &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Flushes any existing raw data, resets the processor to start a new MP3. </p>
-<p>This is only needed to abort a currently playing MP3 file (i.e. skipping a track in the middle). Multiple MP3 files can just be concatenated together in the input buffer with <code>write</code> </p>
+<p>Flushes any existing raw data, resets the processor to start a new AAC. </p>
+<p>This is only needed to abort a currently playing AAC file (i.e. skipping a track in the middle). Multiple AAC files can just be concatenated together in the input buffer with <code>write</code> </p>
 
 </div>
 </div>
@@ -621,7 +621,7 @@ template&lt;class DataBuffer &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get the number of times the MP3 decoder has underflowed waiting on raw data since <code>begin</code> </p>
+<p>Get the number of times the AAC decoder has underflowed waiting on raw data since <code>begin</code> </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of frames of underflow data have occurred </dd></dl>
 
 </div>
