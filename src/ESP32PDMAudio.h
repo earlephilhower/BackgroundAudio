@@ -66,15 +66,9 @@ public:
         @return True if succeeded
     */
     bool setFrequency(int freq) override {
-
-        // TODO - There is some fixed off-by-ratio 1/1.25 in the PDM output clock vs. the PCM input data at IDF 5.5
-        freq *= 8;
-        freq /= 10;
         if (_running && (_sampleRate != freq)) {
-            i2s_pdm_tx_clk_config_t clk_cfg;
-            clk_cfg = I2S_PDM_TX_CLK_DEFAULT_CONFIG((uint32_t)freq);
-            clk_cfg.up_sample_fp = 960;
-            clk_cfg.up_sample_fs = 480;
+            // [FIX] Use the correct clock configuration for DAC-style PDM output.
+            i2s_pdm_tx_clk_config_t clk_cfg = I2S_PDM_TX_CLK_DAC_DEFAULT_CONFIG((uint32_t)freq);
             i2s_channel_disable(_tx_handle);
             i2s_channel_reconfig_pdm_tx_clock(_tx_handle, &clk_cfg);
             i2s_channel_enable(_tx_handle);
@@ -104,9 +98,10 @@ public:
         chan_cfg.dma_frame_num = _bufferWords;
         assert(ESP_OK == i2s_new_channel(&chan_cfg, &_tx_handle, nullptr));
 
+        // [FIX] Use the specific PDM DAC configurations for both clock and slot.
         i2s_pdm_tx_config_t pdm_cfg = {
-            .clk_cfg = I2S_PDM_TX_CLK_DEFAULT_CONFIG(_sampleRate),
-            .slot_cfg = I2S_PDM_TX_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO),
+            .clk_cfg = I2S_PDM_TX_CLK_DAC_DEFAULT_CONFIG(_sampleRate),
+            .slot_cfg = I2S_PDM_TX_SLOT_DAC_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO),
             .gpio_cfg = {
                 .clk = I2S_GPIO_UNUSED,
                 .dout = (gpio_num_t)_dout,
@@ -116,9 +111,8 @@ public:
                 },
             },
         };
+        // The slot configuration must be set to output PCM data for the hardware modulator.
         pdm_cfg.slot_cfg.data_fmt = I2S_PDM_DATA_FMT_PCM;
-        pdm_cfg.clk_cfg.up_sample_fp = 960;
-        pdm_cfg.clk_cfg.up_sample_fs = 480;
         assert(ESP_OK == i2s_channel_init_pdm_tx_mode(_tx_handle, &pdm_cfg));
 
         i2s_chan_info_t _info;
