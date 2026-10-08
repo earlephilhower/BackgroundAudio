@@ -223,6 +223,7 @@ int LoadDictionary(Translator *tr, const char *name, int no_error)
 #endif
 	int size;
 	char fname[sizeof(path_home)+20];
+        (void) no_error;
 
 	if (dictionary_name != name)
 		strncpy(dictionary_name, name, 40 - 1); // currently loaded dictionary name
@@ -2088,6 +2089,7 @@ static void MatchRule(Translator *tr, char *word[], char *word_start, int group_
 				if ((option_phonemes & espeakPHONEMES_TRACE) && (match.points > 0) && ((word_flags & FLAG_NO_TRACE) == 0)) {
 					// show each rule that matches, and it's points score
 					int pts;
+                                        (void) pts;
 					char decoded_phonemes[80];
 #ifndef ARDUINO
                                         char output[80];

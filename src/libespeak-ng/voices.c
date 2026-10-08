@@ -1252,6 +1252,9 @@ char const *SelectVoice(espeak_VOICE *voice_select, int *found)
 
 static void GetVoices(const char *path, int len_path_voices, int is_language_file)
 {
+    (void) path;
+    (void) len_path_voices;
+    (void) is_language_file;
 #ifndef ARDUINO
 	char fname[sizeof(path_home)+100];
 #endif
