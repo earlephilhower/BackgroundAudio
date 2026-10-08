@@ -150,9 +150,9 @@
                 sectLen += sectLenIncr;
             } while (sectLenIncr == sectEscapeVal);
 
-            /* a section covers at least one band and ends within the group;
-             * past the end of the data every read is zero, so without this a
-             * zero length repeats forever and a long one overruns sfbCodeBook */
+           /*  a section covers at least one band and ends within the group;
+               past the end of the data every read is zero, so without this a
+               zero length repeats forever and a long one overruns sfbCodeBook */
             if (sectLen < 1 || sectLen > maxSFB - sfb) {
                 sectLen = maxSFB - sfb;
                 cb = 0;
