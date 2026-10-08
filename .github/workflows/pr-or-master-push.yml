@@ -18,8 +18,8 @@ jobs:
     name: Arduino library linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/arduino-lint-action@4de5fc895deecbda2f6b1cc05de7a8fdd5c4c51f # v2
+      - uses: actions/checkout@v7
+      - uses: arduino/arduino-lint-action@9a3603836c75e41753e531167395edeb90ba5dae # v3.0.0 for CodeQL
         with:
           library-manager: 'update'
 
@@ -31,7 +31,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: Run codespell
@@ -57,7 +57,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: Install Arduino-CLI, RP2040 core, this library
@@ -70,7 +70,7 @@ jobs:
         ./arduino-cli core update-index
         ./arduino-cli core install rp2040:rp2040
         sed -i 's/-Wextra/-Wextra -Werror/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Enable -Werror
-        sed -i 's/-std=gnu++23/-std=gnu++17 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
+        sed -i 's/-std=gnu++23/-std=gnu++23 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
         mkdir -p ~/Arduino/libraries
         cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
     - name: Build examples RP2040
@@ -88,7 +88,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: Install Arduino-CLI, RP2040 core, this library
@@ -101,7 +101,7 @@ jobs:
         ./arduino-cli core update-index
         ./arduino-cli core install rp2040:rp2040
         sed -i 's/-Wextra/-Wextra -Werror/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Enable -Werror
-        sed -i 's/-std=gnu++17/-std=gnu++17 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
+        sed -i 's/-std=gnu++23/-std=gnu++23 -Wno-overloaded-virtual/' ~/.arduino*/packages/rp2040/hardware/rp2040/*/platform.txt # Disable overloaded virtual warning in HTTPS WiFi
         mkdir -p ~/Arduino/libraries
         cp -a /home/runner/work/BackgroundAudio/BackgroundAudio ~/Arduino/libraries/.
     - name: Build examples RP2350
@@ -121,7 +121,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: Install Arduino-CLI, ESP32 core, this library
