@@ -287,6 +287,7 @@ private:
     }
 
     static void _cb(void *ptr) {
+        (void) ptr;
         // Don't actually do work in the DMA interrupt, do it in the work IRQ context (low prio)
         irq_set_pending(BackgroundAudioAACClass<DataBuffer>::_workIRQ);
     }
