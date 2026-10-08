@@ -271,6 +271,7 @@ public:
         @return 0 due to unsupported
     */
     inline size_t write0(size_t cnt) {
+        (void) cnt;
         return 0;
     }
 

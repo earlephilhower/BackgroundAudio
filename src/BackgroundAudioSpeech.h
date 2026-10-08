@@ -380,6 +380,7 @@ private:
     }
 
     static void _cb(void *ptr) {
+        (void) ptr;
         // Don't actually do work in the DMA interrupt, do it in the work IRQ context (low prio)
         irq_set_pending(BackgroundAudioSpeechClass<DataBuffer>::_workIRQ);
     }
@@ -390,6 +391,9 @@ private:
 #endif
 
     static int _speechCB(short *data, int count, espeak_EVENT *events) {
+        (void) data;
+        (void) count;
+        (void) events;
         return 0; // Should never really be called by ESpeak internals
     }
 
